@@ -8,6 +8,7 @@ import { login } from "@/services/user"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { AlertCircleIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useLogin } from "@/contexts/LoginContext"
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>("")
@@ -15,13 +16,16 @@ const LoginForm = () => {
     const [error, setError] = useState<string | null>(null)
 
     const router = useRouter()
+    const { setUser } = useLogin()
 
     const isLogged = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setError(null)
         
         try {
-            const res = await login({email, senha}) //enviar info dessa tela para a próxima
+            await login({email, senha})
+            setUser({email, senha})
+
             router.push("/")
         } catch (err) {
             setError("Erro ao logar")
