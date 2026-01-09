@@ -9,6 +9,8 @@ export const metadata: Metadata = {
 
 const inter = Inter({subsets: ["latin"], variable: "--font-inter"})
 
-const RootLayout = ({ children }: Readonly<{children: React.ReactNode}>) => <html lang="en"><body className={inter.className}><LoginProvider>{ children }</LoginProvider></body></html>
+const RootLayout = ({ children }: Readonly<{children: React.ReactNode}>) => (
+  <html lang="en"><body className={`${inter.className} min-h-screen bg-[url('/FLUID-BG.png')] bg-cover bg-center bg-no-repeat`}><LoginProvider>{ children }</LoginProvider></body></html>
+)
 
 export default RootLayout

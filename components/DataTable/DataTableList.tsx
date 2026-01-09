@@ -14,9 +14,9 @@ const people: Person[] = [
 
 const DataTableList = () => (
     <ItemGroup>
-        {people.map((person, index) => (
+        {people.map((person) => (
                 <React.Fragment key={person.id}>
-                    <Item>
+                    <Item className="p-2.5 text-default-orange">
                         <ItemMedia>
                             <Avatar>
                                 <AvatarImage src={person.avatar} />
@@ -25,7 +25,7 @@ const DataTableList = () => (
                                 </AvatarFallback>
                             </Avatar>
                         </ItemMedia>
-                        <ItemContent className="gap-1">
+                        <ItemContent className="p-0">
                             <ItemTitle>
                                 {person.nome}
                             </ItemTitle>
