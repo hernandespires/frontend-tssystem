@@ -5,7 +5,7 @@ import { FaArrowDown } from "react-icons/fa"
 import Wellcome from "../Wellcome"
 
 const Header = ({ department }: { department: string }) => (
-    <header className="glass-effect flex py-4.5 border-1 border-default-border-color rounded-md justify-center">
+    <header className="m-4 glass-effect flex py-4.5 border border-default-border-color rounded-md justify-center">
         <section className="flex justify-between gap-130">
             <div className="flex gap-5">
                 <Image src="/LOGO-ts2.svg" width="180" height="55" alt="Logo" />
@@ -20,7 +20,7 @@ const Header = ({ department }: { department: string }) => (
                 <Button size="icon-lg" className="w-16 h-15">
                     <Image src="/line-md_bell-filled.svg" width="32" height="32" alt="Notificações" />
                 </Button>
-                <Button className="min-w-45 h-15 border-1 border-default-orange bg-transparent gap-2">
+                <Button className="min-w-45 h-15 border border-default-orange bg-transparent gap-2">
                     <Avatar className="w-12 h-12">
                         <AvatarImage src="https://github.com/shadcn.png" alt="Avatar" />
                         <AvatarFallback>

@@ -26,7 +26,7 @@ const LoginForm = () => {
             await login({email, senha})
             setUser({email, senha})
 
-            router.push("/")
+            router.push("/rh/dashboard")
         } catch (err) {
             setError("Erro ao logar")
         }
