@@ -12,10 +12,10 @@ const Button = ({ isFulled, isDashed = false, onClick, icon, text }: { isFulled?
                 ${(isFulled && !isDashed) ? "bg-default-orange" : (!isFulled && isDashed) ? "border border-dashed" : (!isFulled && !isDashed) && "border border-default-border-color"}
             `}
         >
-        { icon }
-        <span className={`font-semibold text-xl w-36 ${!isFulled && "text-white"}`}>
-            {text}
-        </span>
+            { icon }
+            <span className={`font-semibold text-xl w-36 ${isFulled && "text-black"}`}>
+                {text}
+            </span>
         </button>
     )
 }

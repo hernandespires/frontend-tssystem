@@ -17,7 +17,7 @@ const Header = ({ department }: { department: string }) => (
                 </div>
             </div>
             <div className="flex gap-6">
-                <Button size="icon-lg" className="w-16 h-15">
+                <Button size="icon-lg" className="w-16 h-15" variant="outline">
                     <Image src="/line-md_bell-filled.svg" width="32" height="32" alt="Notificações" />
                 </Button>
                 <Button className="min-w-45 h-15 border border-default-orange bg-transparent gap-2">

@@ -3,7 +3,6 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import DataTableList from "./DataTableList"
 import { Button } from "../ui/button"
 import { RiGitRepositoryCommitsFill } from "react-icons/ri"
-import Wellcome from "../Wellcome"
 
 const DataTable = ({ filter }: { filter: string }) => (
     <section className="w-1/2 max-w-147">
@@ -19,7 +18,7 @@ const DataTable = ({ filter }: { filter: string }) => (
             </InputGroup>
             <DataTableList />
             <div className="flex justify-end">
-                <Button variant="default" size="sm" className="p-4.5">
+                <Button variant="outline" size="sm" className="p-4.5">
                     <RiGitRepositoryCommitsFill />
                     Ver todos { filter }
                 </Button>
