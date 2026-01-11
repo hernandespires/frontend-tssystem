@@ -5,7 +5,7 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <main className="flex flex-col">
         <Header department="Recursos humanos" />
         <div className="flex justify-center flex-1">
-            <section className="flex flex-col justify-center min-w-303 gap-6">
+            <section className="flex flex-col justify-center w-303 gap-6">
                 <LoginProvider>
                     { children }
                 </LoginProvider>
