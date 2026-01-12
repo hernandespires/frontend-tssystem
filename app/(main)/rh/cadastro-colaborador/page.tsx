@@ -1,5 +1,6 @@
 "use client"
 
+import AdditionalDocuments from "@/components/EmployeeRegistrationForm/AdditionalDocuments"
 import BankDetails from "@/components/EmployeeRegistrationForm/BankDetails"
 import LaborDocuments from "@/components/EmployeeRegistrationForm/LaborDocuments"
 import PersonalInformation from "@/components/EmployeeRegistrationForm/PersonalInformations"
@@ -16,9 +17,9 @@ const CadastroColaborador = () => {
         <>
             {
                 actualStep === 1 ? <PersonalInformation urlPath={path} prevStep={() => route.push("/rh")} actualStep={actualStep} percentageProgress={20} nextStep={setActualStep} /> 
-                : actualStep === 2 ? <LaborDocuments urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={20} nextStep={setActualStep} /> 
-                : actualStep === 3 ? <BankDetails urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={20} nextStep={setActualStep} /> 
-                : actualStep === 4 ? <LaborDocuments urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={20} nextStep={setActualStep} /> 
+                : actualStep === 2 ? <LaborDocuments urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={40} nextStep={setActualStep} /> 
+                : actualStep === 3 ? <BankDetails urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={60} nextStep={setActualStep} /> 
+                : actualStep === 4 ? <AdditionalDocuments urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={80} nextStep={setActualStep} /> 
                 : actualStep === 5 && <LaborDocuments urlPath={path} prevStep={() => setActualStep(actualStep - 1)} actualStep={actualStep} percentageProgress={20} nextStep={setActualStep} />
             }
         </>

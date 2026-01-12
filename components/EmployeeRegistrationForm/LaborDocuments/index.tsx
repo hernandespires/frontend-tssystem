@@ -5,9 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { LuArrowBigRight } from "react-icons/lu"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../ui/progress"
 import { formSchema } from "./formSchema"
@@ -26,14 +24,14 @@ const LaborDocuments = (
 
     return (
         <section>
-            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep }>
+            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={() => nextStep(3)}>
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         { actualStep }/5 - Dados Pessoais
                     </h1>
                     <Progress value={ percentageProgress } className="max-w-107.5" />
                 </div>
-                <form className="flex items-stretch gap-22.5 h-112 px-38.75 py-3" onSubmit={() => {}}>
+                <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Field>
                             <FieldLabel>
@@ -184,12 +182,6 @@ const LaborDocuments = (
                             </FieldError>
                         </Field>
                     </div>
-                </form>
-                <div className="flex justify-center">
-                    <Button className="bg-default-orange h-15.25 w-107.5" onClick={() => nextStep(3)}>
-                        <LuArrowBigRight />
-                        Avançar
-                    </Button>
                 </div>
             </RegistrationForm>
         </section>

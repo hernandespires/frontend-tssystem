@@ -9,9 +9,11 @@ import { FaArrowLeft } from "react-icons/fa"
 import { useRouter } from "next/navigation"
 import { UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
+import { LuArrowBigRight } from "react-icons/lu"
 
 const RegistrationForm = (
-    { formSchema, urlPath, form, prevStep, children }: { formSchema: ZodObject, urlPath: { name: string; route: string; }[], form: UseFormReturn, prevStep: () => void, children: ReactNode }
+    { formSchema, urlPath, form, prevStep, children, nextStep }:
+    { formSchema: ZodObject, urlPath: { name: string; route: string; }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: () => void }
 ) => {
     const router = useRouter()
 
@@ -29,7 +31,7 @@ const RegistrationForm = (
                 { urlPath }
             </RoutesList>
             <Form {...form}>
-                <section onSubmit={form.handleSubmit(onSubmit)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
                     <div className="flex gap-6 items-center">
                         <Button variant="secondary" onClick={ prevStep }>
                             <FaArrowLeft />
@@ -40,7 +42,13 @@ const RegistrationForm = (
                         </span>
                     </div>
                     { children }
-                </section>
+                    <div className="flex justify-center">
+                        <Button className="bg-default-orange h-15.25 w-107.5" onClick={ nextStep }>
+                            <LuArrowBigRight />
+                            Avançar
+                        </Button>
+                    </div>
+                </form>                                
             </Form>
         </section>
     )
