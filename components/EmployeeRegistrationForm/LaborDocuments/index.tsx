@@ -127,7 +127,7 @@ const LaborDocuments = (
                                         6x1
                                     </SelectItem>
                                 </SelectContent>
-                            </Select>   
+                            </Select>
                             <FieldError>
                                 {form.formState.errors.laborScale?.message}
                             </FieldError>
