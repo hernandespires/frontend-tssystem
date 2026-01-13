@@ -9,6 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { AlertCircleIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useLogin } from "@/contexts/LoginContext"
+import { FaGoogle } from "react-icons/fa"
+import { signIn } from "next-auth/react"
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>("")
@@ -47,8 +49,12 @@ const LoginForm = () => {
                 </Label>
                 <Input type="password" id="senha" placeholder="Senha" onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} />
             </div>
-            <Button type="submit" className="w-full bg-default-orange">
+            <Button type="submit" className="w-full bg-default-orange text-white">
                 Entrar
+            </Button>
+            <Button type="submit" className="w-full" onClick={() => signIn("google", { callbackUrl: "/rh" })}>
+                <FaGoogle />
+                Entrar com o Google
             </Button>
         </form>
     )

@@ -1,17 +1,10 @@
-import Header from "@/components/Header"
-import { LoginProvider } from "@/contexts/LoginContext"
+import { getServerSession } from "next-auth"
+import ClientShell from "./ClientShell"
 
-const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
-    <main className="flex flex-col">
-        <Header department="Recursos humanos" />
-        <div className="flex justify-center flex-1">
-            <section className="flex flex-col justify-center w-303 gap-6">
-                <LoginProvider>
-                    { children }
-                </LoginProvider>
-            </section>
-        </div>
-    </main>
-)
+const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
+    const session = await getServerSession()
+
+    return <ClientShell session={session}>{ children }</ClientShell>
+}
 
 export default RootLayout

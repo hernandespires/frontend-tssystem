@@ -10,8 +10,8 @@ type LoginContextType = {
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined)
 
-export const LoginProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<Login | null>(null)
+export const LoginProvider = ({ children, initialUser }: { children: ReactNode, initialUser: Login | null }) => {
+    const [user, setUser] = useState<Login | null>(initialUser)
 
     return <LoginContext.Provider value={{user, setUser}}>{ children }</LoginContext.Provider>
 }
