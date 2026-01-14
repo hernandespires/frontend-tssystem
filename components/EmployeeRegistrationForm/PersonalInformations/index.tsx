@@ -13,8 +13,29 @@ import { formSchema } from "./formSchema"
 import { Dispatch, SetStateAction } from "react"
 
 const PersonalInformation = (
-    { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
-    { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
+    { urlPath, prevStep, nextStep, actualStep, percentageProgress, setter }:
+    { 
+        urlPath: { name: string; route: string; }[], 
+        prevStep: () => void, 
+        nextStep: Dispatch<SetStateAction<number>>, 
+        actualStep: number, 
+        percentageProgress: number, 
+        setter: { 
+            name: Dispatch<SetStateAction<string>>, 
+            birthday: Dispatch<SetStateAction<string>>, 
+            civilState: Dispatch<SetStateAction<string>>, 
+            naciolity: Dispatch<SetStateAction<string>>, 
+            rg: Dispatch<SetStateAction<string>>, 
+            cpf: Dispatch<SetStateAction<string>>, 
+            email: Dispatch<SetStateAction<string>>, 
+            motherName: Dispatch<SetStateAction<string>>, 
+            phone: Dispatch<SetStateAction<string>>, 
+            city: Dispatch<SetStateAction<string>>, 
+            postalCode: Dispatch<SetStateAction<string>>, 
+            street: Dispatch<SetStateAction<string>>,
+            neighborhood: Dispatch<SetStateAction<string>>
+        }
+    }
 ) => {
     const form = useForm <z.infer <typeof formSchema>> ({
         resolver: zodResolver(formSchema),
@@ -36,7 +57,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="name">
                                 Nome completo
                             </FieldLabel>
-                            <Input id="name" placeholder="Nome" {...form.register("name")} />            
+                            <Input id="name" placeholder="Nome" {...form.register("name")} onChange={(event) => setter.name(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.name?.message}
                             </FieldError>
@@ -46,7 +67,7 @@ const PersonalInformation = (
                                 <FieldLabel htmlFor="birthday">
                                     Data de nascimento
                                 </FieldLabel>
-                                <Input id="birthday" placeholder="10, Janeiro 2026" {...form.register("birthday")} />
+                                <Input id="birthday" placeholder="10, Janeiro 2026" {...form.register("birthday")} onChange={(event) => setter.birthday(event.target.value)} />
                                 <FieldError>
                                     {form.formState.errors.birthday?.message}
                                 </FieldError>
@@ -56,7 +77,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="civilState">
                                 Estado Civil
                             </FieldLabel>
-                            <Select {...form.register("civilState")}>
+                            <Select {...form.register("civilState")} onValueChange={(event) => setter.civilState(event.target.value)}>
                                 <SelectTrigger id="civilState">
                                     <SelectValue placeholder="Solteiro(a)" />
                                 </SelectTrigger>
@@ -80,7 +101,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="nacionality">
                                 Nacionalidade
                             </FieldLabel>
-                            <Input id="nacionality" placeholder="Brasileiro" {...form.register("nacionality")} />
+                            <Input id="nacionality" placeholder="Brasileiro" {...form.register("nacionality")} onChange={(event) => setter.naciolity(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.nacionality?.message}
                             </FieldError>
@@ -89,7 +110,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="rg">
                                 RG
                             </FieldLabel>
-                            <Input id="rg" placeholder="1231231241" {...form.register("rg")} />                
+                            <Input id="rg" placeholder="1231231241" {...form.register("rg")} onChange={(event) => setter.rg(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.rg?.message}
                             </FieldError>
@@ -98,7 +119,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="cpf">
                                 CPF
                             </FieldLabel>
-                            <Input id="cpf" placeholder="1231231241" {...form.register("cpf")} />
+                            <Input id="cpf" placeholder="1231231241" {...form.register("cpf")} onChange={(event) => setter.cpf(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.rg?.message}
                             </FieldError>
@@ -107,7 +128,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="email">
                                 Email para contato (Pessoal)
                             </FieldLabel>
-                            <Input id="email" placeholder="Email" {...form.register("email")} />
+                            <Input id="email" placeholder="Email" {...form.register("email")} onChange={(event) => setter.email(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.email?.message}
                             </FieldError>
@@ -116,7 +137,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="mother-name">
                                 Nome completo da mãe
                             </FieldLabel>
-                            <Input id="mother-name" placeholder="Nome" {...form.register("motherName")} />
+                            <Input id="mother-name" placeholder="Nome" {...form.register("motherName")} onChange={(event) => setter.motherName(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.motherName?.message}
                             </FieldError>
@@ -130,7 +151,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="phone">
                                 Celular
                             </FieldLabel>
-                            <Input id="phone" placeholder="(00) 00000-0000" {...form.register("phone")} />
+                            <Input id="phone" placeholder="(00) 00000-0000" {...form.register("phone")} onChange={(event) => setter.phone(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.phone?.message}
                             </FieldError>
@@ -145,7 +166,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="city">
                                 Cidade
                             </FieldLabel>
-                            <Input id="city" placeholder="Jau" {...form.register("city")} />
+                            <Input id="city" placeholder="Jau" {...form.register("city")} onChange={(event) => setter.city(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.city?.message}
                             </FieldError>
@@ -154,7 +175,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="postalCode">
                                 Código Postal
                             </FieldLabel>
-                            <Input id="postalCode" placeholder="11111-111" {...form.register("postalCode")} />
+                            <Input id="postalCode" placeholder="11111-111" {...form.register("postalCode")} onChange={(event) => setter.postalCode(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.postalCode?.message}
                             </FieldError>
@@ -163,7 +184,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="street">
                                 Rua
                             </FieldLabel>
-                            <Input id="street" placeholder="Rua Lorem Ipsum" {...form.register("street")} />
+                            <Input id="street" placeholder="Rua Lorem Ipsum" {...form.register("street")} onChange={(event) => setter.street(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.street?.message}
                             </FieldError>
@@ -172,7 +193,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="neighborhood">
                                 Bairro
                             </FieldLabel>
-                            <Input id="neighborhood" placeholder="Bairro Lorem Ipsum" {...form.register("neighborhood")} />
+                            <Input id="neighborhood" placeholder="Bairro Lorem Ipsum" {...form.register("neighborhood")} onChange={(event) => setter.neighborhood(event.target.value)} />
                             <FieldError>
                                 {form.formState.errors.neighborhood?.message}
                             </FieldError>
