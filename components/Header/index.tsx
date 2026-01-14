@@ -10,6 +10,7 @@ const Header = ({ department }: { department: string }) => {
     const { user } = useLogin()
 
     if (!user) return redirect("/")
+    if (user === undefined) return null
 
     return (
         <header className="m-4 glass-effect flex py-4.5 border border-default-border-color rounded-md justify-center">
