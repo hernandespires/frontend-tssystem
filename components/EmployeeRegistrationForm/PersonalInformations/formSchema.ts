@@ -1,7 +1,7 @@
 import z from "zod"
 
 export const formSchema = z.object({
-    name: z.string().min(1),
+    name: z.string().min(1).nonempty("Nome é obrigatório"),
     birthday: z.coerce.date(),
     civilState: z.string(),
     nacionality: z.tuple([z.string().min(1), z.string().optional()]),

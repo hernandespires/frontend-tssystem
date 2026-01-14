@@ -10,41 +10,46 @@ import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../ui/progress"
 import { formSchema } from "./formSchema"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
+import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 
 const PersonalInformation = (
-    { urlPath, prevStep, nextStep, actualStep, percentageProgress, setter }:
-    { 
-        urlPath: { name: string; route: string; }[], 
-        prevStep: () => void, 
-        nextStep: Dispatch<SetStateAction<number>>, 
-        actualStep: number, 
-        percentageProgress: number, 
-        setter: { 
-            name: Dispatch<SetStateAction<string>>, 
-            birthday: Dispatch<SetStateAction<string>>, 
-            civilState: Dispatch<SetStateAction<string>>, 
-            naciolity: Dispatch<SetStateAction<string>>, 
-            rg: Dispatch<SetStateAction<string>>, 
-            cpf: Dispatch<SetStateAction<string>>, 
-            email: Dispatch<SetStateAction<string>>, 
-            motherName: Dispatch<SetStateAction<string>>, 
-            phone: Dispatch<SetStateAction<string>>, 
-            city: Dispatch<SetStateAction<string>>, 
-            postalCode: Dispatch<SetStateAction<string>>, 
-            street: Dispatch<SetStateAction<string>>,
-            neighborhood: Dispatch<SetStateAction<string>>
-        }
-    }
+    { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
+    { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
+    const { setPersonalInformation } = useContext(CreateEmployeeContext)
+
     const form = useForm <z.infer <typeof formSchema>> ({
         resolver: zodResolver(formSchema),
         defaultValues: {"birthday": new Date()}
     })
 
+    const onChangeStep = () => {
+        const values = form.getValues()
+
+        setPersonalInformation((prev) => ({
+            ...prev,
+            employeeName: values.name,
+            birthday: values.birthday,
+            civilState: values.civilState,
+            nacionality: values.nacionality,
+            rg: values.rg,
+            cpf: values.cpf,
+            email: values.email,
+            motherName: values.motherName,
+            phone: values.phone,
+            city: values.city,
+            postalCode: values.postalCode,
+            street: values.street,
+            neighborhood: values.neighborhood
+        }))
+
+        nextStep(2)
+    }
+
     return (
         <section>
-            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={() => nextStep(2)}>
+            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={() => onChangeStep()}>
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         { actualStep }/5 - Dados Pessoais
@@ -57,7 +62,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="name">
                                 Nome completo
                             </FieldLabel>
-                            <Input id="name" placeholder="Nome" {...form.register("name")} onChange={(event) => setter.name(event.target.value)} />
+                            <Input id="name" placeholder="Nome" {...form.register("name")} />
                             <FieldError>
                                 {form.formState.errors.name?.message}
                             </FieldError>

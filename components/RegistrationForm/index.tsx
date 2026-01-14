@@ -15,15 +15,15 @@ const RegistrationForm = (
     { formSchema, urlPath, form, prevStep, children, nextStep }:
     { formSchema: ZodObject, urlPath: { name: string; route: string; }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: () => void }
 ) => {
-    const router = useRouter()
-
-    const onSubmit = (values: z.infer <typeof formSchema>) => {
+    const onSubmit = (values: z.infer<typeof formSchema>) => {
         try {
             toast(<pre className="mt-2 w-85 rounded-md bg-slate-950 p-4"><code className="text-white">{JSON.stringify(values, null, 2)}</code></pre>)
-        } catch (error) {
+            nextStep()
+        } catch {
             toast.error("Failed to submit the form. Please try again.")
         }
     }
+
 
     return (
         <section className="flex flex-col gap-3">
@@ -43,12 +43,12 @@ const RegistrationForm = (
                     </div>
                     { children }
                     <div className="flex justify-center">
-                        <Button className="bg-default-orange h-15.25 w-107.5" onClick={ nextStep }>
+                        <Button className="bg-default-orange h-15.25 w-107.5">
                             <LuArrowBigRight />
                             Avançar
                         </Button>
                     </div>
-                </form>                                
+                </form>
             </Form>
         </section>
     )
