@@ -23,11 +23,9 @@ const LoginForm = () => {
     const isLogged = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setError(null)
-        
         try {
             await login({email, senha})
             setUser({email, senha})
-
             router.push("/rh")
         } catch (err) {
             setError("Erro ao logar")
@@ -35,28 +33,42 @@ const LoginForm = () => {
     }
 
     return (
-        <form className="border-2 px-4 py-8.5 space-y-5 rounded-md border-default-border-color" onSubmit={isLogged}>
-            {error && <Alert variant="destructive"><AlertCircleIcon /><AlertTitle>Erro ao logar!</AlertTitle><AlertDescription><p>{error}</p></AlertDescription></Alert>}
-            <div className="grid w-full max-w-sm items-center space-y-3 text-default-orange text-bold focus:border-default-orange focus:ring-1 focus:ring-default-orange">
-                <Label htmlFor="email">
-                    Email
-                </Label>
-                <Input type="email" id="email" placeholder="Email" onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)} />
+        <div className="border-2 px-4 py-8.5 space-y-5 rounded-md border-default-border-color">
+            {error && (
+                <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>Erro ao logar!</AlertTitle>
+                    <AlertDescription><p>{error}</p></AlertDescription>
+                </Alert>
+            )}
+
+            {/* Formulário APENAS para Email/Senha */}
+            <form onSubmit={isLogged} className="space-y-5">
+                <div className="grid w-full max-w-sm items-center space-y-3 text-default-orange text-bold">
+                    <Label htmlFor="email">Email</Label>
+                    <Input type="email" id="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                <div className="grid w-full max-w-sm items-center space-y-3 text-default-orange text-bold">
+                    <Label htmlFor="password">Senha</Label>
+                    <Input type="password" id="senha" placeholder="Senha" onChange={(e) => setSenha(e.target.value)} />
+                </div>
+                <Button type="submit" className="w-full bg-default-orange text-white">
+                    Entrar
+                </Button>
+            </form>
+
+            {/* Botão do Google FORA do form. Agora é impossível dar erro de submit */}
+            <div className="w-full">
+                <Button 
+                    type="button" 
+                    className="w-full" 
+                    onClick={() => signIn("google", { callbackUrl: "/rh" })}
+                >
+                    <FaGoogle />
+                    Entrar com o Google
+                </Button>
             </div>
-            <div className="grid w-full max-w-sm items-center space-y-3 text-default-orange text-bold focus:border-default-orange focus:ring-1 focus:ring-default-orange">
-                <Label htmlFor="password">
-                    Senha
-                </Label>
-                <Input type="password" id="senha" placeholder="Senha" onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSenha(event.target.value)} />
-            </div>
-            <Button type="submit" className="w-full bg-default-orange text-white">
-                Entrar
-            </Button>
-            <Button type="submit" className="w-full" onClick={() => signIn("google", { callbackUrl: "/rh" })}>
-                <FaGoogle />
-                Entrar com o Google
-            </Button>
-        </form>
+        </div>
     )
 }
 
