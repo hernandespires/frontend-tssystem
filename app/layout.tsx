@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "TS System",
   description: "Sistema do TS",
   icons: {
-    icon: "/favicon.png", 
+    icon: "/favicon.webp", 
   },
 }
 
