@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../ui/progress"
+import { Progress } from "../../../ui/progress"
 import { formSchema } from "./formSchema"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 

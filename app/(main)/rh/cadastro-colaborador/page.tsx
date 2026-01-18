@@ -1,10 +1,10 @@
 "use client"
 
-import AdditionalDocuments from "@/components/EmployeeRegistrationForm/AdditionalDocuments"
-import BankDetails from "@/components/EmployeeRegistrationForm/BankDetails"
-import Finalization from "@/components/EmployeeRegistrationForm/Finalization"
-import LaborDocuments from "@/components/EmployeeRegistrationForm/LaborDocuments"
-import PersonalInformation from "@/components/EmployeeRegistrationForm/PersonalInformations"
+import AdditionalDocuments from "@/components/EmployeeRegistrationForm/forms/AdditionalDocuments"
+import BankDetails from "@/components/EmployeeRegistrationForm/forms/BankDetails"
+import Finalization from "@/components/EmployeeRegistrationForm/forms/Finalization"
+import LaborDocuments from "@/components/EmployeeRegistrationForm/forms/LaborDocuments"
+import PersonalInformation from "@/components/EmployeeRegistrationForm/forms/PersonalInformations"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 

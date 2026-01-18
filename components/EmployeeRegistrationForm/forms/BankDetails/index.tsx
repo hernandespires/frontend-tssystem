@@ -7,20 +7,25 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../ui/progress"
+import { Progress } from "../../../ui/progress"
 import { formSchema } from "./formSchema"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
+    const { personalInformation, setPersonalInformation } = useContext(CreateEmployeeContext)
+
     const form = useForm <z.infer <typeof formSchema>> ({
         resolver: zodResolver(formSchema)
     })
+
+    console.log(personalInformation)
 
     return (
         <section>

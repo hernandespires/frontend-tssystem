@@ -3,16 +3,10 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../ui/progress"
+import { Progress } from "../../../ui/progress"
 import { formSchema } from "./formSchema"
 import { Dispatch, SetStateAction } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
 import FileUploadPreview from "./FileUploadPreview"
 
 const AdditionalDocuments = (

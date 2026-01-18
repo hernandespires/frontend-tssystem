@@ -4,12 +4,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { FaArrowDown } from "react-icons/fa"
 import Wellcome from "../Wellcome"
 import { useLogin } from "@/contexts/LoginContext"
-import { redirect } from "next/navigation"
 
 const Header = ({ department }: { department: string }) => {
     const { user } = useLogin()
-
-    if (!user) return redirect("/")
     if (user === undefined) return null
 
     return (

@@ -1,0 +1,1 @@
+export const useGetFirstErrorKey = (errors: Record<string, any>, schemaKeys: string[]) => schemaKeys.find((key) => errors[key])
