@@ -1,8 +1,12 @@
+"use client"
+
 import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
-import { getServerSession } from "next-auth"
+import { useLogin } from "@/contexts/LoginContext"
+import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { redirect } from "next/navigation"
+import { useContext } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
 import { IoPersonAddOutline } from "react-icons/io5"
@@ -11,8 +15,13 @@ import { MdOutlinePersonSearch, MdPeopleOutline } from "react-icons/md"
 import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
-const Rh = async () => {
-    const session = await getServerSession()
+const Rh = () => {
+    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+
+    const { user } = useLogin()
+    if (!user) redirect("/login")    
+
+    console.log(employeeInformations)
 
     return (
         <main className="flex flex-col gap-6">

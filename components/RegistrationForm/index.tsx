@@ -6,24 +6,21 @@ import { Form } from "../ui/form"
 import { ReactNode } from "react"
 import { Button } from "../ui/button"
 import { FaArrowLeft } from "react-icons/fa"
-import { useRouter } from "next/navigation"
 import { UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
 import { LuArrowBigRight } from "react-icons/lu"
+import { SendPersonalInformation } from "@/types/services/rh/employee"
 
 const RegistrationForm = (
     { formSchema, urlPath, form, prevStep, children, nextStep }:
-    { formSchema: ZodObject, urlPath: { name: string; route: string; }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: () => void }
+    { formSchema: ZodObject, urlPath: { name: string, route: string }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: (personalInformation: SendPersonalInformation) => Promise<void> }
 ) => {
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        try {
-            toast(<pre className="mt-2 w-85 rounded-md bg-slate-950 p-4"><code className="text-white">{JSON.stringify(values, null, 2)}</code></pre>)
-            nextStep()
-        } catch {
-            toast.error("Failed to submit the form. Please try again.")
-        }
-    }
+    const onSubmit = (values: z.infer<typeof formSchema>) => nextStep(values)
 
+    const onError = (errors: any) => {
+        const firstError = Object.values(errors).find((err: any) => err?.message)
+        if (firstError?.message) toast.error(firstError.message)
+    }
 
     return (
         <section className="flex flex-col gap-3">
@@ -31,7 +28,7 @@ const RegistrationForm = (
                 { urlPath }
             </RoutesList>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
+                <form onSubmit={form.handleSubmit(onSubmit, onError)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
                     <div className="flex gap-6 items-center">
                         <Button variant="secondary" onClick={ prevStep }>
                             <FaArrowLeft />
