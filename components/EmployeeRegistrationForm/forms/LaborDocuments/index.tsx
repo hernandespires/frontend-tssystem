@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
-import { SendPersonalInformation } from "@/types/services/rh/employee"
+import { SendEmployee } from "@/types/services/rh/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { onChangeFormStep } from "@/hooks/useIsValidFormField"
 import DropdownMenu from "../../components/DropdownMenu"
@@ -20,7 +20,7 @@ const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { personalInformation, setPersonalInformation } = useContext(CreateEmployeeContext)
+    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
     
     const form = useZodForm(formSchema)
     const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
@@ -28,11 +28,11 @@ const LaborDocuments = (
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-    const handleNextStep = (values: SendPersonalInformation) => {
-        onChangeFormStep({ form, fields: values, setData: setPersonalInformation, nextStep })
+    const handleNextStep = (values: SendEmployee) => {
+        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
     }
 
-    console.log(personalInformation)
+    console.log(employeeInformations)
 
     return (
         <section>

@@ -1,5 +1,11 @@
 import z from "zod"
+import { defaultEmptyError } from "../../defaultFormFieldErrors"
 
 export const formSchema = z.object({
-    bank: z.string().min(1), agency: z.string().min(1), account: z.string().min(1), pix: z.string().min(1), cnpjTransportationVoucher: z.string().min(1), monthlyAmount: z.string().min(1)
+    bank: z.enum(["santander", "sicred", "banco do brasil"], { error: defaultEmptyError("Banco") }), 
+    agency: z.string().nonempty(defaultEmptyError("Agência")), 
+    account: z.string().nonempty(defaultEmptyError("Conta")), 
+    pix: z.string().nonempty(defaultEmptyError("Chave pix")), 
+    cnpjTransportationVoucher: z.string().optional(),
+    monthlyAmount: z.string().optional()
 })

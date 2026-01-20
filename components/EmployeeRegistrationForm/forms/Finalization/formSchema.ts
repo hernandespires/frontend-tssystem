@@ -1,5 +1,4 @@
 import z from "zod"
+import { defaultEmptyError } from "../../defaultFormFieldErrors"
 
-export const formSchema = z.object({
-    department: z.string().min(1), operation: z.string().min(1), level: z.string().min(1)
-})
+export const formSchema = z.object({ department: z.string().nonempty(defaultEmptyError("Departamento")), operation: z.string().nonempty(defaultEmptyError("Operação")), level: z.string().nonempty("Nível") })

@@ -1,35 +1,42 @@
 "use client"
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../ui/progress"
 import { formSchema } from "./formSchema"
-import { Dispatch, SetStateAction, useContext } from "react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
+import DropdownMenu from "../../components/DropdownMenu"
+import { useZodForm } from "@/hooks/useZodForm"
+import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
+import { onChangeFormStep } from "@/hooks/useIsValidFormField"
+import { SendEmployee } from "@/types/services/rh/employee"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { personalInformation, setPersonalInformation } = useContext(CreateEmployeeContext)
+    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
+    
+    const form = useZodForm(formSchema)
+    
+    const errors = form.formState.errors
+    const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
+    
+    const handleNextStep = (values: SendEmployee) => {
+        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
+    }
 
-    const form = useForm <z.infer <typeof formSchema>> ({
-        resolver: zodResolver(formSchema)
-    })
-
-    console.log(personalInformation)
+    console.log(employeeInformations)
 
     return (
         <section>
-            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={() => nextStep(4)}>
+            <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={handleNextStep}>
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         { actualStep }/5 - Dados Pessoais
@@ -38,37 +45,20 @@ const BankDetails = (
                 </div>
                 <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-                        <Field>
-                            <FieldLabel htmlFor="bank">
-                                Banco
-                            </FieldLabel>
-                            <Select {...form.register("bank")}>
-                                <SelectTrigger id="bank">
-                                    <SelectValue placeholder="Santander" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="option1">
-                                        Santander
-                                    </SelectItem>
-                                    <SelectItem value="option2">
-                                        Sicred
-                                    </SelectItem>
-                                    <SelectItem value="option3">
-                                        Banco do Brasil
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FieldError>
-                                {form.formState.errors.bank?.message}
-                            </FieldError>
-                        </Field>
+                        <DropdownMenu
+                            form={form}
+                            name="bank"
+                            label="Banco"
+                            schemaKeys={Object.keys(formSchema.shape)}
+                            options={[{ label: "Santander", value: "santander" }, { label: "Sicred", value: "sicred" }, { label: "Banco do Brasil", value: "banco do brasil" }]}
+                        />
                         <Field>
                             <FieldLabel htmlFor="agency">
                                 Agência
                             </FieldLabel>
                             <Input id="agency" placeholder="1111111111111" {...form.register("agency")} />
                             <FieldError>
-                                {form.formState.errors.agency?.message}
+                                {firstErrorKey === "agency" && String(form.formState.errors.agency?.message)}
                             </FieldError>
                         </Field>
                         <Field>
@@ -77,7 +67,7 @@ const BankDetails = (
                             </FieldLabel>
                             <Input id="account" placeholder="1111111111111" {...form.register("account")} />
                             <FieldError>
-                                {form.formState.errors.account?.message}
+                                {firstErrorKey === "account" && String(form.formState.errors.account?.message)}
                             </FieldError>
                         </Field>
                         <Field>
@@ -86,7 +76,7 @@ const BankDetails = (
                             </FieldLabel>
                             <Input id="pix" placeholder="14997692681" {...form.register("pix")} />
                             <FieldError>
-                                {form.formState.errors.pix?.message}
+                                {firstErrorKey === "pix" && String(form.formState.errors.pix?.message)}
                             </FieldError>
                         </Field>
                     </div>
@@ -96,28 +86,31 @@ const BankDetails = (
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Field>
                             <div className="flex gap-2">
-                                <Checkbox id="transportationVoucher" />
+                                <Checkbox 
+                                    id="transportationVoucher" 
+                                    onCheckedChange={(isChecked) => isChecked ? setTransportationVoucherDocumentationVisibility(true) : setTransportationVoucherDocumentationVisibility(false)} 
+                                />
                                 <Label htmlFor="transportationVoucher">
                                     Vale Transporte
                                 </Label>
                             </div>
                         </Field>
-                        <Field>
+                        <Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
                             <FieldLabel htmlFor="cnpjTransportationVoucher">
                                 CNPJ - Empresa vale transporte
                             </FieldLabel>
                             <Input id="cnpjTransportationVoucher" placeholder="14997692681" {...form.register("cnpjTransportationVoucher")} />
                             <FieldError>
-                                {form.formState.errors.cnpjTransportationVoucher?.message}
+                                {firstErrorKey === "cnpjTransportationVoucher" && String(form.formState.errors.cnpjTransportationVoucher?.message)}
                             </FieldError>
                         </Field>
-                        <Field>
+                        <Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
                             <FieldLabel htmlFor="monthlyAmount">
                                 Valor mensal
                             </FieldLabel>
                             <Input id="monthlyAmount" placeholder="14997692681" {...form.register("monthlyAmount")} />
                             <FieldError>
-                                {form.formState.errors.monthlyAmount?.message}
+                                {firstErrorKey === "monthlyAmount" && String(form.formState.errors.monthlyAmount?.message)}
                             </FieldError>
                         </Field>
                     </div>

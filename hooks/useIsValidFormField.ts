@@ -1,7 +1,7 @@
 import { toast } from "sonner"
 import { UseFormReturn, FieldValues } from "react-hook-form"
 
-type OnChangeFormStepParams<T extends FieldValues> = { form: UseFormReturn<T>, fields: T, setData: React.Dispatch<React.SetStateAction<any>>, nextStep: (step: number) => void }
+type OnChangeFormStepParams<T extends FieldValues> = { form: UseFormReturn<T>, fields: T, setData: React.Dispatch<React.SetStateAction<any>>, nextStep?: (step: number) => void }
 
 export const onChangeFormStep = async <T extends FieldValues>({ form, fields, setData, nextStep }: OnChangeFormStepParams<T>) => {
     const isValid = await form.trigger()

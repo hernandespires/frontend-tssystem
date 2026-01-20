@@ -1,12 +1,9 @@
-export interface Employee { id_colaborador: string, nome_colaborador: string, documento_pessoal: string, status: string, data_admissao: string, data_desligamento: string }
-
-// export interface SendEmployee { nome_colaborador: string, documento_pessoal: string, status: string, data_admissao: string, data_desligamento: string }
-
-export interface SendEmployee { 
-    name: string, 
-    birthday: Date | null, 
-    civilState: "" | "single" | "married" | "widowed",
-    nacionality: "" | "brazilian" | "american" | "other",
+export interface Employee {
+    id: string,
+    name: string,
+    birthday: string | null, 
+    civilState: "" | "Single" | "Married" | "Widowed",
+    nacionality: "" | "Brazilian" | "American" | "Other",
     rg: string, 
     cpf: string, 
     email: string, 
@@ -25,5 +22,53 @@ export interface SendEmployee {
     salary: string,
     residentialProve: string,
     reservist: boolean,
-    documentation: string
+    documentation: string,
+    bank: string,
+    agency: string,
+    account: string,
+    pix: string,
+    transportationVoucher: boolean,
+    cnpjTransportationVoucher: string,
+    monthlyAmount: string,
+    additionalDocuments: string,
+    department: "" | "P&D" | "Web Design" | "Paid Traffic",
+    operation: "" | "01" | "02" | "03",
+    level: "" | "Puppy" | "Assistant" | "Junior"
+}
+
+export interface SendEmployee { 
+    name: string, 
+    birthday: string | null, 
+    civilState: "" | "Single" | "Married" | "Widowed",
+    nacionality: "" | "Brazilian" | "American" | "Other",
+    rg: string, 
+    cpf: string, 
+    email: string, 
+    motherName: string, 
+    phone: string, 
+    city: string, 
+    postalCode: string, 
+    street: string, 
+    neighborhood: string,
+    workCard: string,
+    pisPasep: string,
+    typeEmployment: string,
+    laborModality: string,
+    laborScale: string,
+    admissionDate: string,
+    salary: string,
+    residentialProve: string,
+    reservist: boolean,
+    documentation: string,
+    bank: string,
+    agency: string,
+    account: string,
+    pix: string,
+    transportationVoucher: boolean,
+    cnpjTransportationVoucher: string,
+    monthlyAmount: string,
+    additionalDocuments: string,
+    department: "" | "P&D" | "Web Design" | "Paid Traffic",
+    operation: "" | "01" | "02" | "03",
+    level: "" | "Puppy" | "Assistant" | "Junior"
 }

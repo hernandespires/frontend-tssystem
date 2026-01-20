@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useZodForm } from "@/hooks/useZodForm"
 import { onChangeFormStep } from "@/hooks/useIsValidFormField"
-import { SendPersonalInformation } from "@/types/services/rh/employee"
+import { SendEmployee } from "@/types/services/rh/employee"
 import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
 
@@ -22,15 +22,15 @@ const PersonalInformation = (
 ) => {
     const [open, setOpen] = useState(false)
     const [date, setDate] = useState<Date | undefined>(undefined)
-    const { setPersonalInformation } = useContext(CreateEmployeeContext)
+    const { setEmployeeInformations } = useContext(CreateEmployeeContext)
 
     const form = useZodForm(formSchema)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-    const handleNextStep = (values: SendPersonalInformation) => {
-        onChangeFormStep({ form, fields: values, setData: setPersonalInformation, nextStep })
+    const handleNextStep = (values: SendEmployee) => {
+        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
     }
 
     return (

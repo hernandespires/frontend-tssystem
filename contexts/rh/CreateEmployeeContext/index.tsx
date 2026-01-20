@@ -2,14 +2,14 @@ import { SendEmployee } from "@/types/services/rh/employee"
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react"
 
 interface CreateEmployeeContextType {
-    personalInformation: SendEmployee
-    setPersonalInformation: Dispatch<SetStateAction<SendEmployee>>
+    employeeInformations: SendEmployee
+    setEmployeeInformations: Dispatch<SetStateAction<SendEmployee>>
 }
 
 export const CreateEmployeeContext = createContext<CreateEmployeeContextType | null>(null)
 
 export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) => {
-    const [personalInformation, setPersonalInformation] = useState<SendEmployee>({
+    const [employeeInformations, setEmployeeInformations] = useState<SendEmployee>({
         name: "", 
         birthday: null, 
         civilState: "", 
@@ -32,8 +32,19 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         salary: "",
         residentialProve: "",
         reservist: false,
-        documentation: ""
+        documentation: "",
+        bank: "",
+        agency: "",
+        account: "",
+        pix: "",
+        transportationVoucher: false,
+        cnpjTransportationVoucher: "",
+        monthlyAmount: "",
+        additionalDocuments: "",
+        department: "",
+        operation: "",
+        level: ""
     })
 
-    return <CreateEmployeeContext.Provider value={{ personalInformation, setPersonalInformation }}>{ children }</CreateEmployeeContext.Provider>
+    return <CreateEmployeeContext.Provider value={{ employeeInformations, setEmployeeInformations }}>{ children }</CreateEmployeeContext.Provider>
 }
