@@ -15,6 +15,10 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { onChangeFormStep } from "@/hooks/useIsValidFormField"
 import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { ChevronDownIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
@@ -23,13 +27,23 @@ const LaborDocuments = (
     const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
     
     const form = useZodForm(formSchema)
+    
     const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
+    const [open, setOpen] = useState(false)
+    const [date, setDate] = useState<Date | undefined>(undefined)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
+    const parseSalary = (value: string) => Number(value.replace(/\./g, "").replace(",", "."))
+
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
+        onChangeFormStep({ 
+            form, 
+            fields: { ...values, workCard: Number(values.workCard), admissionDate: new Intl.DateTimeFormat("pt-BR").format(date), salary: parseSalary(values.salary) },
+            setData: setEmployeeInformations, 
+            nextStep 
+        })
     }
 
     console.log(employeeInformations)
@@ -49,7 +63,7 @@ const LaborDocuments = (
                             <FieldLabel>
                                 Carteira de Trabalho
                             </FieldLabel>
-                            <Input id="workCard" placeholder="12312312321" {...form.register("workCard")} />
+                            <Input id="workCard" inputMode="numeric" maxLength={11} placeholder="12312312321" {...form.register("workCard")} />
                             <FieldError>
                                 {firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}
                             </FieldError>
@@ -58,7 +72,7 @@ const LaborDocuments = (
                             <FieldLabel>
                                 PIS/PASEP
                             </FieldLabel>
-                            <Input id="pisPasep" placeholder="12312312321" {...form.register("pisPasep")} />
+                            <Input id="pisPasep" inputMode="numeric" maxLength={11} placeholder="12312312321" {...form.register("pisPasep")} />
                             <FieldError>
                                 {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
                             </FieldError>
@@ -68,7 +82,7 @@ const LaborDocuments = (
                             name="typeEmployment"
                             label="Tipo de Vínculo"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "CLT", value: "clt" }, { label: "RG", value: "rg" }, { label: "Freelance", value: "freelance" }]}
+                            options={[{ label: "CLT", value: "CLT" }, { label: "CNPJ", value: "CNPJ" }, { label: "Freelance", value: "FREELANCE" }]}
                         />
                         <DropdownMenu
                             className="max-w-[68%]"
@@ -76,29 +90,49 @@ const LaborDocuments = (
                             name="laborModality"
                             label="Modalidade"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Presencial", value: "in person" }, { label: "Semi-presencial", value: "Hybrid" }, { label: "Home office", value: "Home office" }]}
+                            options={[{ label: "Presencial", value: "IN_PERSON" }, { label: "Semi-presencial", value: "HYBRID" }, { label: "Home office", value: "HOME_OFFICE" }]}
                         />
                         <DropdownMenu
                             form={form}
                             name="laborScale"
                             label="Escala"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "5x2", value: "5x2" }, { label: "4x3", value: "4x3" }, { label: "6x1", value: "6x1" }]}
+                            options={[{ label: "5x2", value: "_5X2" }, { label: "4x3", value: "_4X3" }, { label: "6x1", value: "_6X1" }]}
                         />
                     </div>
                     <div>
                         <Separator orientation="vertical" className="self-stretch w-px bg-default-border-color" />
                     </div>
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-                        <Field>
-                            <FieldLabel>
-                                Data de admissão
-                            </FieldLabel>
-                            <Input id="admissionDate" placeholder="11, Janeiro 2025" {...form.register("admissionDate")} />
-                            <FieldError>
-                                {firstErrorKey === "admissionDate" && String(form.formState.errors.admissionDate?.message)}
-                            </FieldError>
-                        </Field>
+                        <div className="w-full">
+                            <Field className="max-w-1/2">
+                                <FieldLabel htmlFor="admissionDate">
+                                    Data de admisão
+                                </FieldLabel>
+                                <Popover open={open} onOpenChange={setOpen}>
+                                    <PopoverTrigger asChild>
+                                        <Button id="date" variant="outline" className="justify-between font-normal">
+                                            {date ? date.toLocaleDateString() : "Select date"}
+                                            <ChevronDownIcon />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={date}
+                                            captionLayout="dropdown"
+                                            onSelect={(date) => {
+                                                setDate(date)
+                                                setOpen(false)
+                                            }}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FieldError>
+                                    {firstErrorKey === "admissionDate" && String(form.formState.errors.admissionDate?.message)}
+                                </FieldError>
+                            </Field>
+                        </div>
                         <Field>
                             <FieldLabel>
                                 Salário

@@ -50,7 +50,7 @@ const BankDetails = (
                             name="bank"
                             label="Banco"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Santander", value: "santander" }, { label: "Sicred", value: "sicred" }, { label: "Banco do Brasil", value: "banco do brasil" }]}
+                            options={[{ label: "Santander", value: "Santander" }, { label: "Sicred", value: "Sicred" }, { label: "Banco do Brasil", value: "Banco do Brasil" }]}
                         />
                         <Field>
                             <FieldLabel htmlFor="agency">

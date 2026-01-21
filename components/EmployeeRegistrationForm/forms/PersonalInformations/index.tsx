@@ -15,13 +15,13 @@ import { onChangeFormStep } from "@/hooks/useIsValidFormField"
 import { SendEmployee } from "@/types/services/rh/employee"
 import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
+import { Controller } from "react-hook-form"
 
 const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
     const [open, setOpen] = useState(false)
-    const [date, setDate] = useState<Date | undefined>(undefined)
     const { setEmployeeInformations } = useContext(CreateEmployeeContext)
 
     const form = useZodForm(formSchema)
@@ -30,7 +30,12 @@ const PersonalInformation = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
+        onChangeFormStep({ 
+            form, 
+            fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)), cpf: Number(values.cpf), phone: Number(values.phone), postalCode: Number(values.postalCode) }, 
+            setData: setEmployeeInformations, 
+            nextStep
+        })
     }
 
     return (
@@ -54,33 +59,35 @@ const PersonalInformation = (
                             </FieldError>
                         </Field>
                         <div className="w-full">
-                            <Field className="max-w-1/2">
-                                <FieldLabel htmlFor="birthday">
-                                    Data de nascimento
-                                </FieldLabel>
-                                <Popover open={open} onOpenChange={setOpen}>
-                                    <PopoverTrigger asChild>
-                                        <Button variant="outline" id="date" className="justify-between font-normal">
-                                            {date ? date.toLocaleDateString() : "Select date"}
-                                            <ChevronDownIcon />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={date}
-                                            captionLayout="dropdown"
-                                            onSelect={(date) => {
-                                                setDate(date)
-                                                setOpen(false)
-                                            }}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FieldError>
-                                    {firstErrorKey === "birthday" && String(form.formState.errors.birthday?.message)}
-                                </FieldError>
-                            </Field>
+                            <Controller control={form.control} name="birthday" render={({ field }) => (
+                                <Field className="max-w-1/2">
+                                    <FieldLabel htmlFor="birthday">
+                                        Data de nascimento
+                                    </FieldLabel>
+                                    <Popover open={open} onOpenChange={setOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button id="date" variant="outline" className="justify-between font-normal">
+                                                {field.value ? new Date(field.value).toLocaleDateString("pt-BR") : "Select date"}
+                                                <ChevronDownIcon />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value ? new Date(field.value) : undefined}
+                                                captionLayout="dropdown"
+                                                onSelect={(date) => {
+                                                    field.onChange(date)
+                                                    setOpen(false)
+                                                }}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FieldError>
+                                        {firstErrorKey === "birthday" && String(form.formState.errors.birthday?.message)}
+                                    </FieldError>
+                                </Field>
+                            )} />
                         </div>
                         <DropdownMenu
                             className="max-w-[35%]"
@@ -88,7 +95,7 @@ const PersonalInformation = (
                             name="civilState"
                             label="Estado Civil"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Solteiro(a)", value: "single" }, { label: "Casado(a)", value: "married" }, { label: "Viúvo(a)", value: "widowed" }]}
+                            options={[{ label: "Solteiro(a)", value: "SINGLE" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }]}
                         />
                         <DropdownMenu
                             className="max-w-[57%]"
@@ -96,7 +103,7 @@ const PersonalInformation = (
                             name="nacionality"
                             label="Nacionalidade"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Brasileiro(a)", value: "brazilian" }, { label: "Americano(a)", value: "american" }, { label: "Outro(a)", value: "other" }]}
+                            options={[{ label: "Brasileiro(a)", value: "BRAZILIAN" }, { label: "Americano(a)", value: "AMERICAN" }, { label: "Outro(a)", value: "OTHER" }]}
                         />
                         <Field>
                             <FieldLabel htmlFor="rg">
@@ -111,7 +118,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="cpf">
                                 CPF
                             </FieldLabel>
-                            <Input id="cpf" placeholder="1231231241" {...form.register("cpf")} />
+                            <Input id="cpf" inputMode="numeric" maxLength={11} placeholder="1231231241" {...form.register("cpf")} />
                             <FieldError>
                                 {firstErrorKey === "cpf" && String(form.formState.errors.cpf?.message)}
                             </FieldError>
@@ -143,7 +150,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="phone">
                                 Celular
                             </FieldLabel>
-                            <Input id="phone" placeholder="(00) 00000-0000" {...form.register("phone")} />
+                            <Input id="phone" inputMode="numeric" maxLength={11} placeholder="(00) 00000-0000" {...form.register("phone")} />
                             <FieldError>
                                 {firstErrorKey === "phone" && String(form.formState.errors.phone?.message)}
                             </FieldError>
@@ -167,7 +174,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="postalCode">
                                 Código Postal
                             </FieldLabel>
-                            <Input id="postalCode" placeholder="11111-111" {...form.register("postalCode")} />
+                            <Input id="postalCode" inputMode="numeric" maxLength={8} placeholder="11111-111" {...form.register("postalCode")} />
                             <FieldError>
                                 {firstErrorKey === "postalCode" && String(form.formState.errors.postalCode?.message)}
                             </FieldError>
