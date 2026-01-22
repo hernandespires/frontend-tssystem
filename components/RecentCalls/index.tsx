@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button"
 
 const RecentCalls = () => {
     return (
-        <section className="w-1/2 max-w-147">
+        <section className="w-full">
             <div className="flex flex-col gap-4 border border-default-border-color px-5 py-5 rounded-md bg-black/20">
                 <h1 className="text-default-orange text-xl font-bold">
                     Últimos Chamados
