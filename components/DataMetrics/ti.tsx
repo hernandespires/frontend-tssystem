@@ -1,15 +1,14 @@
-import { MdDepartureBoard } from "react-icons/md"
-import DataChart from "../DataChart"
-import Button from "@/components/ui/button"
+import { DataChart } from "../DataChart"
+import { Button } from "@/components/ui/button"
 
 
-const DataMetrics = ({ department }: { department: string }) => {
+const DataMetricsTI = ({ department }: { department: string }) => {
     return (
         <section className="border border-default-border-color w-full rounded-md px-5 py-4 bg-black/20 flex flex-col justify-between h-full">
             <h1 className="section-title mb-4">Métricas do {department}</h1>
-            <div className="flex-items-center-justify-center-flex-1">
-                <div className="flex-1">
-                    <Datachart title="" />
+                <div className="flex items-center justify-center flex-1">
+                    <div className="flex-1">
+                    <DataChart title="" />
                 </div>
 
                 {/* linha fina */}
@@ -19,7 +18,7 @@ const DataMetrics = ({ department }: { department: string }) => {
                     <DataChart title="" />
                 </div>
             </div>
-            
+
             <div>
                 <Button
                     variant="outline"
@@ -32,6 +31,4 @@ const DataMetrics = ({ department }: { department: string }) => {
     )
 }
 
-
-
-export default DataMetrics
+export default DataMetricsTI
