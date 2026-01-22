@@ -16,7 +16,7 @@ const Ti = () => {
         if (!user) redirect("/")
 
     return (
-        <main className="flex gap-6 w-full">
+        <main className="flex gap-6 w-full items-start">
             
             <div className="flex flex-col flex-1 gap-6 w-full">
                 <div className="flex gap-4 w-full">
@@ -42,9 +42,8 @@ const Ti = () => {
             </div>
 
 
-            <div className="flex flex-col gap-6 w-100 min-w-100">
-
-                <div className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col gap-6 w-[400px] min-w-[400px]">
+                    <div className="grid grid-cols-2 gap-6">
                     <Button isFulled onClick={"/"} icon={<FaLifeRing size={36} color="black" />} text="Controle de Chamados" />
                     <Button isFulled onClick={"/"} icon={<FaLock size={36} color="black" />} text="Controle de Acessos" />
                     <Button isFulled onClick={"/"} icon={<FaLaptop size={36} color="black" />} text="Controle de Patrimônios" />
