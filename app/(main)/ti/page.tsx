@@ -44,7 +44,7 @@ const Ti = () => {
                         <RecentCalls />
                     </div>
                 </div>
-                <div className="flex flex-wrap gap-6 max-w-150 w-full justify-end">
+                <div className="flex flex-wrap gap-6 max-w-100 w-full justify-end">
                     <Button isFulled onClick={"/"} icon={<FaLifeRing size={36} color="black" />} text="Controle de Chamados" />
                     <Button isFulled onClick={"/"} icon={<FaLock size={36} color="black" />} text="Controle de Acessos" />
                     <Button isFulled onClick={"/"} icon={<FaLaptop size={36} color="black" />} text="Controle de Patrimônios" />
