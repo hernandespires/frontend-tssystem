@@ -10,7 +10,7 @@ const chartConfig = {
     quantity: { label: "Quantidade" }, male: { label: "Masculino", color: "var(--chart-1)" }, female: { label: "Feminino", color: "var(--chart-5)" }
 } satisfies ChartConfig
 
-const DataChart = ({ title, isBorder = false }: { title: string; isBorder?: boolean }) => {
+export const DataChart = ({ title, isBorder = false }: { title: string; isBorder?: boolean }) => {
     return (
         <Card className={`bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 ${isBorder && "border-r"}`}>
             <CardHeader className="items-center pb-2">
