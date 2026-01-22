@@ -17,9 +17,6 @@ const Ti = () => {
 
     return (
         <main className="flex flex-col gap-6">
-            
-            {/* === LINHA DE CIMA === */}
-            {/* Esquerda: Cards + Chamados Recentes | Direita: Botões (3x2) */}
             <div className="flex gap-6 items-start justify-between">
                 
                 {/* Container da Esquerda (Ocupa o espaço que sobra) */}
@@ -47,10 +44,7 @@ const Ti = () => {
                         <RecentCalls />
                     </div>
                 </div>
-
-                {/* Container da Direita (Botões) */}
-                {/* LÓGICA DO RH: max-w-150 garante o grid 3x2 (3 botões por linha) */}
-                <div className="flex flex-wrap gap-6 max-w-150">
+                <div className="flex flex-wrap gap-6 max-w-150 w-full justify-end">
                     <Button isFulled onClick={"/"} icon={<FaLifeRing size={36} color="black" />} text="Controle de Chamados" />
                     <Button isFulled onClick={"/"} icon={<FaLock size={36} color="black" />} text="Controle de Acessos" />
                     <Button isFulled onClick={"/"} icon={<FaLaptop size={36} color="black" />} text="Controle de Patrimônios" />
@@ -60,14 +54,8 @@ const Ti = () => {
                 </div>
             </div>
 
-            {/* === LINHA DE BAIXO === */}
-            {/* Esquerda: Lista de Usuários | Direita: Métricas */}
-            <div className="flex gap-6 items-start">
-                
-                {/* Lista (O próprio componente já tem a largura fixa igual ao RH) */}
-                <DataTable filter="Usuários" />
-                
-                {/* Métricas (Ocupa o resto da largura) */}
+            <div className="flex gap-5 items-end justify-between">
+                <DataTable filter="Colaboradores" />
                 <div className="w-full">
                     <DataMetricsTI department="TI" />
                 </div>
