@@ -16,35 +16,31 @@ const Ti = () => {
     if (!user) redirect("/")
 
     return (
-        <main className="flex gap-6 w-full items-start">
+        <main className="flex flex-col gap-6">
             
-            {/*COLUNA DA ESQUERDA*/}
-            <div className="flex flex-col flex-1 gap-6 w-full">
-                
-                {/* Cards do Topo */}
-                <div className="flex gap-4 w-full">
-                    <div className="bg-default-orange rounded-md p-4 flex flex-col items-center justify-center flex-1 text-black shadow-sm">
-                        <span className="text-sm font-bold">Novos Chamados</span>
-                        <span className="text-4xl font-bold">03</span>
+            <div className="flex gap-6 items-start justify-between">
+                <div className="flex flex-col gap-6 w-full">
+                    <div className="flex gap-4 w-full">
+                        <div className="bg-default-orange rounded-md p-4 flex flex-col items-center justify-center flex-1 text-black shadow-sm">
+                            <span className="text-sm font-bold">Novos Chamados</span>
+                            <span className="text-4xl font-bold">03</span>
+                        </div>
+                        <div className="border border-default-border-color bg-black/40 rounded-md p-4 flex flex-col items-center justify-center flex-1">
+                            <span className="text-gray-300 text-sm font-bold">Resolvidos</span>
+                            <span className="text-4xl font-bold text-white">10</span>
+                        </div>
+                        <div className="border border-default-border-color bg-black/40 rounded-md p-4 flex flex-col items-center justify-center flex-1">
+                            <span className="text-gray-300 text-sm font-bold">Não Resolvidos</span>
+                            <span className="text-4xl font-bold text-white">03</span>
+                        </div>
                     </div>
-                    <div className="border border-default-border-color bg-black/40 rounded-md p-4 flex flex-col items-center justify-center flex-1">
-                        <span className="text-gray-300 text-sm font-bold">Resolvidos</span>
-                        <span className="text-4xl font-bold text-white">10</span>
-                    </div>
-                    <div className="border border-default-border-color bg-black/40 rounded-md p-4 flex flex-col items-center justify-center flex-1">
-                        <span className="text-gray-300 text-sm font-bold">Não Resolvidos</span>
-                        <span className="text-4xl font-bold text-white">03</span>
+
+                    <div className="w-full">
+                        <RecentCalls />
                     </div>
                 </div>
 
-                <RecentCalls />
-                <DataTable filter="Usuários" />
-            </div>
-
-            {/* COLUNA DA DIREITA */}
-            <div className="flex flex-col gap-6">
-            
-                <div className="flex flex-wrap gap-6 max-w-100 justify-end">
+                <div className="flex flex-wrap gap-6 max-w-150">
                     <Button isFulled onClick={"/"} icon={<FaLifeRing size={36} color="black" />} text="Controle de Chamados" />
                     <Button isFulled onClick={"/"} icon={<FaLock size={36} color="black" />} text="Controle de Acessos" />
                     <Button isFulled onClick={"/"} icon={<FaLaptop size={36} color="black" />} text="Controle de Patrimônios" />
@@ -52,12 +48,13 @@ const Ti = () => {
                     <Button onClick={"/"} icon={<FaUserPlus size={36} color="white" />} text="Cadastro de Usuários" />
                     <Button onClick={"/"} icon={<FaBox size={36} color="white" />} text="Cadastro de Patrimônios" />
                 </div>
+            </div>
 
-                {/* MÉTRICAS DO TI */}
+            <div className="flex gap-6 items-start">
+                <DataTable filter="Colaboradores" />
                 <div className="w-full">
                     <DataMetricsTI department="TI" />
                 </div>
-
             </div>
         </main>
     )

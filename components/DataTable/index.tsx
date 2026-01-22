@@ -6,7 +6,7 @@ import { RiGitRepositoryCommitsFill } from "react-icons/ri"
 
 const DataTable = ({ filter }: { filter: string }) => (
     <section className="w-1/2 max-w-147">
-        <section className="flex flex-col gap-1.5 border-1 border-default-border-color px-5.5 py-2.5 rounded-md">
+        <section className="flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md">
             <h1 className="section-title">
                 Lista de { filter }
             </h1>
