@@ -38,8 +38,8 @@ const Rh = () => {
             </div>
             <div className="flex gap-6">
                 <div className="flex flex-col gap-6">
-                    <Button onClick={"/"} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
-                    <Button onClick={"/"} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
+                    <Button onClick={"/rh/processos-burocraticos"} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
+                    <Button onClick={"/rh/processos-burocraticos"} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
                 </div>
                 <DataMetrics department="Recursos Humanos" />
             </div>
