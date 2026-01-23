@@ -12,15 +12,16 @@ import { toast } from "sonner"
 import { handleCreateEmployee } from "@/handles/rh/createEmployee"
 
 const Finalization = (
-    { urlPath, prevStep, actualStep, percentageProgress, nextStep }: { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep?: () => void }
+    { urlPath, prevStep, actualStep, percentageProgress }: { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep?: () => void }
 ) => {
     const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
     const form = useZodForm(formSchema)
     
     const handleNextStep = async (values: SendEmployee) => {
+        const newEmployee: SendEmployee = { ...employeeInformations, ...values }
         onChangeFormStep({ form, fields: values, setData: setEmployeeInformations })
 
-        const result = await handleCreateEmployee(values)
+        const result = await handleCreateEmployee(newEmployee)
         if (result) {
             toast.success("Colaborador cadastrado com sucesso!")
             redirect("/rh")
@@ -40,23 +41,15 @@ const Finalization = (
                 </div>
                 <div className="max-w-full flex items-center justify-center">
                     <div className="w-200 h-72 flex flex-col justify-between items-center px-38.75 py-3">
-                        <DropdownMenu
-                            form={form}
-                            name="department"
-                            label="Departamento"
-                            schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Pesquisa & Desenvolvimento", value: "P&D" }, { label: "Web Design", value: "Web Design" }, { label: "Tráfego Pago", value: "Paid Traffic" }]}
-                        />
-                        <DropdownMenu
-                            form={form} name="operation" label="Operação" schemaKeys={Object.keys(formSchema.shape)} options={[{ label: "01", value: "01" }, { label: "02", value: "02" }, { label: "03", value: "03" }]}
-                        />
-                        <DropdownMenu
-                            form={form}
-                            name="level"
-                            label="Nível"
-                            schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Puppy", value: "Puppy" }, { label: "Auxiliar", value: "Assistant" }, { label: "Junior", value: "Junior" }]}
-                        />
+                        <DropdownMenu form={form} name="department" label="Departamento" schemaKeys={Object.keys(formSchema.shape)} options={
+                            [{ label: "Pesquisa & Desenvolvimento", value: "RESEARCH_AND_DEVELOPMENT" }, { label: "Web Design", value: "WEB_DESIGN" }, { label: "Tráfego Pago", value: "PAID_TRAFFIC" }]
+                        } />
+                        <DropdownMenu form={form} name="operation" label="Operação" schemaKeys={Object.keys(formSchema.shape)} options={
+                            [{ label: "01", value: "_01" }, { label: "02", value: "_02" }, { label: "03", value: "_03" }]
+                        } />
+                        <DropdownMenu form={form} name="level" label="Nível" schemaKeys={Object.keys(formSchema.shape)} options={
+                            [{ label: "Puppy", value: "PUPPY" }, { label: "Auxiliar", value: "ASSISTANT" }, { label: "Junior", value: "JUNIOR" }]
+                        } />
                     </div>
                 </div>
             </RegistrationForm>

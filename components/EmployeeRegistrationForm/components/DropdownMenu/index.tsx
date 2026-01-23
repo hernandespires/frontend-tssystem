@@ -4,8 +4,8 @@ import { Controller, FieldValues, Path, UseFormReturn } from "react-hook-form"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 
 const DropdownMenu = 
-    <T extends FieldValues>({ className, form, name, label, options, schemaKeys }:
-    { className?: string, form: UseFormReturn<T>, name: Path<T>, label: string, options: { label: string, value: string | number }[], schemaKeys: string[] }) => 
+    <T extends FieldValues>
+    ({ className, form, name, label, options, schemaKeys }: { className?: string, form: UseFormReturn, name: Path<T>, label: string, options: { label: string, value: string | number }[], schemaKeys: string[] }) => 
 {
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, schemaKeys)
@@ -26,7 +26,7 @@ const DropdownMenu =
                 </Select>
             )} />
             <FieldError>
-                {firstErrorKey === name && String(form.formState.errors[name]?.message)}
+                { firstErrorKey === name && String(form.formState.errors[name]?.message) }
             </FieldError>
         </Field>
     )

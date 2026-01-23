@@ -15,12 +15,15 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { onChangeFormStep } from "@/hooks/useIsValidFormField"
 import { SendEmployee } from "@/types/services/rh/employee"
+import { Controller } from "react-hook-form"
+import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
+import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { setEmployeeInformations } = useContext(CreateEmployeeContext)
     const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
     
     const form = useZodForm(formSchema)
@@ -29,10 +32,8 @@ const BankDetails = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
+        onChangeFormStep({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeInformations, nextStep })
     }
-
-    console.log(employeeInformations)
 
     return (
         <section>
@@ -45,18 +46,14 @@ const BankDetails = (
                 </div>
                 <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-                        <DropdownMenu
-                            form={form}
-                            name="bank"
-                            label="Banco"
-                            schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "Santander", value: "santander" }, { label: "Sicred", value: "sicred" }, { label: "Banco do Brasil", value: "banco do brasil" }]}
-                        />
+                        <DropdownMenu form={form} name="bank" label="Banco" schemaKeys={Object.keys(formSchema.shape)} options={[
+                            { label: "Santander", value: "SANTANDER" }, { label: "Sicred", value: "SICRED" }, { label: "Banco do Brasil", value: "BANCO_DO_BRASIL" }
+                        ]} />
                         <Field>
                             <FieldLabel htmlFor="agency">
                                 Agência
                             </FieldLabel>
-                            <Input id="agency" placeholder="1111111111111" {...form.register("agency")} />
+                            <Input id="agency" inputMode="numeric" maxLength={4} placeholder="0000" {...form.register("agency")} />
                             <FieldError>
                                 {firstErrorKey === "agency" && String(form.formState.errors.agency?.message)}
                             </FieldError>
@@ -65,7 +62,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="account">
                                 Conta
                             </FieldLabel>
-                            <Input id="account" placeholder="1111111111111" {...form.register("account")} />
+                            <Input id="account" maxLength={11} placeholder="1111111111111" {...form.register("account")} />
                             <FieldError>
                                 {firstErrorKey === "account" && String(form.formState.errors.account?.message)}
                             </FieldError>
@@ -74,7 +71,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="pix">
                                 Chave Pix
                             </FieldLabel>
-                            <Input id="pix" placeholder="14997692681" {...form.register("pix")} />
+                            <Input id="pix" placeholder="email / celular" {...form.register("pix")} />
                             <FieldError>
                                 {firstErrorKey === "pix" && String(form.formState.errors.pix?.message)}
                             </FieldError>
@@ -84,35 +81,43 @@ const BankDetails = (
                         <Separator orientation="vertical" className="self-stretch w-px bg-default-border-color" />
                     </div>
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-                        <Field>
-                            <div className="flex gap-2">
-                                <Checkbox 
-                                    id="transportationVoucher" 
-                                    onCheckedChange={(isChecked) => isChecked ? setTransportationVoucherDocumentationVisibility(true) : setTransportationVoucherDocumentationVisibility(false)} 
-                                />
-                                <Label htmlFor="transportationVoucher">
-                                    Vale Transporte
-                                </Label>
-                            </div>
-                        </Field>
+                        <Controller name="transportationVoucher" control={form.control} defaultValue={false} render={({ field }) => (
+                            <Field>
+                                <div className="flex gap-2">
+                                    <Checkbox id="transportationVoucher" checked={field.value} onCheckedChange={(isChecked) => {
+                                        setTransportationVoucherDocumentationVisibility(Boolean(isChecked))
+                                        field.onChange(isChecked)
+                                    }}
+                                    />
+                                    <Label htmlFor="transportationVoucher">
+                                        Vale Transporte
+                                    </Label>
+                                </div>
+                            </Field>
+                        )} />
                         <Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
                             <FieldLabel htmlFor="cnpjTransportationVoucher">
                                 CNPJ - Empresa vale transporte
                             </FieldLabel>
-                            <Input id="cnpjTransportationVoucher" placeholder="14997692681" {...form.register("cnpjTransportationVoucher")} />
+                            <Input id="cnpjTransportationVoucher" inputMode="numeric" maxLength={11} placeholder="11111111111" {...form.register("cnpjTransportationVoucher")} />
                             <FieldError>
                                 {firstErrorKey === "cnpjTransportationVoucher" && String(form.formState.errors.cnpjTransportationVoucher?.message)}
                             </FieldError>
-                        </Field>
+                        </Field>                        
                         <Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
                             <FieldLabel htmlFor="monthlyAmount">
                                 Valor mensal
                             </FieldLabel>
-                            <Input id="monthlyAmount" placeholder="14997692681" {...form.register("monthlyAmount")} />
+                            <Controller control={form.control} name="monthlyAmount" defaultValue="" render={({ field }) => (
+                                <Input id="monthlyAmount" inputMode="numeric" placeholder="R$0000,00" {...field} onChange={(event) => {
+                                    const formattedValue = formatterCurrencyBRL(event.target.value)
+                                    field.onChange(formattedValue)
+                                }} />
+                            )} />
                             <FieldError>
                                 {firstErrorKey === "monthlyAmount" && String(form.formState.errors.monthlyAmount?.message)}
                             </FieldError>
-                        </Field>
+                        </Field>                        
                     </div>
                 </div>                
             </RegistrationForm>

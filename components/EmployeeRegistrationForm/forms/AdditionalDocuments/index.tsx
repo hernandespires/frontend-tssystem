@@ -4,7 +4,7 @@ import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../ui/progress"
 import { formSchema } from "./formSchema"
 import { Dispatch, SetStateAction, useContext } from "react"
-import FileUploadPreview from "./FileUploadPreview"
+import FileUploadPreview from "../../components/FileUploadPreview"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { onChangeFormStep } from "@/hooks/useIsValidFormField"
@@ -24,7 +24,7 @@ const AdditionalDocuments = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations, nextStep })
+        onChangeFormStep({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeInformations, nextStep })
     }
 
     console.log(employeeInformations)
@@ -34,7 +34,7 @@ const AdditionalDocuments = (
             <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={handleNextStep}>
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
-                        { actualStep }/5 - Dados Pessoais
+                        { actualStep }/5 - Documentos Adicionais
                     </h1>
                     <Progress value={ percentageProgress } className="max-w-107.5" />
                 </div>

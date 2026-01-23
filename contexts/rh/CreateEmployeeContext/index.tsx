@@ -10,16 +10,16 @@ export const CreateEmployeeContext = createContext<CreateEmployeeContextType | n
 
 export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) => {
     const [employeeInformations, setEmployeeInformations] = useState<SendEmployee>({
-        name: "", 
-        birthday: null, 
-        civilState: "", 
-        nacionality: "", 
+        name: "",
+        birthday: "",
+        civilState: "",
+        nacionality: "",
         rg: "", 
-        cpf: "", 
+        cpf: "",
         email: "", 
         motherName: "", 
         phone: "", 
-        city: "", 
+        city: "",  
         postalCode: "", 
         street: "", 
         neighborhood: "", 
@@ -29,21 +29,23 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         laborModality: "",
         laborScale: "",
         admissionDate: "",
-        salary: "",
+        salary: null,
         residentialProve: "",
         reservist: false,
         documentation: "",
         bank: "",
-        agency: "",
-        account: "",
+        agency: null,
+        account: null,
         pix: "",
         transportationVoucher: false,
         cnpjTransportationVoucher: "",
-        monthlyAmount: "",
+        monthlyAmount: null,
         additionalDocuments: "",
         department: "",
         operation: "",
-        level: ""
+        level: "",
+        status: "ACTIVE",
+        quitDate: ""
     })
 
     return <CreateEmployeeContext.Provider value={{ employeeInformations, setEmployeeInformations }}>{ children }</CreateEmployeeContext.Provider>

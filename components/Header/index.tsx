@@ -9,11 +9,13 @@ const Header = ({ department }: { department: string }) => {
     const { user } = useLogin()
     if (user === undefined) return null
 
+
+    console.log(user?.image)
     return (
         <header className="m-4 glass-effect flex py-4.5 border border-default-border-color rounded-md justify-center">
             <section className="flex justify-between gap-130">
                 <div className="flex gap-5">
-                    <Image src="/LOGO-ts2.svg" width="180" height="55" alt="Logo" />
+                    <Image src="/LOGO-TS2.svg" width="180" height="55" alt="Logo" />
                     <div className="flex-col text-xl">
                         <Wellcome name={user?.name} />
                         <span className="font-bold text-white uppercase">
