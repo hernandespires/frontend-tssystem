@@ -4,7 +4,7 @@ import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
 import { useLogin } from "@/contexts/LoginContext"
-// import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext" // Removido se não for usar agora para evitar erros
+import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { redirect } from "next/navigation"
 import { useContext } from "react"
 import { BsClipboardData } from "react-icons/bs"
@@ -16,10 +16,10 @@ import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
 const Rh = () => {
-    // const { employeeInformations } = useContext(CreateEmployeeContext) // Comentado por enquanto
+    const { employeeData } = useContext(CreateEmployeeContext)
 
     const { user } = useLogin()
-    // if (!user) redirect("/login") // Comentado para você conseguir testar sem backend rodando
+    if (!user) redirect("/login")
 
     return (
         <main className="flex flex-col gap-6">

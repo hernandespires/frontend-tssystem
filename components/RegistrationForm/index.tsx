@@ -9,7 +9,7 @@ import { FaArrowLeft } from "react-icons/fa"
 import { UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
 import { LuArrowBigRight } from "react-icons/lu"
-import { SendPersonalInformation } from "@/types/services/rh/employee"
+import { SendPersonalInformation } from "@/types/services/humanResources/employee"
 
 const RegistrationForm = (
     { formSchema, urlPath, form, prevStep, children, nextStep }:

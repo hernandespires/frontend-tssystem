@@ -17,7 +17,7 @@ const DatePicker = <T extends FieldValues>({ form, formSchema, fieldName, label,
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     return (
-        <Controller control={ form.control } name={ fieldName } render={({ field }) => (
+        <Controller control={ form.control } name={ fieldName } defaultValue={null} render={({ field }) => (
             <Field className={ className }>
                 <FieldLabel htmlFor={ fieldName }>
                     { label }

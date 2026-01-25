@@ -1,4 +1,4 @@
-export interface Employee {     //fazer toda a modulação dos dados no backend, unique, nullable, length...
+export interface Employee {
     id: string,
     name: string, 
     birthday: string, 
@@ -38,7 +38,7 @@ export interface Employee {     //fazer toda a modulação dos dados no backend,
     quitDate: string
 }
 
-export interface SendEmployee { //tipar o backend    
+export interface SendEmployee {
     name: string, 
     birthday: string, 
     civilState: "" | "SINGLE" | "MARRIED" | "WIDOWED",

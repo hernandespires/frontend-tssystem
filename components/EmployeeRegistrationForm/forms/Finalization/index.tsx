@@ -4,31 +4,50 @@ import { formSchema } from "./formSchema"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useContext } from "react"
 import { useZodForm } from "@/hooks/useZodForm"
-import { SendEmployee } from "@/types/services/rh/employee"
-import { onChangeFormStep } from "@/hooks/useIsValidFormField"
+import { SendEmployee } from "@/types/services/humanResources/employee"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import DropdownMenu from "../../components/DropdownMenu"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
-import { handleCreateEmployee } from "@/handles/rh/createEmployee"
+import { createEmployee } from "@/services/humanResources/employee"
+import { multipleUpload } from "@/services/file/upload"
+import { UploadContext } from "@/contexts/files/UploadContext"
+
 
 const Finalization = (
     { urlPath, prevStep, actualStep, percentageProgress }: { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep?: () => void }
 ) => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
-    const form = useZodForm(formSchema)
-    
-    const handleNextStep = async (values: SendEmployee) => {
-        const newEmployee: SendEmployee = { ...employeeInformations, ...values }
-        onChangeFormStep({ form, fields: values, setData: setEmployeeInformations })
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
+    const { uploadData } = useContext(UploadContext)
 
-        const result = await handleCreateEmployee(newEmployee)
-        if (result) {
+    const form = useZodForm(formSchema)
+
+    console.log("uploadData - Final😗", uploadData)
+    
+    const handleCreateEmployee = async (values: SendEmployee) => {
+        const newEmployee: SendEmployee = { ...employeeData, ...values }
+        
+        useIsValidFormField({ form, fields: values, setData: setEmployeeData })
+
+        const createNewEmployee = await createEmployee(newEmployee)        
+
+        const uploadFiles = await multipleUpload(uploadData)
+
+        if (createNewEmployee && uploadFiles) return true
+
+        return false
+    }
+
+    const handleNextStep = async (values: SendEmployee) => {
+        const response = await handleCreateEmployee(values)
+
+        if (response) {
             toast.success("Colaborador cadastrado com sucesso!")
             redirect("/rh")
         }
     }
 
-    console.log(employeeInformations)
+    console.log(employeeData)
 
     return (
         <section>

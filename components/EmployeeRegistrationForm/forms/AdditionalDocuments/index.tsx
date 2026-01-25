@@ -7,27 +7,34 @@ import { Dispatch, SetStateAction, useContext } from "react"
 import FileUploadPreview from "../../components/FileUploadPreview"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
-import { onChangeFormStep } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/rh/employee"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { SendEmployee } from "@/types/services/humanResources/employee"
 import { Field, FieldError } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
+import { UploadContext } from "@/contexts/files/UploadContext"
 
 const AdditionalDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
+    const { uploadData, setUploadData } = useContext(UploadContext)
 
     const form = useZodForm(formSchema)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
-    const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeInformations, nextStep })
+    const handleNextStep = (values: SendEmployee) => {        
+        useIsValidFormField({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeData, nextStep })
+        setUploadData(prev => ([
+            ...prev,
+            ...values.additionalDocuments
+        ]))
     }
 
-    console.log(employeeInformations)
+    console.log("employeeData:", employeeData)
+    console.log("uploadData:", uploadData)
 
     return (
         <section>

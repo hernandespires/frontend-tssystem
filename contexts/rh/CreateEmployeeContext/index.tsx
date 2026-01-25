@@ -1,15 +1,11 @@
-import { SendEmployee } from "@/types/services/rh/employee"
-import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react"
-
-interface CreateEmployeeContextType {
-    employeeInformations: SendEmployee
-    setEmployeeInformations: Dispatch<SetStateAction<SendEmployee>>
-}
+import { CreateEmployeeContextType } from "@/types/contexts/rh/employee"
+import { SendEmployee } from "@/types/services/humanResources/employee"
+import { createContext, ReactNode, useState } from "react"
 
 export const CreateEmployeeContext = createContext<CreateEmployeeContextType | null>(null)
 
 export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) => {
-    const [employeeInformations, setEmployeeInformations] = useState<SendEmployee>({
+    const [employeeData, setEmployeeData] = useState<SendEmployee>({
         name: "",
         birthday: "",
         civilState: "",
@@ -48,5 +44,5 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         quitDate: ""
     })
 
-    return <CreateEmployeeContext.Provider value={{ employeeInformations, setEmployeeInformations }}>{ children }</CreateEmployeeContext.Provider>
+    return <CreateEmployeeContext.Provider value={{ employeeData, setEmployeeData }}>{ children }</CreateEmployeeContext.Provider>
 }

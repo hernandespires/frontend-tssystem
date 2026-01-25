@@ -8,21 +8,23 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
-import { SendEmployee } from "@/types/services/rh/employee"
+import { SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
-import { onChangeFormStep } from "@/hooks/useIsValidFormField"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
 import { Controller } from "react-hook-form"
 import DatePicker from "../../components/DatePicker"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
+import { UploadContext } from "@/contexts/files/UploadContext"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
+    const { uploadData, setUploadData } = useContext(UploadContext)
     
     const form = useZodForm(formSchema)
     
@@ -33,21 +35,28 @@ const LaborDocuments = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ 
+        useIsValidFormField({
             form, 
             fields: { 
                 ...values, 
                 admissionDate: new Intl.DateTimeFormat("pt-BR").format(date), 
-                salary: formatterBigDecimal(values.salary), 
-                residentialProve: values.residentialProve[0].name, 
+                salary: formatterBigDecimal(values.salary),
+                residentialProve: values.residentialProve[0].name,
                 documentation: values.documentation[0]?.name
             }, 
-            setData: setEmployeeInformations, 
-            nextStep 
-        })
+            setData: setEmployeeData,
+            nextStep
+        })        
+
+        // setUploadData((prev) => ({ ...prev, residentialProve: values.residentialProve, documentation: values.documentation }))
+        setUploadData(([
+            // ...prev,
+            ...values.residentialProve,
+            ...values.documentation
+        ]))
     }
 
-    console.log(employeeInformations)
+    console.log(employeeData)
 
     return (
         <section>

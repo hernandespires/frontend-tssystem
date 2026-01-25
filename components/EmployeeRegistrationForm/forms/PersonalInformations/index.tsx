@@ -7,8 +7,8 @@ import { Dispatch, SetStateAction, useContext } from "react"
 import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
-import { onChangeFormStep } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/rh/employee"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { SendEmployee } from "@/types/services/humanResources/employee"
 import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
 import DatePicker from "../../components/DatePicker"
@@ -17,7 +17,7 @@ const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
 
     const form = useZodForm(formSchema)
 
@@ -25,7 +25,7 @@ const PersonalInformation = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeInformations, nextStep })
+        useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
     }
 
     return (

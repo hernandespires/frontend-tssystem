@@ -16,12 +16,12 @@ import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
 const Rh = () => {
-    const { employeeInformations, setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
 
     const { user } = useLogin()
-    if (!user) redirect("/login")    
+    if (!user) redirect("/login")
 
-    console.log(employeeInformations)
+    console.log(employeeData)
 
     return (
         <main className="flex flex-col gap-6">

@@ -21,9 +21,9 @@ const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) =
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-[url('/FLUID-BG.png')] bg-cover bg-center bg-no-repeat`}>
+      <body className={`${inter.className} min-h-screen bg-[url('/bg.png')] bg-cover bg-center bg-no-repeat`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <LoginProvider initialUser={session?.user || null}>
+          <LoginProvider initialUser={session?.user || null}>            
             <Toaster richColors position="top-center" />
             { children }
           </LoginProvider>

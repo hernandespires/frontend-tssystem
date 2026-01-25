@@ -13,8 +13,8 @@ import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
 import DropdownMenu from "../../components/DropdownMenu"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
-import { onChangeFormStep } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/rh/employee"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { SendEmployee } from "@/types/services/humanResources/employee"
 import { Controller } from "react-hook-form"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
@@ -23,7 +23,7 @@ const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { setEmployeeInformations } = useContext(CreateEmployeeContext)
+    const { setEmployeeData } = useContext(CreateEmployeeContext)
     const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
     
     const form = useZodForm(formSchema)
@@ -32,7 +32,7 @@ const BankDetails = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
     const handleNextStep = (values: SendEmployee) => {
-        onChangeFormStep({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeInformations, nextStep })
+        useIsValidFormField({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeData, nextStep })
     }
 
     return (

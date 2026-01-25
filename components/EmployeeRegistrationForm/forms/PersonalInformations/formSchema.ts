@@ -3,7 +3,7 @@ import { defaultEmptyError, defaultError } from "../../defaultFormFieldErrors"
 
 export const formSchema = z.object({
     name: z.string().nonempty(defaultEmptyError("Nome")),
-    birthday: z.date({ error: defaultEmptyError("Data de nascimento") }),
+    birthday: z.date({ error: defaultEmptyError("Data de nascimento") }).nonoptional(""),
     civilState: z.enum(["SINGLE", "MARRIED", "WIDOWED"], { error: defaultEmptyError("Estado civil") }),
     nacionality: z.enum(["BRAZILIAN", "AMERICAN", "OTHER"], { error: defaultEmptyError("Nacionalidade") }),
     rg: z.string().nonempty(defaultEmptyError("RG")).min(12, defaultError("RG")).max(12, defaultError("RG")),

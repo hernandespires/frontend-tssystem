@@ -1,5 +1,5 @@
 import api from "@/lib/api"
-import { Employee, SendEmployee } from "@/types/services/rh/employee"
+import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 
 export const getAllEmployees = async (): Promise<Employee[]> => {
   return (await api.get("/rh/allEmployee")).data

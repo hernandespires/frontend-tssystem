@@ -1,0 +1,1 @@
+export interface Upload { name: string, downloadUri: string, type: string, size: number | null }
