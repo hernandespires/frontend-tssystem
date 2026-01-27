@@ -43,7 +43,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="name">
                                 Nome completo
                             </FieldLabel>
-                            <Input id="name" placeholder="Nome" {...form.register("name")} />
+                            <Input id="name" maxLength={155} placeholder="Nome" {...form.register("name")} />
                             <FieldError>
                                 {firstErrorKey === "name" && String(form.formState.errors.name?.message)}
                             </FieldError>
@@ -55,13 +55,13 @@ const PersonalInformation = (
                             { label: "Solteiro(a)", value: "SINGLE" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }
                         ]} />
                         <DropdownMenu className="max-w-[57%]" form={form} name="nacionality" label="Nacionalidade" schemaKeys={Object.keys(formSchema.shape)} options={[
-                            { label: "Brasileiro(a)", value: "BRAZILIAN" }, { label: "Americano(a)", value: "AMERICAN" }, { label: "Outro(a)", value: "OTHER" }
+                            { label: "Brasileiro(a)", value: "BRAZILIAN" }, { label: "Americano(a)", value: "AMERICAN" }
                         ]} />
                         <Field>
                             <FieldLabel htmlFor="rg">
                                 RG
                             </FieldLabel>
-                            <Input id="rg" placeholder="1231231241" {...form.register("rg")} />
+                            <Input id="rg" maxLength={12} placeholder="XX.XXX.XXX-X" {...form.register("rg")} />
                             <FieldError>
                                 {firstErrorKey === "rg" && String(form.formState.errors.rg?.message)}
                             </FieldError>
@@ -70,7 +70,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="cpf">
                                 CPF
                             </FieldLabel>
-                            <Input id="cpf" maxLength={11} placeholder="1231231241" {...form.register("cpf")} />
+                            <Input id="cpf" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...form.register("cpf")} />
                             <FieldError>
                                 {firstErrorKey === "cpf" && String(form.formState.errors.cpf?.message)}
                             </FieldError>
@@ -79,7 +79,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="email">
                                 Email para contato (Pessoal)
                             </FieldLabel>
-                            <Input id="email" placeholder="Email" {...form.register("email")} />
+                            <Input id="email" maxLength={155} placeholder="Email" {...form.register("email")} />
                             <FieldError>
                                 {firstErrorKey === "email" && String(form.formState.errors.email?.message)}
                             </FieldError>
@@ -88,7 +88,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="mother-name">
                                 Nome completo da mãe
                             </FieldLabel>
-                            <Input id="mother-name" placeholder="Nome" {...form.register("motherName")} />
+                            <Input id="mother-name" maxLength={155} placeholder="Nome da mãe" {...form.register("motherName")} />
                             <FieldError>
                                 {firstErrorKey === "motherName" && String(form.formState.errors.motherName?.message)}
                             </FieldError>
@@ -98,11 +98,11 @@ const PersonalInformation = (
                         <Separator orientation="vertical" className="self-stretch w-px bg-default-border-color" />
                     </div>
                     <div className="flex flex-wrap gap-x-6 gap-y-4.5 flex-1 h-fit">
-                        <Field className="w-[48.5%]">
+                        <Field className="w-[55%]">
                             <FieldLabel htmlFor="phone">
                                 Celular
                             </FieldLabel>
-                            <Input id="phone" maxLength={11} placeholder="(00) 00000-0000" {...form.register("phone")} />
+                            <Input id="phone" maxLength={19} placeholder="+55 (XX) XXXXX-XXXX" {...form.register("phone")} />
                             <FieldError>
                                 {firstErrorKey === "phone" && String(form.formState.errors.phone?.message)}
                             </FieldError>
@@ -117,7 +117,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="city">
                                 Cidade
                             </FieldLabel>
-                            <Input id="city" placeholder="Jau" {...form.register("city")} />
+                            <Input id="city" maxLength={155} placeholder="Jau" {...form.register("city")} />
                             <FieldError>
                                 {firstErrorKey === "city" && String(form.formState.errors.city?.message)}
                             </FieldError>
@@ -126,7 +126,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="postalCode">
                                 Código Postal
                             </FieldLabel>
-                            <Input id="postalCode" maxLength={8} placeholder="11111-111" {...form.register("postalCode")} />
+                            <Input id="postalCode" maxLength={10} placeholder="XXXXX-XXX" {...form.register("postalCode")} />
                             <FieldError>
                                 {firstErrorKey === "postalCode" && String(form.formState.errors.postalCode?.message)}
                             </FieldError>
@@ -135,7 +135,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="street">
                                 Rua
                             </FieldLabel>
-                            <Input id="street" placeholder="Rua Lorem Ipsum" {...form.register("street")} />
+                            <Input id="street" maxLength={155} placeholder="Rua Lorem Ipsum" {...form.register("street")} />
                             <FieldError>
                                 {firstErrorKey === "street" && String(form.formState.errors.street?.message)}
                             </FieldError>
@@ -144,7 +144,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="neighborhood">
                                 Bairro
                             </FieldLabel>
-                            <Input id="neighborhood" placeholder="Bairro Lorem Ipsum" {...form.register("neighborhood")} />
+                            <Input id="neighborhood" maxLength={155} placeholder="Bairro do novo colaborador" {...form.register("neighborhood")} />
                             <FieldError>
                                 {firstErrorKey === "neighborhood" && String(form.formState.errors.neighborhood?.message)}
                             </FieldError>

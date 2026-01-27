@@ -16,7 +16,7 @@ import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
 const Rh = () => {
-    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
+    const { employeeData } = useContext(CreateEmployeeContext)
 
     const { user } = useLogin()
     if (!user) redirect("/login")
@@ -25,7 +25,7 @@ const Rh = () => {
 
     return (
         <main className="flex flex-col gap-6">
-            <div className="flex gap-5 items-end justify-between">
+            <div className="flex gap-5 justify-between">
                 <DataTable filter="Colaboradores" />
                 <div className="flex flex-wrap gap-6 max-w-150">
                     <Button isFulled onClick={"/"} icon={<BsClipboardData size={36} color="black" />} text="Relatório Mensal" />

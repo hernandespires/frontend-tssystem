@@ -73,7 +73,7 @@ const LaborDocuments = (
                             <FieldLabel>
                                 Carteira de Trabalho
                             </FieldLabel>
-                            <Input id="workCard" maxLength={11} placeholder="12312312321" {...form.register("workCard")} />
+                            <Input id="workCard" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...form.register("workCard")} />
                             <FieldError>
                                 {firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}
                             </FieldError>
@@ -82,7 +82,7 @@ const LaborDocuments = (
                             <FieldLabel>
                                 PIS/PASEP
                             </FieldLabel>
-                            <Input id="pisPasep" maxLength={11} placeholder="12312312321" {...form.register("pisPasep")} />
+                            <Input id="pisPasep" maxLength={14} placeholder="XXX.XXXXX.XX-X" {...form.register("pisPasep")} />
                             <FieldError>
                                 {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
                             </FieldError>
@@ -109,7 +109,7 @@ const LaborDocuments = (
                                 Salário
                             </FieldLabel>
                             <Controller control={form.control} name="salary" defaultValue="" render={({ field }) => (
-                                <Input id="salary" inputMode="numeric" placeholder="R$0000,00" {...field} onChange={(event) => {
+                                <Input id="salary" inputMode="numeric" maxLength={13} placeholder="R$ 0000,00" {...field} onChange={(event) => {
                                     const formattedValue = formatterCurrencyBRL(event.target.value)
                                     field.onChange(formattedValue)
                                 }} />

@@ -3,34 +3,29 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemSeparator, ItemTitle } from "../ui/item"
 import { Button } from "../ui/button"
 import { IoIosArrowForward } from "react-icons/io"
+import { Employee } from "@/types/services/humanResources/employee" 
+import { Skeleton } from "../ui/skeleton"
 
-interface Person { id: number, nome: string, email: string, avatar: string }
-
-const people: Person[] = [
-    {id: 1, nome: "Luizinho TS", email: "luizbarros@trajetoriadosucesso.com", avatar: "https://github.com/shadcn.png"},
-    {id: 2, nome: "Kojiminha TS", email: "joãogoncalves@trajetoriadosucesso.com", avatar: "https://github.com/maxleiter.png"},
-    {id: 3, nome: "Felipinho TS", email: "felipefreitas@trajetoriadosucesso.com", avatar: "https://github.com/evilrabbit.png"}
-]
-
-const DataTableList = () => (
-    <ItemGroup>
-        {people.map((person) => (
-                <React.Fragment key={person.id}>
+const DataTableList = ({ data }: { data: Employee[] }) => (
+    <ItemGroup className="h-full">
+        { data ? (
+            data.map((data) => (
+                <React.Fragment key={data.id}>
                     <Item className="p-2.5 text-default-orange">
                         <ItemMedia>
                             <Avatar>
-                                <AvatarImage src={person.avatar} />
+                                <AvatarImage src="https://github.com/shadcn.png" />
                                 <AvatarFallback>
-                                    {person.nome.charAt(0)}
+                                    {data.name.charAt(0)}
                                 </AvatarFallback>
                             </Avatar>
                         </ItemMedia>
                         <ItemContent className="p-0">
                             <ItemTitle>
-                                {person.nome}
+                                {data.name} 
                             </ItemTitle>
                             <ItemDescription>
-                                {person.email}
+                                {data.email}
                             </ItemDescription>
                         </ItemContent>
                         <ItemActions>
@@ -41,7 +36,8 @@ const DataTableList = () => (
                         <ItemSeparator className="bg-default-border-color" />
                     </Item>
                 </React.Fragment>
-        ))}
+            ))
+        ): <div className="flex items-center gap-4"><Skeleton className="w-12 h-12 rounded-full" /><div className="space-y-2"><Skeleton className="w-62.5 h-4" /><Skeleton className="w-50 h-4" /></div></div> }
     </ItemGroup>
 )
 
