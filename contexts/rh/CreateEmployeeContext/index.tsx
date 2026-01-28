@@ -9,7 +9,7 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         name: "",
         birthday: "",
         civilState: "",
-        nacionality: "",
+        // nacionality: "",
         rg: "", 
         cpf: "",
         email: "", 

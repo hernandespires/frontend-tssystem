@@ -5,7 +5,7 @@ export const formSchema = z.object({
     name: z.string({ error: defaultError("Nome") }).nonempty(defaultEmptyError(defaultEmptyError("Nome"))),
     birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")),
     civilState: z.enum(["SINGLE", "MARRIED", "WIDOWED"], { error: defaultError("Estado civil") }).nonoptional(defaultEmptyError("Estado civil")),
-    nacionality: z.enum(["BRAZILIAN", "AMERICAN"], { error: defaultError("Nacionalidade") }).nonoptional(defaultEmptyError("Nacionalidade")),
+    // nacionality: z.enum(["BRAZILIAN", "AMERICAN"], { error: defaultError("Nacionalidade") }).nonoptional(defaultEmptyError("Nacionalidade")),
     rg: z.string({ error: defaultError("RG") }).nonempty(defaultEmptyError("RG")).min(12, defaultError("RG")),
     cpf: z.string({ error: defaultError("CPF") }).nonempty(defaultEmptyError("CPF")).min(14, defaultError("CPF")),
     email: z.string({ error: defaultError("Email") }).nonempty(defaultEmptyError("Email")),
