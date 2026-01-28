@@ -53,7 +53,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="agency">
                                 Agência
                             </FieldLabel>
-                            <Input id="agency" inputMode="numeric" maxLength={4} placeholder="0000" {...form.register("agency")} />
+                            <Input id="agency" inputMode="numeric" maxLength={6} placeholder="XXXX-X" {...form.register("agency")} />
                             <FieldError>
                                 {firstErrorKey === "agency" && String(form.formState.errors.agency?.message)}
                             </FieldError>
@@ -62,7 +62,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="account">
                                 Conta
                             </FieldLabel>
-                            <Input id="account" maxLength={11} placeholder="1111111111111" {...form.register("account")} />
+                            <Input id="account" maxLength={6} placeholder="XXXX-X" {...form.register("account")} />
                             <FieldError>
                                 {firstErrorKey === "account" && String(form.formState.errors.account?.message)}
                             </FieldError>
@@ -71,7 +71,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="pix">
                                 Chave Pix
                             </FieldLabel>
-                            <Input id="pix" placeholder="email / celular" {...form.register("pix")} />
+                            <Input id="pix" maxLength={155} placeholder="email / documento / celular" {...form.register("pix")} />
                             <FieldError>
                                 {firstErrorKey === "pix" && String(form.formState.errors.pix?.message)}
                             </FieldError>
@@ -99,7 +99,7 @@ const BankDetails = (
                             <FieldLabel htmlFor="cnpjTransportationVoucher">
                                 CNPJ - Empresa vale transporte
                             </FieldLabel>
-                            <Input id="cnpjTransportationVoucher" inputMode="numeric" maxLength={11} placeholder="11111111111" {...form.register("cnpjTransportationVoucher")} />
+                            <Input id="cnpjTransportationVoucher" inputMode="numeric" maxLength={18} placeholder="XX.XXX.XXX/XXXX-XX" {...form.register("cnpjTransportationVoucher")} />
                             <FieldError>
                                 {firstErrorKey === "cnpjTransportationVoucher" && String(form.formState.errors.cnpjTransportationVoucher?.message)}
                             </FieldError>
@@ -109,7 +109,7 @@ const BankDetails = (
                                 Valor mensal
                             </FieldLabel>
                             <Controller control={form.control} name="monthlyAmount" defaultValue="" render={({ field }) => (
-                                <Input id="monthlyAmount" inputMode="numeric" placeholder="R$0000,00" {...field} onChange={(event) => {
+                                <Input id="monthlyAmount" inputMode="numeric" maxLength={13} placeholder="R$ 0000,00" {...field} onChange={(event) => {
                                     const formattedValue = formatterCurrencyBRL(event.target.value)
                                     field.onChange(formattedValue)
                                 }} />

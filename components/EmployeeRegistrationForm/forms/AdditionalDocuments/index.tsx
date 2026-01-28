@@ -27,10 +27,7 @@ const AdditionalDocuments = (
     
     const handleNextStep = (values: SendEmployee) => {        
         useIsValidFormField({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeData, nextStep })
-        setUploadData(prev => ([
-            ...prev,
-            ...values.additionalDocuments
-        ]))
+        setUploadData(prev => ([ ...prev, ...values.additionalDocuments ]))
     }
 
     console.log("employeeData:", employeeData)

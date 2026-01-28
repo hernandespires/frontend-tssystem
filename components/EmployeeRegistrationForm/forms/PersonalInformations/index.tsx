@@ -17,7 +17,7 @@ const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
-    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
+    const { setEmployeeData } = useContext(CreateEmployeeContext)
 
     const form = useZodForm(formSchema)
 
