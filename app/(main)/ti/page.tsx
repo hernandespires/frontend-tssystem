@@ -20,8 +20,7 @@ const Ti = () => {
             <div className="flex gap-6 items-start justify-between">
                 
                 {/* Container da Esquerda (Ocupa o espaço que sobra) */}
-                <div className="flex flex-col gap-6 w-full">
-                    
+                <div className="flex flex-col gap-6 flex-1 min-w-0">                    
                     {/* 1. Cards */}
                     <div className="flex gap-4 w-full">
                         <div className="bg-default-orange rounded-md p-4 flex flex-col items-center justify-center flex-1 text-black shadow-sm">
@@ -37,14 +36,11 @@ const Ti = () => {
                             <span className="text-4xl font-bold text-white">03</span>
                         </div>
                     </div>
-
-                    {/* 2. Chamados Recentes */}
-                    {/* Nota: Se ficar pequeno, verifique se o arquivo RecentCalls tem w-full */}
                     <div className="w-full">
                         <RecentCalls />
                     </div>
                 </div>
-                <div className="flex flex-wrap gap-6 max-w-100 w-full justify-end">
+                <div className="flex flex-wrap gap-6 max-w-150 w-full justify-end">
                     <Button isFulled onClick={"/"} icon={<FaLifeRing size={36} color="black" />} text="Controle de Chamados" />
                     <Button isFulled onClick={"/"} icon={<FaLock size={36} color="black" />} text="Controle de Acessos" />
                     <Button isFulled onClick={"/"} icon={<FaLaptop size={36} color="black" />} text="Controle de Patrimônios" />
@@ -54,9 +50,12 @@ const Ti = () => {
                 </div>
             </div>
 
-            <div className="flex gap-5 items-end justify-between">
-                <DataTable filter="Colaboradores" />
-                <div className="w-full">
+            <div className="flex gap-6 items-start">
+                <div className="flex-1">
+                    <DataTable filter="Colaboradores" />
+                </div>
+
+                <div className="w-full max-w-150">
                     <DataMetricsTI department="TI" />
                 </div>
             </div>

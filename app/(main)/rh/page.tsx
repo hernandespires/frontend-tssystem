@@ -26,7 +26,9 @@ const Rh = () => {
     return (
         <main className="flex flex-col gap-6">
             <div className="flex gap-5 items-end justify-between">
-                <DataTable filter="Colaboradores" />
+                <div className="flex-1">
+                    <DataTable filter="Colaboradores" />
+                </div>
                 <div className="flex flex-wrap gap-6 max-w-150">
                     <Button isFulled onClick={"/"} icon={<BsClipboardData size={36} color="black" />} text="Relatório Mensal" />
                     <Button isFulled onClick={"/"} icon={<LuScanFace size={36} color="black" />} text="Pontos" />
