@@ -6,7 +6,7 @@ import { Progress } from "../../../ui/progress"
 import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
+import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
@@ -24,7 +24,7 @@ const LaborDocuments = (
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
     const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-    const { uploadData, setUploadData } = useContext(UploadContext)
+    const { setUploadData } = useContext(UploadContext)
     
     const form = useZodForm(formSchema)
     

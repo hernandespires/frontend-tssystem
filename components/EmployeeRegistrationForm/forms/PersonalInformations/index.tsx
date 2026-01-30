@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../ui/progress"
 import { Dispatch, SetStateAction, useContext } from "react"
-import { CreateEmployeeContext } from "@/contexts/rh/CreateEmployeeContext"
+import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
@@ -17,7 +17,7 @@ const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
-    const { setEmployeeData } = useContext(CreateEmployeeContext)
+    const { setEmployeeData } = useContext(CreateEmployeeContext)    
 
     const form = useZodForm(formSchema)
 

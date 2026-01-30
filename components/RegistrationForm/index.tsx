@@ -9,11 +9,11 @@ import { FaArrowLeft } from "react-icons/fa"
 import { UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
 import { LuArrowBigRight } from "react-icons/lu"
-import { SendPersonalInformation } from "@/types/services/humanResources/employee"
+import { SendEmployee } from "@/types/services/humanResources/employee"
 
 const RegistrationForm = (
     { formSchema, urlPath, form, prevStep, children, nextStep }:
-    { formSchema: ZodObject, urlPath: { name: string, route: string }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: (personalInformation: SendPersonalInformation) => Promise<void> }
+    { formSchema: ZodObject, urlPath: { name: string, route: string }[], form: UseFormReturn, prevStep: () => void, children: ReactNode, nextStep: (personalInformation: SendEmployee) => Promise<void> }
 ) => {
     const onSubmit = (values: z.infer<typeof formSchema>) => nextStep(values)
 
@@ -30,7 +30,7 @@ const RegistrationForm = (
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit, onError)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
                     <div className="flex gap-6 items-center">
-                        <Button variant="secondary" onClick={ prevStep }>
+                        <Button type="button" variant="secondary" onClick={ prevStep }>
                             <FaArrowLeft />
                             Voltar
                         </Button>

@@ -1,26 +1,27 @@
-import { CreateEmployeeContextType } from "@/types/contexts/rh/employee"
-import { SendEmployee } from "@/types/services/humanResources/employee"
+import { FindEmployeeContextTypes } from "@/types/contexts/rh/employee"
+import { Employee } from "@/types/services/humanResources/employee"
 import { createContext, ReactNode, useState } from "react"
 
-export const CreateEmployeeContext = createContext<CreateEmployeeContextType | null>(null)
+export const FindEmployeeContext = createContext<FindEmployeeContextTypes | null>(null)
 
-export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) => {
-    const [employeeData, setEmployeeData] = useState<SendEmployee>({
-        name: "",
-        birthday: "",
+export const FindEmployeeProvider = ({ children }: { children: ReactNode }) => {
+    const [employeeFound, setEmployeeFound] = useState<Employee>({
+        id: "",
+        name: "", 
+        birthday: "", 
         civilState: "",
-        // nacionality: "",
+        // nacionality: "" | "BRAZILIAN" | "AMERICAN",
         rg: "", 
         cpf: "",
         email: "", 
         motherName: "", 
-        phone: "", 
-        city: "",  
+        phone: "",
+        city: "", 
         postalCode: "", 
         street: "", 
-        neighborhood: "", 
-        workCard: "", 
-        pisPasep: "", 
+        neighborhood: "",
+        workCard: "",
+        pisPasep: "",
         typeEmployment: "",
         laborModality: "",
         laborScale: "",
@@ -44,5 +45,5 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         quitDate: ""
     })
 
-    return <CreateEmployeeContext.Provider value={{ employeeData, setEmployeeData }}>{ children }</CreateEmployeeContext.Provider>
+    return <FindEmployeeContext.Provider value={{ employeeFound, setEmployeeFound }}>{ children }</FindEmployeeContext.Provider>
 }

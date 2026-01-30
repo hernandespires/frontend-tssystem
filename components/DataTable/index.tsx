@@ -5,7 +5,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import DataTableList from "./DataTableList"
 import { Button } from "../ui/button"
 import { RiGitRepositoryCommitsFill } from "react-icons/ri"
-import { getAllEmployees } from "@/services/humanResources/employee"
+import { findAllEmployees } from "@/services/humanResources/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { useEffect, useState } from "react"
 
@@ -14,7 +14,7 @@ const DataTable = ({ filter }: { filter: string }) => {
 
     useEffect(() => {
         const fetchAllEmployees = async () => {
-            const data: Employee[] = await getAllEmployees()
+            const data: Employee[] = await findAllEmployees()
             return setAllEmployees(data)
         }
 

@@ -1,11 +1,11 @@
 import api from "@/lib/api"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 
-export const getAllEmployees = async (): Promise<Employee[]> => {
+export const findAllEmployees = async (): Promise<Employee[]> => {
   return (await api.get("/rh/allEmployee")).data
 }
 
-export const getEmployeeById = async (id: string): Promise<Employee> => {
+export const findEmployeeById = async (id: string): Promise<Employee> => {
     return (await api.get(`/rh/getEmployee/${id}`)).data
 }
 
