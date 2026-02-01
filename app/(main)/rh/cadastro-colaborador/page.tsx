@@ -1,10 +1,10 @@
 "use client"
 
-import AdditionalDocuments from "@/components/EmployeeRegistrationForm/forms/AdditionalDocuments"
-import BankDetails from "@/components/EmployeeRegistrationForm/forms/BankDetails"
-import Finalization from "@/components/EmployeeRegistrationForm/forms/Finalization"
-import LaborDocuments from "@/components/EmployeeRegistrationForm/forms/LaborDocuments"
-import PersonalInformation from "@/components/EmployeeRegistrationForm/forms/PersonalInformations"
+import AdditionalDocuments from "@/app/(main)/rh/cadastro-colaborador/_forms/AdditionalDocuments"
+import BankDetails from "@/app/(main)/rh/cadastro-colaborador/_forms/BankDetails"
+import Finalization from "@/app/(main)/rh/cadastro-colaborador/_forms/Finalization"
+import LaborDocuments from "@/app/(main)/rh/cadastro-colaborador/_forms/LaborDocuments"
+import PersonalInformation from "@/app/(main)/rh/cadastro-colaborador/_forms/PersonalInformations"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 

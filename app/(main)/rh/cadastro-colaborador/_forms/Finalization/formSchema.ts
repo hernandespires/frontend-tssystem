@@ -1,5 +1,5 @@
 import z from "zod"
-import { defaultEmptyError, defaultError } from "../../defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
 
 export const formSchema = z.object({
     department: z.enum(["RESEARCH_AND_DEVELOPMENT", "WEB_DESIGN", "PAID_TRAFFIC"], { error: defaultError("Departamento") }).nonoptional(defaultEmptyError("Departamento")),

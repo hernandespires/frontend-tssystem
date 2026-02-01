@@ -2,7 +2,7 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../../ui/progress"
+import { Progress } from "../../../../../../components/ui/progress"
 import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
@@ -11,13 +11,15 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import DropdownMenu from "../../components/DropdownMenu"
 import { formSchema } from "./formSchema"
 import { Controller } from "react-hook-form"
-import DatePicker from "../../components/DatePicker"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
 import { UploadContext } from "@/contexts/files/UploadContext"
+import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import DropdownMenu from "../components/DropdownMenu"
+import DatePicker from "../components/DatePicker"
+import Link from "next/link"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
@@ -25,6 +27,7 @@ const LaborDocuments = (
 ) => {
     const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
     const { setUploadData } = useContext(UploadContext)
+    const { employeeFound } = useContext(FindEmployeeContext)
     
     const form = useZodForm(formSchema)
     
@@ -35,28 +38,26 @@ const LaborDocuments = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     const handleNextStep = (values: SendEmployee) => {
+        console.log(values.residentialProve)
+
         useIsValidFormField({
             form, 
             fields: { 
-                ...values, 
+                ...values,
                 admissionDate: new Intl.DateTimeFormat("pt-BR").format(date), 
                 salary: formatterBigDecimal(values.salary),
-                residentialProve: values.residentialProve[0].name,
+                residentialProve: values.residentialProve,
                 documentation: values.documentation[0]?.name
-            }, 
+            },
             setData: setEmployeeData,
             nextStep
         })        
 
         // setUploadData((prev) => ({ ...prev, residentialProve: values.residentialProve, documentation: values.documentation }))
-        setUploadData(([
-            // ...prev,
-            ...values.residentialProve,
-            ...values.documentation
-        ]))
+        setUploadData(([...values.residentialProve, ...values.documentation]))
     }
 
-    console.log(employeeData)
+    console.log(employeeFound.residentialProve + "😀😀😀")
 
     return (
         <section>
@@ -122,6 +123,12 @@ const LaborDocuments = (
                             <FieldLabel>
                                 Comprovante de residencia
                             </FieldLabel>
+                            <p className="text-sm text-gray-400">
+                                Documento atual -
+                                <Link className="text-blue-400 underline cursor-pointer" href={`http://localhost:8080/file/download/${employeeFound.residentialProve}`}>
+                                    {employeeFound.residentialProve?.length > 26 ? `${employeeFound.residentialProve.slice(0, 26)}...` : employeeFound.residentialProve}
+                                </Link>
+                            </p>
                             <Input id="residentialProve" type="file" {...form.register("residentialProve")} />
                             <FieldError>
                                 {firstErrorKey === "residentialProve" && String(form.formState.errors.residentialProve?.message)}

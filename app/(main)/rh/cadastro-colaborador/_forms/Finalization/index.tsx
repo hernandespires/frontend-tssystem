@@ -1,17 +1,17 @@
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../../ui/progress"
+import { Progress } from "../../../../../../components/ui/progress"
 import { formSchema } from "./formSchema"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useContext } from "react"
 import { useZodForm } from "@/hooks/useZodForm"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import DropdownMenu from "../../components/DropdownMenu"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
 import { createEmployee } from "@/services/humanResources/employee"
 import { multipleUpload } from "@/services/file/upload"
 import { UploadContext } from "@/contexts/files/UploadContext"
+import DropdownMenu from "../components/DropdownMenu"
 
 
 const Finalization = (

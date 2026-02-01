@@ -1,5 +1,5 @@
 import z from "zod"
-import { defaultEmptyError, defaultError } from "../../defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
 
 export const formSchema = z.object({
     workCard: z.string({ error: defaultError("Carteira de trabalho") }).nonempty(defaultEmptyError("Carteira de trabalho")).min(14, defaultError("Carteira de trabalho")),
@@ -9,7 +9,12 @@ export const formSchema = z.object({
     laborScale: z.enum(["_5X2", "_4X3", "_6X1"], { error: defaultError("Escala") }).nonoptional("Escala"),
     admissionDate: z.date({ error: defaultError("Data de admissão") }).nonoptional("Data de admisão"),
     salary: z.string({ error: defaultError("Salário") }).nonempty(defaultEmptyError("Salário")).max(13, defaultError("Salário")),
-    residentialProve: z.any().refine((files) => files?.[0] instanceof File, defaultEmptyError("Comprovante de residência")),
+    residentialProve: z.any()
+    .refine((files) => {        
+        if (!files || files.length === 0) return true
+                
+        return files[0] instanceof File
+    }, defaultError("Comprovante de residência")).optional(),
     reservist: z.boolean(),
     documentation: z.any().optional()
 }).superRefine((data, ctx) => {

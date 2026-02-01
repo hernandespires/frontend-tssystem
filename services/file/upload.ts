@@ -14,3 +14,13 @@ export const multipleUpload = async (files: File[]): Promise<Upload[]> => {
 
   return data
 }
+
+export const download = async (name: string): Promise<File> => {
+  const res = await api.get(`/file/download/${name}`, { responseType: 'blob' })
+  const resAsBlob = res.data
+  const mimeType = res.headers['content-type'] || 'application/octet-stream'
+
+  const file = new File([resAsBlob], name, { type: mimeType })
+
+  return file
+}

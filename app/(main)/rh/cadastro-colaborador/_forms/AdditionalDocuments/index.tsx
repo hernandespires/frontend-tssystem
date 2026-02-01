@@ -1,10 +1,9 @@
 "use client"
 
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../../ui/progress"
+import { Progress } from "../../../../../../components/ui/progress"
 import { formSchema } from "./formSchema"
 import { Dispatch, SetStateAction, useContext } from "react"
-import FileUploadPreview from "../../components/FileUploadPreview"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
@@ -12,6 +11,7 @@ import { SendEmployee } from "@/types/services/humanResources/employee"
 import { Field, FieldError } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { UploadContext } from "@/contexts/files/UploadContext"
+import FileUploadPreview from "../components/FileUploadPreview"
 
 const AdditionalDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 

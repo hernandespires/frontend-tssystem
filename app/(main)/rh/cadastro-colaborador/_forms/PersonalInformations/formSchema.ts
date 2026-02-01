@@ -1,5 +1,5 @@
 import z from "zod"
-import { defaultEmptyError, defaultError } from "../../defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
 
 export const formSchema = z.object({
     name: z.string({ error: defaultError("Nome") }).nonempty(defaultEmptyError(defaultEmptyError("Nome"))),

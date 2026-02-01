@@ -6,8 +6,18 @@ import { useContext } from "react"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 
 export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {
+    // const [files, setFiles] = useState<object | null>(null)
     const { employeeFound } = useContext(FindEmployeeContext)
-    console.log(employeeFound)
+    
+    // console.log(files.residentialProve)
+    
+    // useEffect(() => {
+    //     const getFiles = async () => {
+    //         setFiles({ residentialProve: await download(employeeFound.residentialProve) })
+    //     }
+
+    //     getFiles()
+    // }, [])
 
     return (
         useForm<z.infer<TSchema>>({ 
@@ -32,7 +42,7 @@ export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {
                 laborScale: employeeFound.laborScale,
                 admissionDate: new Date(employeeFound.admissionDate),
                 salary: formatterCurrencyBRL(String(employeeFound.salary)),
-                residentialProve: employeeFound.residentialProve,
+                // residentialProve: files?.residentialProve,
                 reservist: employeeFound.reservist,
                 documentation: employeeFound.documentation,
                 bank: employeeFound.bank,
