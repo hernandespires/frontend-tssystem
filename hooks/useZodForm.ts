@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { useContext } from "react"
-import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
+import { formatterCPF, formatterCurrencyBRL, formatterRG } from "@/utils/formatters"
 
 export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {    
     const { employeeFound } = useContext(FindEmployeeContext)
@@ -15,8 +15,8 @@ export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {
                 name: employeeFound.name, 
                 birthday: new Date(employeeFound.birthday), 
                 civilState: employeeFound.civilState, 
-                rg: employeeFound.rg, 
-                cpf: employeeFound.cpf, 
+                rg: formatterRG(employeeFound.rg), 
+                cpf: formatterCPF(employeeFound.cpf), 
                 email: employeeFound.email, 
                 motherName: employeeFound.motherName, 
                 phone: employeeFound.phone, 

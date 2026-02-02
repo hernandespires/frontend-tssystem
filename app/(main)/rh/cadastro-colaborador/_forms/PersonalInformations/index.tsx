@@ -12,6 +12,8 @@ import { SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
 import DatePicker from "../components/DatePicker"
 import DropdownMenu from "../components/DropdownMenu"
+import { Controller } from "react-hook-form"
+import { formatterCPF, formatterRG } from "@/utils/formatters"
 
 const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
@@ -61,7 +63,11 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="rg">
                                 RG
                             </FieldLabel>
-                            <Input id="rg" maxLength={12} placeholder="XX.XXX.XXX-X" {...form.register("rg")} />
+                            <Controller control={form.control} name="rg" defaultValue="" render={({ field }) => (
+                                <Input id="rg" maxLength={12} placeholder="XX.XXX.XXX-X" {...field} onChange={((event) => {                                    
+                                    field.onChange(formatterRG(event.target.value))
+                                })} />
+                            )} />
                             <FieldError>
                                 {firstErrorKey === "rg" && String(form.formState.errors.rg?.message)}
                             </FieldError>
@@ -70,7 +76,11 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="cpf">
                                 CPF
                             </FieldLabel>
-                            <Input id="cpf" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...form.register("cpf")} />
+                            <Controller control={form.control} name="cpf" defaultValue="" render={({ field }) => (
+                                <Input id="cpf" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...field} onChange={(event) => {
+                                    field.onChange(formatterCPF(event.target.value))
+                                }} />
+                            )} />
                             <FieldError>
                                 {firstErrorKey === "cpf" && String(form.formState.errors.cpf?.message)}
                             </FieldError>

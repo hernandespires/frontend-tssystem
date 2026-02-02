@@ -15,8 +15,8 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { Controller } from "react-hook-form"
-import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
-import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
+import { formatterCurrencyBRL } from "@/utils/formatters"
+import { formatterBigDecimal } from "@/utils/formatters"
 import DropdownMenu from "../components/DropdownMenu"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 
@@ -115,8 +115,7 @@ const BankDetails = (
                             </FieldLabel>
                             <Controller control={form.control} name="monthlyAmount" defaultValue="" render={({ field }) => (
                                 <Input id="monthlyAmount" inputMode="numeric" maxLength={13} placeholder="R$ 0000,00" {...field} onChange={(event) => {
-                                    const formattedValue = formatterCurrencyBRL(event.target.value)
-                                    field.onChange(formattedValue)
+                                    field.onChange(formatterCurrencyBRL(event.target.value))
                                 }} />
                             )} />
                             <FieldError>
