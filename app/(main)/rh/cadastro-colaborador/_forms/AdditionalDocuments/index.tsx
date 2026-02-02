@@ -12,6 +12,8 @@ import { Field, FieldError } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import FileUploadPreview from "../components/FileUploadPreview"
+import ActualDocument from "../components/ActualDocument"
+import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 
 const AdditionalDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
@@ -19,19 +21,17 @@ const AdditionalDocuments = (
 ) => {
     const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
     const { uploadData, setUploadData } = useContext(UploadContext)
+    const { employeeFound } = useContext(FindEmployeeContext)
 
     const form = useZodForm(formSchema)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
-    const handleNextStep = (values: SendEmployee) => {        
+    const handleNextStep = (values: SendEmployee) => {
         useIsValidFormField({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeData, nextStep })
         setUploadData(prev => ([ ...prev, ...values.additionalDocuments ]))
     }
-
-    console.log("employeeData:", employeeData)
-    console.log("uploadData:", uploadData)
 
     return (
         <section>
@@ -42,6 +42,9 @@ const AdditionalDocuments = (
                     </h1>
                     <Progress value={ percentageProgress } className="max-w-107.5" />
                 </div>
+                <ActualDocument>
+                    {employeeFound.additionalDocuments}
+                </ActualDocument>                
                 <Field className="flex min-h-112 py-3">
                     <div className="flex flex-col items-center w-fit">
                         <FileUploadPreview fieldName="additionalDocuments" form={form} />

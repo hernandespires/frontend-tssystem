@@ -9,8 +9,6 @@ const Header = ({ department }: { department: string }) => {
     const { user } = useLogin()
     if (user === undefined) return null
 
-
-    console.log(user?.image)
     return (
         <header className="m-4 glass-effect flex py-4.5 border border-default-border-color rounded-md justify-center">
             <section className="flex justify-between gap-130">

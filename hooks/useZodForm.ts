@@ -5,19 +5,8 @@ import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { useContext } from "react"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 
-export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {
-    // const [files, setFiles] = useState<object | null>(null)
+export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {    
     const { employeeFound } = useContext(FindEmployeeContext)
-    
-    // console.log(files.residentialProve)
-    
-    // useEffect(() => {
-    //     const getFiles = async () => {
-    //         setFiles({ residentialProve: await download(employeeFound.residentialProve) })
-    //     }
-
-    //     getFiles()
-    // }, [])
 
     return (
         useForm<z.infer<TSchema>>({ 

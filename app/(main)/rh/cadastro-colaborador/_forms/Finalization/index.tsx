@@ -21,8 +21,6 @@ const Finalization = (
     const { uploadData } = useContext(UploadContext)
 
     const form = useZodForm(formSchema)
-
-    console.log("uploadData - Final😗", uploadData)
     
     const handleCreateEmployee = async (values: SendEmployee) => {
         const newEmployee: SendEmployee = { ...employeeData, ...values }
@@ -46,8 +44,6 @@ const Finalization = (
             redirect("/rh")
         }
     }
-
-    console.log(employeeData)
 
     return (
         <section>

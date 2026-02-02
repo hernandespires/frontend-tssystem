@@ -19,7 +19,7 @@ import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import DropdownMenu from "../components/DropdownMenu"
 import DatePicker from "../components/DatePicker"
-import Link from "next/link"
+import ActualDocument from "../components/ActualDocument"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
@@ -31,7 +31,7 @@ const LaborDocuments = (
     
     const form = useZodForm(formSchema)
     
-    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
+    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(employeeFound.reservist !== undefined || null ? employeeFound.reservist : false)
     const [date, setDate] = useState<Date | undefined>(undefined)
 
     const errors = form.formState.errors
@@ -46,18 +46,15 @@ const LaborDocuments = (
                 ...values,
                 admissionDate: new Intl.DateTimeFormat("pt-BR").format(date), 
                 salary: formatterBigDecimal(values.salary),
-                residentialProve: values.residentialProve,
+                residentialProve: values.residentialProve.length > 0 && values.residentialProve[0].name,
                 documentation: values.documentation[0]?.name
             },
             setData: setEmployeeData,
             nextStep
         })        
-
-        // setUploadData((prev) => ({ ...prev, residentialProve: values.residentialProve, documentation: values.documentation }))
+        
         setUploadData(([...values.residentialProve, ...values.documentation]))
     }
-
-    console.log(employeeFound.residentialProve + "😀😀😀")
 
     return (
         <section>
@@ -123,12 +120,9 @@ const LaborDocuments = (
                             <FieldLabel>
                                 Comprovante de residencia
                             </FieldLabel>
-                            <p className="text-sm text-gray-400">
-                                Documento atual -
-                                <Link className="text-blue-400 underline cursor-pointer" href={`http://localhost:8080/file/download/${employeeFound.residentialProve}`}>
-                                    {employeeFound.residentialProve?.length > 26 ? `${employeeFound.residentialProve.slice(0, 26)}...` : employeeFound.residentialProve}
-                                </Link>
-                            </p>
+                            <ActualDocument>
+                                {employeeFound.residentialProve}
+                            </ActualDocument>
                             <Input id="residentialProve" type="file" {...form.register("residentialProve")} />
                             <FieldError>
                                 {firstErrorKey === "residentialProve" && String(form.formState.errors.residentialProve?.message)}
@@ -142,7 +136,7 @@ const LaborDocuments = (
                                         field.onChange(isChecked)
                                     }} />
                                     <Label htmlFor="reservist">
-                                        Resevista
+                                        Reservista
                                     </Label>
                                 </div>
                             </Field>
@@ -151,6 +145,9 @@ const LaborDocuments = (
                             <FieldLabel>
                                 Documentação
                             </FieldLabel>
+                            <ActualDocument>
+                                {employeeFound.documentation}
+                            </ActualDocument>
                             <Input id="documentation" type="file" {...form.register("documentation")} />
                             <FieldError>
                                 {firstErrorKey === "documentation" && String(form.formState.errors.documentation?.message)}

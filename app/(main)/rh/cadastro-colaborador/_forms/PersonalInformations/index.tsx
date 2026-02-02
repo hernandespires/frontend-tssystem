@@ -3,14 +3,13 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../../../../components/ui/progress"
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
-import { download } from "@/services/file/upload"
 import DatePicker from "../components/DatePicker"
 import DropdownMenu from "../components/DropdownMenu"
 
@@ -24,14 +23,6 @@ const PersonalInformation = (
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
-
-    useEffect(() => {
-        const call = async () => {
-            console.log(await download("logo.webp"))
-        }
-
-        call()
-    }, [])
 
     const handleNextStep = (values: SendEmployee) => {
         useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
