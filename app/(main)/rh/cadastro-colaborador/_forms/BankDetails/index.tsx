@@ -18,13 +18,18 @@ import { Controller } from "react-hook-form"
 import { formatterCurrencyBRL } from "@/utils/formatters/formatterCurrencyBRL"
 import { formatterBigDecimal } from "@/utils/formatters/formatterBigDecimal"
 import DropdownMenu from "../components/DropdownMenu"
+import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
     const { setEmployeeData } = useContext(CreateEmployeeContext)
-    const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
+    const { employeeFound } = useContext(FindEmployeeContext)
+
+    const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(
+        employeeFound.transportationVoucher !== undefined || null ? employeeFound.transportationVoucher : false
+    )
     
     const form = useZodForm(formSchema)
     
