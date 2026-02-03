@@ -7,7 +7,7 @@ export const formSchema = z.object({
     account: z.string({ error: defaultError("Conta") }).min(6, defaultError("Conta")).nonempty(defaultEmptyError("Conta")),
     pix: z.string({ error: defaultError("Chave pix") }).nonempty("Chave pix"),
     transportationVoucher: z.boolean(),
-    cnpjTransportationVoucher: z.string({ error: defaultError("CNPJ da empresa de transporte") }).min(18, defaultError("CNPJ da empresa de transporte")).optional(),
+    cnpjTransportationVoucher: z.string({ error: defaultError("CNPJ da empresa de transporte") }).min(18, defaultEmptyError("CNPJ da empresa de transporte")).optional(),
     monthlyAmount: z.string().optional()
 }).superRefine((data, ctx) => {
     if (data.transportationVoucher) {

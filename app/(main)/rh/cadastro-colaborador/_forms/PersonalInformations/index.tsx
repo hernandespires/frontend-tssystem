@@ -8,27 +8,36 @@ import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeCont
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/humanResources/employee"
+import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
 import DatePicker from "../components/DatePicker"
 import DropdownMenu from "../components/DropdownMenu"
 import { Controller } from "react-hook-form"
-import { formatterCPF, formatterRG } from "@/utils/formatters"
+import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
+import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { toast } from "sonner"
 
 const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
     { urlPath: { name: string; route: string; }[], prevStep: () => void, nextStep: Dispatch<SetStateAction<number>>, actualStep: number, percentageProgress: number }
 ) => {
     const { setEmployeeData } = useContext(CreateEmployeeContext)
+    const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
 
     const form = useZodForm(formSchema)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-    const handleNextStep = (values: SendEmployee) => {
-        useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
+    const handleConflictingValues = ({ value }: { value: string }): boolean => {
+        return allEmployeesDataFound.map((employee: Employee) => value === employee.rg)
     }
+
+    const handleNextStep = (values: SendEmployee) => {        
+        if (handleConflictingValues(values.rg)) return toast.error("RG já foi cadastrado para outro colaborador")
+
+        useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
+    }    
 
     return (
         <section>
@@ -108,15 +117,19 @@ const PersonalInformation = (
                         <Separator orientation="vertical" className="self-stretch w-px bg-default-border-color" />
                     </div>
                     <div className="flex flex-wrap gap-x-6 gap-y-4.5 flex-1 h-fit">
-                        <Field className="w-[55%]">
-                            <FieldLabel htmlFor="phone">
-                                Celular
-                            </FieldLabel>
-                            <Input id="phone" maxLength={19} placeholder="+55 (XX) XXXXX-XXXX" {...form.register("phone")} />
-                            <FieldError>
-                                {firstErrorKey === "phone" && String(form.formState.errors.phone?.message)}
-                            </FieldError>
-                        </Field>
+                        <Controller name="phone" control={form.control} defaultValue="" render={({ field }) => (
+                            <Field className="w-[55%]">
+                                <FieldLabel htmlFor="phone">
+                                    Celular
+                                </FieldLabel>
+                                <Input id="phone" maxLength={19} placeholder="+55 (XX) XXXXX-XXXX" {...field} onChange={(event) => {
+                                    field.onChange(formatterPhone(event.target.value))
+                                }} />
+                                <FieldError>
+                                    {firstErrorKey === "phone" && String(form.formState.errors.phone?.message)}
+                                </FieldError>
+                            </Field>
+                        )} />
                         <h1 className="w-full">
                             Endereço
                         </h1>
@@ -132,15 +145,19 @@ const PersonalInformation = (
                                 {firstErrorKey === "city" && String(form.formState.errors.city?.message)}
                             </FieldError>
                         </Field>
-                        <Field className="w-[46%]">
-                            <FieldLabel htmlFor="postalCode">
-                                Código Postal
-                            </FieldLabel>
-                            <Input id="postalCode" maxLength={10} placeholder="XXXXX-XXX" {...form.register("postalCode")} />
-                            <FieldError>
-                                {firstErrorKey === "postalCode" && String(form.formState.errors.postalCode?.message)}
-                            </FieldError>
-                        </Field>
+                        <Controller name="postalCode" control={form.control} defaultValue="" render={({ field }) => (
+                            <Field className="w-[46%]">
+                                <FieldLabel htmlFor="postalCode">
+                                    Código Postal
+                                </FieldLabel>
+                                <Input id="postalCode" maxLength={10} placeholder="XXXXX-XXX" {...field} onChange={(event) => {
+                                    field.onChange(formatterPostalCode(event.target.value))
+                                }} />
+                                <FieldError>
+                                    {firstErrorKey === "postalCode" && String(form.formState.errors.postalCode?.message)}
+                                </FieldError>
+                            </Field>
+                        )} />
                         <Field>
                             <FieldLabel htmlFor="street">
                                 Rua

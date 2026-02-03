@@ -13,7 +13,7 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
 import { Controller } from "react-hook-form"
-import { formatterCurrencyBRL } from "@/utils/formatters"
+import { formatterCPF, formatterCurrencyBRL, formatterPisPasep } from "@/utils/formatters"
 import { formatterBigDecimal } from "@/utils/formatters"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
@@ -67,24 +67,32 @@ const LaborDocuments = (
                 </div>
                 <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-                        <Field>
-                            <FieldLabel>
-                                Carteira de Trabalho
-                            </FieldLabel>
-                            <Input id="workCard" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...form.register("workCard")} />
-                            <FieldError>
-                                {firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}
-                            </FieldError>
-                        </Field>
-                        <Field>
-                            <FieldLabel>
-                                PIS/PASEP
-                            </FieldLabel>
-                            <Input id="pisPasep" maxLength={14} placeholder="XXX.XXXXX.XX-X" {...form.register("pisPasep")} />
-                            <FieldError>
-                                {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
-                            </FieldError>
-                        </Field>
+                        <Controller name="workCard" control={form.control} defaultValue="" render={({ field }) => (
+                            <Field>
+                                <FieldLabel>
+                                    Carteira de Trabalho
+                                </FieldLabel>
+                                <Input id="workCard" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...field} onChange={(event) => {
+                                    field.onChange(formatterCPF(event.target.value))
+                                }} />
+                                <FieldError>
+                                    {firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}
+                                </FieldError>
+                            </Field>
+                        )} />
+                        <Controller name="pisPasep" control={form.control} defaultValue="" render={({ field }) => (
+                            <Field>
+                                <FieldLabel>
+                                    PIS/PASEP
+                                </FieldLabel>
+                                <Input id="pisPasep" maxLength={14} placeholder="XXX.XXXXX.XX-X" {...field} onChange={(event) => {
+                                    field.onChange(formatterPisPasep(event.target.value))
+                                }} />
+                                <FieldError>
+                                    {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
+                                </FieldError>
+                            </Field>
+                        )} />
                         <DropdownMenu form={form} name="typeEmployment" label="Tipo de Vínculo" schemaKeys={Object.keys(formSchema.shape)} options={[
                             { label: "CLT", value: "CLT" }, { label: "CNPJ", value: "CNPJ" }, { label: "Freelance", value: "FREELANCE" }
                         ]} />
@@ -108,7 +116,7 @@ const LaborDocuments = (
                             </FieldLabel>
                             <Controller control={form.control} name="salary" defaultValue="" render={({ field }) => (
                                 <Input id="salary" inputMode="numeric" maxLength={13} placeholder="R$ 0000,00" {...field} onChange={(event) => {
-                                    field.onChange(formatterCurrencyBRL(event.target.vlaue))
+                                    field.onChange(formatterCurrencyBRL(event.target.value))
                                 }} />
                             )} />
                             <FieldError>

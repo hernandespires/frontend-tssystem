@@ -12,7 +12,7 @@ export const formSchema = z.object({
     motherName: z.string({ error: defaultError("Nome da mãe") }).nonempty(defaultEmptyError("Nome da mãe")),
     phone: z.string({ error: defaultError("Celular") }).min(11, defaultError("Celular")),
     city: z.string({ error: defaultError("Cidade") }).nonempty(defaultEmptyError("Cidade")),
-    postalCode: z.string({ error: defaultError("Código postal") }).nonempty(defaultEmptyError("Código postal")).min(10, defaultError("Código postal")),
+    postalCode: z.string({ error: defaultError("Código postal") }).nonempty(defaultEmptyError("Código postal")).min(9, defaultError("Código postal")),
     street: z.string({ error: defaultError("Rua") }).nonempty(defaultEmptyError("Rua")),
     neighborhood: z.string({ error: defaultError("Bairro") }).nonempty(defaultEmptyError("Bairro"))
 })
