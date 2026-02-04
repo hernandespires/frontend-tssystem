@@ -17,10 +17,10 @@ import { Employee, SendEmployee } from "@/types/services/humanResources/employee
 import { Controller } from "react-hook-form"
 import { formatterBankAgencyAndAccount, formatterCNPJ, formatterCurrencyBRL, formatterPix } from "@/utils/formatters"
 import { formatterBigDecimal } from "@/utils/formatters"
-import DropdownMenu from "../components/DropdownMenu"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
+import dynamic from "next/dynamic"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
@@ -51,6 +51,8 @@ const BankDetails = (
 
         useIsValidFormField({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeData, nextStep })
     }
+
+    const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
     return (
         <section>

@@ -1,3 +1,5 @@
+"use client"
+
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Controller, FieldValues, Path, UseFormReturn } from "react-hook-form"
@@ -16,12 +18,12 @@ const DropdownMenu =
                 { label }
             </FieldLabel>
             <Controller control={ form.control } name={ name } render={({ field }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field?.value ?? ""} onValueChange={field.onChange}>
                     <SelectTrigger id={ name }>
                         <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
                     <SelectContent>
-                        { options.map((option: { label: string, value: string | number }) => <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>) }
+                        { options.map((option: { label: string, value: string | number }) => <SelectItem key={option.value} value={String(option.value)}>{option.label}</SelectItem>) }
                     </SelectContent>
                 </Select>
             )} />

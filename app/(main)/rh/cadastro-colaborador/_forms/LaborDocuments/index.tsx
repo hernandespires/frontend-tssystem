@@ -17,7 +17,6 @@ import { formatterCPF, formatterCurrencyBRL, formatterPisPasep } from "@/utils/f
 import { formatterBigDecimal } from "@/utils/formatters"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import DropdownMenu from "../components/DropdownMenu"
 import ActualDocument from "../components/ActualDocument"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
@@ -71,6 +70,7 @@ const LaborDocuments = (
     }    
 
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
+    const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
     return (
         <section>
@@ -144,7 +144,7 @@ const LaborDocuments = (
                                 Comprovante de residencia
                             </FieldLabel>
                             <ActualDocument>
-                                {employeeFound.residentialProve}
+                                {employeeFound?.residentialProve ? employeeFound?.residentialProve : employeeData?.residentialProve}
                             </ActualDocument>
                             <Input id="residentialProve" type="file" {...form.register("residentialProve")} />
                             <FieldError>
@@ -169,7 +169,7 @@ const LaborDocuments = (
                                 Documentação
                             </FieldLabel>
                             <ActualDocument>
-                                {employeeFound.documentation}
+                                {employeeFound?.documentation ? employeeFound?.documentation : employeeData?.documentation}
                             </ActualDocument>
                             <Input id="documentation" type="file" {...form.register("documentation")} />
                             <FieldError>

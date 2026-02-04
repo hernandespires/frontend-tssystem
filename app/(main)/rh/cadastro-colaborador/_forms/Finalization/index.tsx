@@ -11,7 +11,7 @@ import { toast } from "sonner"
 import { createEmployee } from "@/services/humanResources/employee"
 import { multipleUpload } from "@/services/file/upload"
 import { UploadContext } from "@/contexts/files/UploadContext"
-import DropdownMenu from "../components/DropdownMenu"
+import dynamic from "next/dynamic"
 
 
 const Finalization = (
@@ -43,6 +43,8 @@ const Finalization = (
             redirect("/rh")
         }
     }
+
+    const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
     return (
         <section>

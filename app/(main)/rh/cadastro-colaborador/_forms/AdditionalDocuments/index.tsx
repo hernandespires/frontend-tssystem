@@ -1,5 +1,3 @@
-"use client"
-
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../../../../components/ui/progress"
 import { formSchema } from "./formSchema"
@@ -33,6 +31,8 @@ const AdditionalDocuments = (
         setUploadData(prev => ([ ...prev, ...values.additionalDocuments ]))
     }
 
+    console.log(employeeData, "🌹🌹🌹")
+
     return (
         <section>
             <RegistrationForm formSchema={formSchema} urlPath={ urlPath } form={form} prevStep={ prevStep } nextStep={handleNextStep}>
@@ -43,7 +43,7 @@ const AdditionalDocuments = (
                     <Progress value={ percentageProgress } className="max-w-107.5" />
                 </div>
                 <ActualDocument>
-                    {employeeFound.additionalDocuments}
+                    {employeeFound?.additionalDocuments ? employeeFound?.additionalDocuments : employeeData?.additionalDocuments}
                 </ActualDocument>                
                 <Field className="flex min-h-112 py-3">
                     <div className="flex flex-col items-center w-fit">

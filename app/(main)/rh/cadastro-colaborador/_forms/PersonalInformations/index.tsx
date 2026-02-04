@@ -10,7 +10,6 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
-import DropdownMenu from "../components/DropdownMenu"
 import { Controller } from "react-hook-form"
 import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
@@ -43,6 +42,7 @@ const PersonalInformation = (
     }
 
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
+    const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
     return (
         <section>

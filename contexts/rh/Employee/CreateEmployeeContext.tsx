@@ -36,7 +36,7 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
         transportationVoucher: false,
         cnpjTransportationVoucher: "",
         monthlyAmount: null,
-        additionalDocuments: "",
+        additionalDocuments: [],
         department: "",
         operation: "",
         level: "",
