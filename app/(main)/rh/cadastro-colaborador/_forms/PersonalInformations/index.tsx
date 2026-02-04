@@ -10,13 +10,13 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
-import DatePicker from "../components/DatePicker"
 import DropdownMenu from "../components/DropdownMenu"
 import { Controller } from "react-hook-form"
 import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { handleConflictingValues } from "@/utils/handlers"
+import dynamic from "next/dynamic"
 
 const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
@@ -41,6 +41,8 @@ const PersonalInformation = (
             form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep 
         })
     }
+
+    const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
 
     return (
         <section>

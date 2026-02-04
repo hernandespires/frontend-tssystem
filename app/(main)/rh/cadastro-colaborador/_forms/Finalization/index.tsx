@@ -27,8 +27,7 @@ const Finalization = (
         
         useIsValidFormField({ form, fields: values, setData: setEmployeeData })
 
-        const createNewEmployee = await createEmployee(newEmployee)        
-
+        const createNewEmployee = await createEmployee(newEmployee)
         const uploadFiles = await multipleUpload(uploadData)
 
         if (createNewEmployee && uploadFiles) return true

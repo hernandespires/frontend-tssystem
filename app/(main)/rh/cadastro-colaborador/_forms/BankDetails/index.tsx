@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../../../../components/ui/progress"
 import { formSchema } from "./formSchema"
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
@@ -26,18 +26,21 @@ const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
-    const { setEmployeeData } = useContext(CreateEmployeeContext)
+    const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
     const { employeeFound } = useContext(FindEmployeeContext)
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
 
-    const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(
-        employeeFound.transportationVoucher !== undefined || null ? employeeFound.transportationVoucher : false
-    )
+    const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
     
     const form = useZodForm(formSchema)
     
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
+
+    useEffect(() => {
+        if (employeeFound.reservist) setTransportationVoucherDocumentationVisibility(employeeFound.reservist)
+        else if (employeeData.reservist) setTransportationVoucherDocumentationVisibility(employeeData.reservist)
+    }, [])
     
     const handleNextStep = (values: SendEmployee) => {
         const conflictFieldMessages: Record<keyof Employee, string> = { account: "Conta", pix: "Chave pix" }

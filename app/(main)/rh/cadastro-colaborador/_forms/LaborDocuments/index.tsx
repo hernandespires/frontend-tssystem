@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../../../../components/ui/progress"
-import { Dispatch, SetStateAction, useContext, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
@@ -18,10 +18,10 @@ import { formatterBigDecimal } from "@/utils/formatters"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import DropdownMenu from "../components/DropdownMenu"
-import DatePicker from "../components/DatePicker"
 import ActualDocument from "../components/ActualDocument"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
+import dynamic from "next/dynamic"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
@@ -32,13 +32,18 @@ const LaborDocuments = (
     const { employeeFound } = useContext(FindEmployeeContext)
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     
-    const form = useZodForm(formSchema)
+    const form = useZodForm(formSchema)    
     
-    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(employeeFound.reservist !== undefined || null ? employeeFound.reservist : false)
+    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
     const [date, setDate] = useState<Date | undefined>(undefined)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
+
+    useEffect(() => {
+        if (employeeFound.reservist) setDocumentationVisibility(employeeFound.reservist)
+        else if (employeeData.reservist) setDocumentationVisibility(employeeData.reservist)
+    }, [])
 
     const handleNextStep = (values: SendEmployee) => {
         const conflictFieldMessages: Record<keyof Employee, string> = { workCard: "Carteira de trabalho", pisPasep: "PIS/PASEP" }
@@ -63,7 +68,9 @@ const LaborDocuments = (
         })        
         
         setUploadData(([...values.residentialProve, ...values.documentation]))
-    }
+    }    
+
+    const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
 
     return (
         <section>
