@@ -13,12 +13,14 @@ import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeCont
 import { useZodForm } from "@/hooks/useZodForm"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/humanResources/employee"
+import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { Controller } from "react-hook-form"
 import { formatterBankAgencyAndAccount, formatterCNPJ, formatterCurrencyBRL, formatterPix } from "@/utils/formatters"
 import { formatterBigDecimal } from "@/utils/formatters"
 import DropdownMenu from "../components/DropdownMenu"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { handleConflictingValues } from "@/utils/handlers"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 
@@ -26,6 +28,7 @@ const BankDetails = (
 ) => {
     const { setEmployeeData } = useContext(CreateEmployeeContext)
     const { employeeFound } = useContext(FindEmployeeContext)
+    const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
 
     const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(
         employeeFound.transportationVoucher !== undefined || null ? employeeFound.transportationVoucher : false
@@ -37,6 +40,12 @@ const BankDetails = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
     const handleNextStep = (values: SendEmployee) => {
+        const conflictFieldMessages: Record<keyof Employee, string> = { account: "Conta", pix: "Chave pix" }
+
+        if (["account", "pix"].some((field) => handleConflictingValues(
+            employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages
+        ))) return        
+
         useIsValidFormField({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeData, nextStep })
     }
 

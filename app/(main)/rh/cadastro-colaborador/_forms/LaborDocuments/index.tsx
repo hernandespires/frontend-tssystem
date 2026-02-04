@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
-import { SendEmployee } from "@/types/services/humanResources/employee"
+import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
@@ -20,6 +20,8 @@ import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import DropdownMenu from "../components/DropdownMenu"
 import DatePicker from "../components/DatePicker"
 import ActualDocument from "../components/ActualDocument"
+import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { handleConflictingValues } from "@/utils/handlers"
 
 const LaborDocuments = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }:
@@ -28,6 +30,7 @@ const LaborDocuments = (
     const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
     const { setUploadData } = useContext(UploadContext)
     const { employeeFound } = useContext(FindEmployeeContext)
+    const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     
     const form = useZodForm(formSchema)
     
@@ -38,7 +41,13 @@ const LaborDocuments = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     const handleNextStep = (values: SendEmployee) => {
-        console.log(values.residentialProve)
+        const conflictFieldMessages: Record<keyof Employee, string> = { workCard: "Carteira de trabalho", pisPasep: "PIS/PASEP" }
+        
+        if (["workCard", "pisPasep"].some((field) => handleConflictingValues(
+            employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages
+        ))) return
+
+        // if (["workCard", "pisPasep"].some((field) => handleConflictingValues(employeeFound, values[field], field, allEmployeesDataFound))) return
 
         useIsValidFormField({
             form, 

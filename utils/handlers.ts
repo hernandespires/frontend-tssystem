@@ -14,3 +14,19 @@
 //         toast.error("Erro ao baixar arquivo: " + name)
 //     }
 // }
+
+import { Employee } from "@/types/services/humanResources/employee"
+import { toast } from "sonner"
+
+export const handleConflictingValues = (
+    dataFound: Employee, allDataFound: Employee[], dataToCompare: keyof Employee, value: string, conflictFieldMessages: Record<keyof Employee, string>
+): boolean => {
+    const hasConflict = !dataFound[dataToCompare] && allDataFound.some((employee) => employee[dataToCompare] === value)
+
+    if (hasConflict) {
+        toast.error(`${conflictFieldMessages[dataToCompare]} já foi cadastrado para outro colaborador`)
+        return true
+    }
+
+    return false
+}

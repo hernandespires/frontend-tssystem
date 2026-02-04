@@ -15,7 +15,8 @@ import DropdownMenu from "../components/DropdownMenu"
 import { Controller } from "react-hook-form"
 import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
-import { toast } from "sonner"
+import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { handleConflictingValues } from "@/utils/handlers"
 
 const PersonalInformation = (
     { urlPath, prevStep, nextStep, actualStep, percentageProgress }:
@@ -23,21 +24,23 @@ const PersonalInformation = (
 ) => {
     const { setEmployeeData } = useContext(CreateEmployeeContext)
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
+    const { employeeFound } = useContext(FindEmployeeContext)
 
     const form = useZodForm(formSchema)
-
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-    const handleConflictingValues = ({ value }: { value: string }): boolean => {
-        return allEmployeesDataFound.map((employee: Employee) => value === employee.rg)
+    const handleNextStep = (values: SendEmployee) => {
+        const conflictFieldMessages: Record<keyof Employee, string> = { rg: "RG", cpf: "CPF", email: "Email", phone: "Celular" }
+
+        if (["rg", "cpf", "email", "phone"].some((field) => handleConflictingValues(
+            employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages
+        ))) return
+
+        useIsValidFormField({
+            form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep 
+        })
     }
-
-    const handleNextStep = (values: SendEmployee) => {        
-        if (handleConflictingValues(values.rg)) return toast.error("RG já foi cadastrado para outro colaborador")
-
-        useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
-    }    
 
     return (
         <section>
