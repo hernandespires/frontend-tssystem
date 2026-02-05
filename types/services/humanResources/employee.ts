@@ -69,7 +69,7 @@ export interface SendEmployee {
     transportationVoucher: boolean,
     cnpjTransportationVoucher: string,
     monthlyAmount: null | number,
-    additionalDocuments: string[],
+    additionalDocuments: null | string[],
     department: "" | "RESEARCH_AND_DEVELOPMENT" | "WEB_DESIGN" | "PAID_TRAFFIC",
     operation: "" | "_01" | "_02" | "_03",
     level: "" | "PUPPY" | "ASSISTANT" | "JUNIOR",

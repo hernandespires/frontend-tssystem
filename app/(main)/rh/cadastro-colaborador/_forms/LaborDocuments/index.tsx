@@ -47,9 +47,7 @@ const LaborDocuments = (
     const handleNextStep = (values: SendEmployee) => {
         const conflictFieldMessages: Record<keyof Employee, string> = { workCard: "Carteira de trabalho", pisPasep: "PIS/PASEP" }
         
-        if (["workCard", "pisPasep"].some((field) => handleConflictingValues(
-            employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages
-        ))) return
+        if (["workCard", "pisPasep"].some((field) => handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
 
         // if (["workCard", "pisPasep"].some((field) => handleConflictingValues(employeeFound, values[field], field, allEmployeesDataFound))) return
 

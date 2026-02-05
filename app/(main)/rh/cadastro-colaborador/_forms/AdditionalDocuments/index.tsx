@@ -26,12 +26,20 @@ const AdditionalDocuments = (
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
     
-    const handleNextStep = (values: SendEmployee) => {
-        useIsValidFormField({ form, fields: { ...values, additionalDocuments: values.additionalDocuments.map((file) => file.name) }, setData: setEmployeeData, nextStep })
-        setUploadData(prev => ([ ...prev, ...values.additionalDocuments ]))
-    }
+const handleNextStep = async (values: SendEmployee) => {
+  const fileNames = uploadData.map(file => file.name)
 
-    console.log(employeeData, "🌹🌹🌹")
+  await useIsValidFormField({
+    form,
+    fields: {
+      ...values,
+      additionalDocuments: fileNames
+    },
+    setData: setEmployeeData,
+    nextStep
+  })
+}
+
 
     return (
         <section>
@@ -43,8 +51,10 @@ const AdditionalDocuments = (
                     <Progress value={ percentageProgress } className="max-w-107.5" />
                 </div>
                 <ActualDocument>
-                    {employeeFound?.additionalDocuments ? employeeFound?.additionalDocuments : employeeData?.additionalDocuments}
-                </ActualDocument>                
+  {employeeFound?.additionalDocuments?.length
+    ? employeeFound.additionalDocuments
+    : employeeData.additionalDocuments}
+</ActualDocument>
                 <Field className="flex min-h-112 py-3">
                     <div className="flex flex-col items-center w-fit">
                         <FileUploadPreview fieldName="additionalDocuments" form={form} />
