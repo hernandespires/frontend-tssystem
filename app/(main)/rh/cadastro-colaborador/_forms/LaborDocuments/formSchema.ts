@@ -13,11 +13,7 @@ export const formSchema = z.object({
     .refine((files) => {        
         if (!files || files.length === 0) return true
         return files[0] instanceof File
-    }, defaultError("Comprovante de residência")).optional(),
+    }, defaultError("Comprovante de residência")),
     reservist: z.boolean(),
     documentation: z.any().optional()
-}).superRefine((data, ctx) => {
-    if (data.reservist) {
-        if (!data.documentation || data.documentation.length === 0) ctx.addIssue({ code: "custom", path: ["documentation"], message: defaultError("Documentação") })
-    }
 })

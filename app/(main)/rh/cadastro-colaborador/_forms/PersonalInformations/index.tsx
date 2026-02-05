@@ -33,7 +33,7 @@ const PersonalInformation = (
         const conflictFieldMessages: Record<keyof Employee, string> = { rg: "RG", cpf: "CPF", email: "Email", phone: "Celular" }
         if (["rg", "cpf", "email", "phone"].some((field) => handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
 
-        useIsValidFormField({ form, fields: { ...values, birthday: new Intl.DateTimeFormat("pt-BR").format(new Date(values.birthday)) }, setData: setEmployeeData, nextStep })
+        useIsValidFormField({ form, fields: { ...values, birthday: new Date(values.birthday).toLocaleString("pt-BR") }, setData: setEmployeeData, nextStep })
     }
 
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })

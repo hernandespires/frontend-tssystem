@@ -25,7 +25,6 @@ const DatePicker = <T extends FieldValues>({ form, formSchema, fieldName, label,
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button id="date" variant="outline" className="justify-between font-normal">
-                            {console.log(new Date().toLocaleDateString("pt-BR"))}
                             {field.value && !isNaN(new Date(field.value).getTime()) ? field.value.toLocaleDateString("pt-BR") : "Selecione uma data"}
                             <ChevronDownIcon />
                         </Button>

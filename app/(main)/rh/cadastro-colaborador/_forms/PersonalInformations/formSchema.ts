@@ -3,10 +3,8 @@ import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
 
 export const formSchema = z.object({
     name: z.string({ error: defaultError("Nome") }).nonempty(defaultEmptyError(defaultEmptyError("Nome"))),
-    birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")),
-
-    // USAR O BIRTHDAY COMENTADO QUE DEVE RESOLVER O ERRO DA DATA FICAR INVERTENDO AO VOLTAR
-    // birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")).transform((date) => date.toLocaleDateString("pt-BR")),
+    // birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")),
+    birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")).transform((date) => date.toLocaleDateString("pt-BR")),
     civilState: z.enum(["SINGLE", "MARRIED", "WIDOWED"], { error: defaultError("Estado civil") }).nonoptional(defaultEmptyError("Estado civil")),
     // nacionality: z.enum(["BRAZILIAN", "AMERICAN"], { error: defaultError("Nacionalidade") }).nonoptional(defaultEmptyError("Nacionalidade")),
     rg: z.string({ error: defaultError("RG") }).nonempty(defaultEmptyError("RG")).min(12, defaultError("RG")),

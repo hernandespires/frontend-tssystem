@@ -14,69 +14,42 @@ import { UploadContext } from "@/contexts/files/UploadContext"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 
-const DropdownMenu = dynamic(
-  () => import("../components/DropdownMenu"),
-  { ssr: false }
-)
+const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
-const Finalization = ({
-  urlPath,
-  prevStep,
-  actualStep,
-  percentageProgress,
-}: {
-  urlPath: { name: string; route: string }[]
-  prevStep: () => void
-  actualStep: number
-  percentageProgress: number
-}) => {
-  const { employeeData, setEmployeeData } =
-    useContext(CreateEmployeeContext)
-
+const Finalization = (
+  { urlPath, prevStep, actualStep, percentageProgress }: 
+  { urlPath: { name: string; route: string }[], prevStep: () => void, actualStep: number, percentageProgress: number }
+) => {
+  const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
   const { uploadData } = useContext(UploadContext)
-
   const form = useZodForm(formSchema)
   const router = useRouter()
 
 const handleCreateEmployee = async (values: SendEmployee) => {
   try {
-
-    // ✅ 1 — junta todos arquivos
     const allFiles: File[] = Object.values(uploadData ?? {}).flat()
 
     let uploadedNames: string[] = []
 
-    // ✅ 2 — upload primeiro
     if (allFiles.length) {
       const result = await multipleUpload(allFiles)
-
-      // ajuste se necessário
       uploadedNames = result?.map((f:any) => f.name) ?? []
     }
 
-    // ✅ 3 — monta payload final
-    const merged = {
-      ...employeeData,
-      ...values,
-      additionalDocuments: uploadedNames
-    }
+    const merged = { ...employeeData, ...values, additionalDocuments: uploadedNames }
 
     const payload: any = { ...merged }
     delete payload.id
 
     setEmployeeData(payload)
 
-    // ✅ 4 — cria employee
     const created = await createEmployee(payload)
-
     return !!created
 
   } catch (err) {
-    console.error(err)
     return false
   }
 }
-
 
   const handleNextStep = async (values: SendEmployee) => {
     const ok = await handleCreateEmployee(values)
@@ -102,13 +75,11 @@ const handleCreateEmployee = async (values: SendEmployee) => {
           <h1 className="text-2xl font-bold text-default-orange">
             {actualStep}/5 - Dados Pessoais
           </h1>
-
           <Progress
             value={percentageProgress}
             className="max-w-107.5"
           />
         </div>
-
         <div className="max-w-full flex items-center justify-center">
           <div className="w-200 h-72 flex flex-col justify-between items-center px-38.75 py-3">
             <DropdownMenu
@@ -125,7 +96,6 @@ const handleCreateEmployee = async (values: SendEmployee) => {
                 { label: "Tráfego Pago", value: "PAID_TRAFFIC" },
               ]}
             />
-
             <DropdownMenu
               form={form}
               name="operation"
@@ -137,7 +107,6 @@ const handleCreateEmployee = async (values: SendEmployee) => {
                 { label: "03", value: "_03" },
               ]}
             />
-
             <DropdownMenu
               form={form}
               name="level"
