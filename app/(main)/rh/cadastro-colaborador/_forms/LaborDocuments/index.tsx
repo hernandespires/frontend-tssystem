@@ -55,7 +55,7 @@ const LaborDocuments = (
             form, 
             fields: { 
                 ...values,
-                admissionDate: new Intl.DateTimeFormat("pt-BR").format(date), 
+                admissionDate: new Intl.DateTimeFormat("pt-BR").format(new Date(values.admissionDate)),
                 salary: formatterBigDecimal(values.salary),
                 residentialProve: values.residentialProve.length > 0 && values.residentialProve[0].name,
                 documentation: values.documentation[0]?.name
@@ -139,12 +139,12 @@ const LaborDocuments = (
                         </Field>
                         <Field>
                             <FieldLabel>
-                                Comprovante de residencia
+                                Comprovante de residência
                             </FieldLabel>
                             <ActualDocument>
                                 {employeeFound?.residentialProve ? employeeFound?.residentialProve : employeeData?.residentialProve}
                             </ActualDocument>
-                            <Input id="residentialProve" type="file" {...form.register("residentialProve")} />
+                            <Input id="residentialProve" type="file" accept=".pdf, .png, .docx, .jpg" {...form.register("residentialProve")} />
                             <FieldError>
                                 {firstErrorKey === "residentialProve" && String(form.formState.errors.residentialProve?.message)}
                             </FieldError>
@@ -169,7 +169,7 @@ const LaborDocuments = (
                             <ActualDocument>
                                 {employeeFound?.documentation ? employeeFound?.documentation : employeeData?.documentation}
                             </ActualDocument>
-                            <Input id="documentation" type="file" {...form.register("documentation")} />
+                            <Input id="documentation" type="file" accept=".pdf, .png, .docx, .jpg" {...form.register("documentation")} />
                             <FieldError>
                                 {firstErrorKey === "documentation" && String(form.formState.errors.documentation?.message)}
                             </FieldError>

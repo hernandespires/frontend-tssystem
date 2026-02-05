@@ -546,8 +546,9 @@ const FileUploadPreview = ({
   return (
     <section className="space-y-4">
       <Input
-        type="file"
+        type="file"        
         multiple
+        accept=".pdf, .png, .docx, .jpg"
         onChange={handleAddFiles}
       />
 
