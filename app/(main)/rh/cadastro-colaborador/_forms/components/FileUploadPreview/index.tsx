@@ -385,87 +385,186 @@
 
 
 
+// "use client"
+
+// import { useContext, useMemo, ChangeEvent } from "react"
+// import Image from "next/image"
+// import { X } from "lucide-react"
+
+// import { Input } from "@/components/ui/input"
+// import { Button } from "@/components/ui/button"
+// import { UploadContext } from "@/contexts/files/UploadContext"
+
+// const FileUploadPreview = ({ fieldName }: { fieldName: string }) => {
+//   const uploadContext = useContext(UploadContext)
+//   if (!uploadContext) return null
+
+//   const { uploadData, setFiles } = uploadContext
+
+//   const localFiles: File[] = uploadData[fieldName] ?? []
+
+//   const previewFiles = useMemo(() => {
+//     return localFiles.map(file => ({
+//       file,
+//       url: URL.createObjectURL(file),
+//     }))
+//   }, [localFiles])
+
+//   const handleAddFiles = (e: ChangeEvent<HTMLInputElement>) => {
+//     const fileList = e.target.files
+//     if (!fileList) return
+
+//     const newFiles = [...localFiles, ...Array.from(fileList)]
+//     setFiles(fieldName, newFiles)
+
+//     e.target.value = ""
+//   }
+
+//   const handleRemove = (index: number) => {
+//     const updated = localFiles.filter((_, i) => i !== index)
+//     setFiles(fieldName, updated)
+//   }
+
+//   return (
+//     <section className="space-y-4">
+//       <Input type="file" multiple onChange={handleAddFiles} />
+
+//       <div className="flex flex-col gap-2">
+//         {previewFiles.map((item, index) => (
+//           <div key={index} className="flex items-center gap-3 border rounded-lg p-2">
+//             {item.file.type.startsWith("image/") ? (
+//               <Image src={item.url} width={64} height={64} alt="" />
+//             ) : (
+//               <span>{item.file.name}</span>
+//             )}
+
+//             <span className="flex-1 truncate text-sm">
+//               {item.file.name}
+//             </span>
+
+//             <Button
+//               size="icon"
+//               variant="destructive"
+//               className="h-6 w-6"
+//               onClick={() => handleRemove(index)}
+//             >
+//               <X size={14} />
+//             </Button>
+//           </div>
+//         ))}
+//       </div>
+//     </section>
+//   )
+// }
+
+// export default FileUploadPreview
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client"
+
+import { useContext, ChangeEvent } from "react"
+import Image from "next/image"
+import { X } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
-import { ChangeEvent, useContext, useEffect, useState } from "react"
-import Image from "next/image"
 import { UploadContext } from "@/contexts/files/UploadContext"
+import { UseFormReturn } from "react-hook-form"
 
-type PreviewFile = {
-  file: File
-  url: string
-}
+// Tipo interno para persistir preview
+type FileWithPreview = File & { preview?: string }
 
-const FileUploadPreview = () => {
+const FileUploadPreview = ({
+  fieldName,
+  form
+}: {
+  fieldName: string
+  form: UseFormReturn<any>
+}) => {
+
   const uploadContext = useContext(UploadContext)
   if (!uploadContext) return null
 
-  const { uploadData, setUploadData } = uploadContext
-  const [files, setFiles] = useState<PreviewFile[]>([])
+  const { uploadData, setFiles } = uploadContext
 
-  // 🔁 sincroniza preview ao voltar etapa
-  useEffect(() => {
-    if (!Array.isArray(uploadData)) return
-
-    const mapped = uploadData.map(file => ({
-      file,
-      url: URL.createObjectURL(file)
-    }))
-
-    setFiles(mapped)
-
-    return () => {
-      mapped.forEach(item => URL.revokeObjectURL(item.url))
+  // cria lista de arquivos com preview persistente
+  const localFiles: FileWithPreview[] = (uploadData[fieldName] ?? []).map(file => {
+    if (!(file as FileWithPreview).preview) {
+      ;(file as FileWithPreview).preview = URL.createObjectURL(file)
     }
-  }, [uploadData])
+    return file as FileWithPreview
+  })
 
-  const handleAddFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const fileList = event.target.files
+  // sincroniza com o form
+  const syncForm = (files: File[]) => {
+    form.setValue(fieldName, files, {
+      shouldValidate: true,
+      shouldDirty: true
+    })
+  }
+
+  const handleAddFiles = (e: ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files
     if (!fileList) return
 
-    const newFiles = Array.from(fileList)
+    const newFiles: FileWithPreview[] = Array.from(fileList).map(file => {
+      const f = file as FileWithPreview
+      f.preview = URL.createObjectURL(file)
+      return f
+    })
 
-    setUploadData(prev => [...(prev ?? []), ...newFiles])
-    event.target.value = ""
+    const updatedFiles = [...localFiles, ...newFiles]
+
+    setFiles(fieldName, updatedFiles)
+    syncForm(updatedFiles.map(f => f as File)) // envia só o File para o form
+
+    e.target.value = ""
   }
 
   const handleRemove = (index: number) => {
-    setUploadData(prev => (prev ?? []).filter((_, i) => i !== index))
+    const removed = localFiles[index]
+
+    // revoga apenas o arquivo removido
+    if (removed.preview) URL.revokeObjectURL(removed.preview)
+
+    const updated = localFiles.filter((_, i) => i !== index)
+    setFiles(fieldName, updated)
+    syncForm(updated.map(f => f as File))
   }
 
   return (
     <section className="space-y-4">
-      <Input type="file" multiple onChange={handleAddFiles} />
+      <Input
+        type="file"
+        multiple
+        onChange={handleAddFiles}
+      />
 
       <div className="flex flex-col gap-2">
-        {files.map((item, index) => (
+        {localFiles.map((item, index) => (
           <div
-            key={`${item.file.name}-${index}`}
-            className="relative flex items-center gap-3 border rounded-lg p-2"
+            key={index}
+            className="flex items-center gap-3 border rounded-lg p-2"
           >
-            {item.file.type.startsWith("image/") ? (
-              <Image
-                src={item.url}
-                width={64}
-                height={64}
-                alt={item.file.name}
-                className="rounded-md object-cover"
-              />
-            ) : (
-              <span className="text-sm text-muted-foreground">
-                {item.file.name}
-              </span>
-            )}
+            {item.type.startsWith("image/") && item.preview
+              ? <Image src={item.preview} width={64} height={64} alt="" />
+              : <span>{item.name}</span>
+            }
 
-            <span className="flex-1 truncate text-sm">
-              {item.file.name}
-            </span>
+            <span className="flex-1 truncate text-sm">{item.name}</span>
 
             <Button
-              type="button"
               size="icon"
               variant="destructive"
               className="h-6 w-6"

@@ -27,7 +27,7 @@ const LaborDocuments = (
     { urlPath: { name: string; route: string; }[], prevStep: () => void, actualStep: number, percentageProgress: number, nextStep: Dispatch<SetStateAction<number>> }
 ) => {
     const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-    const { setUploadData } = useContext(UploadContext)
+    const { setFiles } = useContext(UploadContext)
     const { employeeFound } = useContext(FindEmployeeContext)
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     
@@ -64,7 +64,7 @@ const LaborDocuments = (
             nextStep
         })        
         
-        setUploadData(([...values.residentialProve, ...values.documentation]))
+        setFiles(([...values.residentialProve, ...values.documentation]))
     }    
 
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
