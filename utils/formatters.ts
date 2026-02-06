@@ -100,7 +100,9 @@ export const formatterCNPJ = (value: string): string => {
 
 export const formatterPix = (value: string): string => {
     if (!value) return ""
-    if (/[a-zA-Z]/.test(value)) return value.replace(/^\+55/, "").replace(/[.\-\/()\s]/g, "").replace(/[^a-zA-Z0-9@._+-]/g, "")
+
+    const hasLetter = /[a-zA-Z]/.test(value)
+    if (hasLetter) return value
 
     let digits = value.replace(/\D/g, "")
 

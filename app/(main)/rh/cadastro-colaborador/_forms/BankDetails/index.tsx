@@ -38,9 +38,9 @@ const BankDetails = (
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
     useEffect(() => {
-        if (employeeFound.reservist) setTransportationVoucherDocumentationVisibility(employeeFound.reservist)
-        else if (employeeData.reservist) setTransportationVoucherDocumentationVisibility(employeeData.reservist)
-    }, [])
+        employeeData.transportationVoucher && setTransportationVoucherDocumentationVisibility(employeeData.transportationVoucher)
+        employeeFound.transportationVoucher && setTransportationVoucherDocumentationVisibility(employeeFound.transportationVoucher)
+    }, [employeeFound, employeeFound])
     
     const handleNextStep = (values: SendEmployee) => {
         const conflictFieldMessages: Record<keyof Employee, string> = { account: "Conta", pix: "Chave pix" }

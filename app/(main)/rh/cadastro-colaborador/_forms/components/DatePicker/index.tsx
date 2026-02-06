@@ -36,7 +36,6 @@ const DatePicker = <T extends FieldValues>(
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
                                 <Button id="date" variant="outline" className="justify-between font-normal">
-                                    {console.log(date?.toLocaleDateString("pt-BR"))}
                                     {isValidDate ? date.toLocaleDateString("pt-BR") : "Selecione uma data"}
                                     <ChevronDownIcon />
                                 </Button>

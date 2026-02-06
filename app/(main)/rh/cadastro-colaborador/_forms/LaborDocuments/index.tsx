@@ -15,12 +15,7 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
 import { Controller } from "react-hook-form"
-import {
-    formatterCPF,
-    formatterCurrencyBRL,
-    formatterPisPasep,
-    formatterBigDecimal
-} from "@/utils/formatters"
+import { formatterCPF, formatterCurrencyBRL, formatterPisPasep, formatterBigDecimal } from "@/utils/formatters"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import ActualDocument from "../components/ActualDocument"
@@ -49,7 +44,7 @@ const LaborDocuments = ({
 
     const form = useZodForm(formSchema)
 
-    const [documentationVisibility, setDocumentationVisibility] = useState(false)
+    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
@@ -57,11 +52,9 @@ const LaborDocuments = ({
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
     const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
-    // Watch reativo
     const watchedDocumentation = form.watch("documentation")
     const watchedResidential = form.watch("residentialProve")
 
-    // 🔹 Função para extrair nome do documento
     const getDocumentName = (value: any) => {
         if (!value) return undefined
 
@@ -76,7 +69,6 @@ const LaborDocuments = ({
         return undefined
     }
 
-    // Mostrar campo documentação se já marcado antes
     useEffect(() => {
         setDocumentationVisibility(
             employeeData?.reservist ??
@@ -85,7 +77,6 @@ const LaborDocuments = ({
         )
     }, [])
 
-    // Restore uploads vindos do UploadContext
     useEffect(() => {
         if (uploadData.residentialProve)
             form.setValue("residentialProve", uploadData.residentialProve)
@@ -96,7 +87,6 @@ const LaborDocuments = ({
             form.setValue("documentation", uploadData.documentation)
     }, [uploadData.documentation])
 
-    // Restore dados do contexto ao voltar de step
     useEffect(() => {
         if (employeeData?.documentation)
             form.setValue("documentation", employeeData.documentation)
@@ -104,8 +94,6 @@ const LaborDocuments = ({
         if (employeeData?.residentialProve)
             form.setValue("residentialProve", employeeData.residentialProve)
     }, [])
-
-    // ================= SUBMIT =================
 
     const handleNextStep = (values: SendEmployee) => {
 
@@ -126,13 +114,8 @@ const LaborDocuments = ({
             )
         ) return
 
-                    const admissionISO =
-  values.admissionDate instanceof Date
-    ? values.admissionDate.toISOString()
-    : values.admissionDate
-      ? new Date(values.admissionDate).toISOString()
-      : undefined
-
+        const admissionISO =
+            values.admissionDate instanceof Date ? values.admissionDate.toISOString() : values.admissionDate ? new Date(values.admissionDate).toISOString() : undefined
 
         useIsValidFormField({
             form,
@@ -160,6 +143,11 @@ const LaborDocuments = ({
         })
     }
 
+useEffect(() => {
+    form.setValue("documentation", null)
+    !documentationVisibility && setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
+}, [documentationVisibility])
+
     return (
         <section>
             <RegistrationForm
@@ -173,23 +161,19 @@ const LaborDocuments = ({
                     <h1 className="text-2xl font-bold text-default-orange">
                         {actualStep}/5 - Documentação Trabalhista
                     </h1>
-
                     <Progress value={percentageProgress} className="max-w-107.5" />
                 </div>
-
                 <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
-
-                    {/* ESQUERDA */}
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-
                         <Controller
                             name="workCard"
                             control={form.control}
                             defaultValue=""
                             render={({ field }) => (
                                 <Field>
-                                    <FieldLabel>Carteira de Trabalho</FieldLabel>
-
+                                    <FieldLabel>
+                                        Carteira de Trabalho
+                                    </FieldLabel>
                                     <Input
                                         {...field}
                                         maxLength={14}
@@ -198,7 +182,6 @@ const LaborDocuments = ({
                                             field.onChange(formatterCPF(e.target.value))
                                         }
                                     />
-
                                     <FieldError>
                                         {firstErrorKey === "workCard" &&
                                             String(form.formState.errors.workCard?.message)}
@@ -206,44 +189,34 @@ const LaborDocuments = ({
                                 </Field>
                             )}
                         />
-
                         <Controller
                             name="pisPasep"
                             control={form.control}
                             defaultValue=""
                             render={({ field }) => (
                                 <Field>
-                                    <FieldLabel>PIS/PASEP</FieldLabel>
-
+                                    <FieldLabel>
+                                        PIS/PASEP
+                                    </FieldLabel>
                                     <Input
                                         {...field}
                                         maxLength={14}
                                         placeholder="XXX.XXXXX.XX-X"
-                                        onChange={(e) =>
-                                            field.onChange(formatterPisPasep(e.target.value))
-                                        }
+                                        onChange={(event) => field.onChange(formatterPisPasep(event.target.value))}
                                     />
-
                                     <FieldError>
-                                        {firstErrorKey === "pisPasep" &&
-                                            String(form.formState.errors.pisPasep?.message)}
+                                        {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
                                     </FieldError>
                                 </Field>
                             )}
                         />
-
                         <DropdownMenu
                             form={form}
                             name="typeEmployment"
                             label="Tipo de Vínculo"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[
-                                { label: "CLT", value: "CLT" },
-                                { label: "CNPJ", value: "CNPJ" },
-                                { label: "Freelance", value: "FREELANCE" }
-                            ]}
+                            options={[{ label: "CLT", value: "CLT" }, {label: "CNPJ", value: "CNPJ"}, {label: "Freelance", value: "FREELANCE"}]}
                         />
-
                         <DropdownMenu
                             className="max-w-[68%]"
                             form={form}
@@ -287,8 +260,9 @@ const LaborDocuments = ({
                         </div>
 
                         <Field>
-                            <FieldLabel>Salário</FieldLabel>
-
+                            <FieldLabel>
+                                Salário
+                            </FieldLabel>
                             <Controller
                                 name="salary"
                                 control={form.control}
@@ -299,42 +273,27 @@ const LaborDocuments = ({
                                         inputMode="numeric"
                                         maxLength={13}
                                         placeholder="R$ 0000,00"
-                                        onChange={(e) =>
-                                            field.onChange(
-                                                formatterCurrencyBRL(e.target.value)
-                                            )
-                                        }
+                                        onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
                                     />
                                 )}
                             />
-
                             <FieldError>
-                                {firstErrorKey === "salary" &&
-                                    String(form.formState.errors.salary?.message)}
+                                {firstErrorKey === "salary" && String(form.formState.errors.salary?.message)}
                             </FieldError>
                         </Field>
-
-                        {/* COMPROVANTE */}
                         <Field>
-                            <FieldLabel>Comprovante de residência</FieldLabel>
-
+                            <FieldLabel>
+                                Comprovante de residência
+                            </FieldLabel>
                             <ActualDocument>
-                                {
-                                    getDocumentName(watchedResidential) ??
-                                    employeeData?.residentialProve ??
-                                    employeeFound?.residentialProve ??
-                                    ""
-                                }
+                                {getDocumentName(watchedResidential) ?? employeeFound?.residentialProve ?? employeeData?.residentialProve ?? ""}
                             </ActualDocument>
-
                             <Input
                                 type="file"
                                 accept=".pdf,.png,.docx,.jpg"
                                 {...form.register("residentialProve")}
                             />
                         </Field>
-
-                        {/* RESERVISTA */}
                         <Controller
                             name="reservist"
                             control={form.control}
@@ -344,39 +303,28 @@ const LaborDocuments = ({
                                     <div className="flex gap-2">
                                         <Checkbox
                                             checked={field.value}
-                                            onCheckedChange={(v) => {
-                                                setDocumentationVisibility(Boolean(v))
-                                                field.onChange(v)
+                                            onCheckedChange={(checked) => {
+                                                setDocumentationVisibility(Boolean(checked))
+                                                field.onChange(checked)
                                             }}
                                         />
-                                        <Label>Reservista</Label>
+                                        <Label>
+                                            Reservista
+                                        </Label>
                                     </div>
                                 </Field>
                             )}
                         />
-
-                        {/* DOCUMENTAÇÃO */}
                         <Field className={!documentationVisibility ? "hidden" : ""}>
-                            <FieldLabel>Documentação</FieldLabel>
-
+                            <FieldLabel>
+                                Documentação
+                            </FieldLabel>
                             <ActualDocument>
-                                {
-                                    getDocumentName(watchedDocumentation) ??
-                                    employeeData?.documentation ??
-                                    employeeFound?.documentation ??
-                                    ""
-                                }
+                                {getDocumentName(watchedDocumentation) ?? employeeFound?.documentation ?? employeeData?.documentation ?? ""}
                             </ActualDocument>
-
-                            <Input
-                                type="file"
-                                accept=".pdf,.png,.docx,.jpg"
-                                {...form.register("documentation")}
-                            />
+                            <Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("documentation")} />
                         </Field>
-
                     </div>
-
                 </div>
             </RegistrationForm>
         </section>

@@ -57,6 +57,7 @@ export const CreateEmployeeContext =
 const defaultState: SendEmployee = {
   name: "",
   birthday: "",
+  sex: "",
   civilState: "",
   rg: "",
   cpf: "",

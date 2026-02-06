@@ -34,13 +34,7 @@ const PersonalInformation = (
         if (["rg", "cpf", "email", "phone"].some((field) => 
             handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
 
-            const birthdayISO =
-  values.birthday instanceof Date
-    ? values.birthday.toISOString()
-    : values.birthday
-      ? new Date(values.birthday).toISOString()
-      : undefined
-
+        const birthdayISO = values.birthday instanceof Date ? values.birthday.toISOString() : values.birthday ? new Date(values.birthday).toISOString() : undefined
         useIsValidFormField({ form, fields: { ...values, birthday: birthdayISO }, setData: setEmployeeData, nextStep })
     }
 
@@ -67,8 +61,16 @@ const PersonalInformation = (
                                 {firstErrorKey === "name" && String(form.formState.errors.name?.message)}
                             </FieldError>
                         </Field>
-                        <div className="w-full">
+                        <div className="w-full flex gap-x-2.5">
                             <DatePicker form={form} formSchema={formSchema} fieldName="birthday" canBeFuture label="Data de nascimento" className="max-w-1/2" />
+                            <DropdownMenu 
+                                className="max-w-1/2"
+                                form={form}
+                                name="sex" 
+                                label="Sexo" 
+                                schemaKeys={Object.keys(formSchema.shape)} 
+                                options={[{ label: "Masculino", value: "MALE" }, { label: "Feminino", value: "FEMALE" }]}
+                            />
                         </div>
                         <DropdownMenu 
                             className="max-w-[35%]" 
@@ -119,7 +121,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="email">
                                 Email para contato (Pessoal)
                             </FieldLabel>
-                            <Input id="email" maxLength={155} placeholder="Email" {...form.register("email")} />
+                            <Input id="email" type="email" maxLength={155} placeholder="Email" {...form.register("email")} />
                             <FieldError>
                                 {firstErrorKey === "email" && String(form.formState.errors.email?.message)}
                             </FieldError>

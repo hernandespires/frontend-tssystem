@@ -60,33 +60,23 @@ const normalizeToBackendDate = (value: unknown): string | null => {
 
   let date: Date | null = null
 
-  // ✔ Já é Date
-  if (value instanceof Date) {
-    date = value
-  }
+  if (value instanceof Date) date = value
 
-  // ✔ String dd/MM/yyyy
   else if (typeof value === "string" && /^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
     const [dd, mm, yyyy] = value.split("/").map(Number)
     date = new Date(yyyy, mm - 1, dd)
   }
 
-  // ✔ yyyy-MM-dd (input HTML)
   else if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}/.test(value)) {
     date = new Date(value)
   }
 
-  // ✔ fallback parse
   else if (typeof value === "string") {
     date = new Date(value)
   }
 
-  if (!date || isNaN(date.getTime())) {
-    console.log("❌ DATA INVÁLIDA RECEBIDA:", value)
-    return null
-  }
+  if (!date || isNaN(date.getTime())) return null
 
-  // ✔ Backend Java espera dd/MM/yyyy
   const d = String(date.getDate()).padStart(2, "0")
   const m = String(date.getMonth() + 1).padStart(2, "0")
   const y = date.getFullYear()
@@ -132,7 +122,6 @@ const handleCreateEmployee = async (values: SendEmployee) => {
       toast.success("Colaborador cadastrado com sucesso!")
       router.push("/rh")
     } else {
-      console.log(values)
       toast.error("Erro ao cadastrar colaborador")
     }
   }

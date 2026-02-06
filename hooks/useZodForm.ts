@@ -78,6 +78,7 @@ export const useZodForm = <TSchema extends ZodAny>(schema: TSchema) => {
         defaultValues: { 
             name: !employeeFound?.name ? employeeData?.name : employeeFound?.name,
             birthday: new Date(!employeeFound?.birthday ? employeeData?.birthday : employeeFound?.birthday),
+            sex: !employeeFound?.sex ? employeeData?.sex : employeeFound?.sex,
             civilState: !employeeFound?.civilState ? employeeData?.civilState : employeeFound?.civilState,
             rg: formatterRG(!employeeFound?.rg ? employeeData?.rg : employeeFound?.rg), 
             cpf: formatterCPF(!employeeFound?.cpf ? employeeData?.cpf : employeeFound?.cpf), 

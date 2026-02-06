@@ -1,6 +1,7 @@
 export interface Employee {
     id: string,
     name: string, 
+    sex: string,
     birthday: string, 
     civilState: "" | "SINGLE" | "MARRIED" | "WIDOWED",
     // nacionality: "" | "BRAZILIAN" | "AMERICAN",
@@ -41,6 +42,7 @@ export interface Employee {
 export interface SendEmployee {
     name: string, 
     birthday: string, 
+    sex: string,
     civilState: "" | "SINGLE" | "MARRIED" | "WIDOWED",
     // nacionality: "" | "BRAZILIAN" | "AMERICAN",
     rg: string, 
