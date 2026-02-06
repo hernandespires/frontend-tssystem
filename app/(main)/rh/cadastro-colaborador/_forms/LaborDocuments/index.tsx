@@ -1,3 +1,5 @@
+"use client"
+
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -13,8 +15,12 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
 import { Controller } from "react-hook-form"
-import { formatterCPF, formatterCurrencyBRL, formatterPisPasep } from "@/utils/formatters"
-import { formatterBigDecimal } from "@/utils/formatters"
+import {
+    formatterCPF,
+    formatterCurrencyBRL,
+    formatterPisPasep,
+    formatterBigDecimal
+} from "@/utils/formatters"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import ActualDocument from "../components/ActualDocument"
@@ -51,9 +57,24 @@ const LaborDocuments = ({
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
     const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
 
-    // ⭐⭐⭐ WATCH REATIVO (CORREÇÃO PRINCIPAL)
+    // Watch reativo
     const watchedDocumentation = form.watch("documentation")
     const watchedResidential = form.watch("residentialProve")
+
+    // 🔹 Função para extrair nome do documento
+    const getDocumentName = (value: any) => {
+        if (!value) return undefined
+
+        if (value instanceof FileList && value.length > 0) {
+            return value[0].name
+        }
+
+        if (typeof value === "string") {
+            return value
+        }
+
+        return undefined
+    }
 
     // Mostrar campo documentação se já marcado antes
     useEffect(() => {
@@ -64,7 +85,7 @@ const LaborDocuments = ({
         )
     }, [])
 
-    // Restore uploads
+    // Restore uploads vindos do UploadContext
     useEffect(() => {
         if (uploadData.residentialProve)
             form.setValue("residentialProve", uploadData.residentialProve)
@@ -75,14 +96,13 @@ const LaborDocuments = ({
             form.setValue("documentation", uploadData.documentation)
     }, [uploadData.documentation])
 
-    // Restore contexto quando volta de step
+    // Restore dados do contexto ao voltar de step
     useEffect(() => {
         if (employeeData?.documentation)
             form.setValue("documentation", employeeData.documentation)
 
         if (employeeData?.residentialProve)
             form.setValue("residentialProve", employeeData.residentialProve)
-
     }, [])
 
     // ================= SUBMIT =================
@@ -118,16 +138,14 @@ const LaborDocuments = ({
                     formatterBigDecimal(values.salary),
 
                 residentialProve:
-                    values.residentialProve?.length > 0
-                        ? values.residentialProve[0].name
-                        : employeeData?.residentialProve
-                          ?? employeeFound?.residentialProve?.[0]?.name,
+                    getDocumentName(values.residentialProve) ??
+                    employeeData?.residentialProve ??
+                    employeeFound?.residentialProve,
 
                 documentation:
-                    values.documentation?.length > 0
-                        ? values.documentation[0].name
-                        : employeeData?.documentation
-                          ?? employeeFound?.documentation
+                    getDocumentName(values.documentation) ??
+                    employeeData?.documentation ??
+                    employeeFound?.documentation
             },
 
             setData: setEmployeeData,
@@ -144,7 +162,6 @@ const LaborDocuments = ({
                 prevStep={prevStep}
                 nextStep={handleNextStep}
             >
-
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         {actualStep}/5 - Documentação Trabalhista
@@ -295,10 +312,12 @@ const LaborDocuments = ({
                             <FieldLabel>Comprovante de residência</FieldLabel>
 
                             <ActualDocument>
-                                {employeeData?.residentialProve ??
-                                 watchedResidential ??
-                                 employeeFound?.residentialProve ??
-                                 ""}
+                                {
+                                    getDocumentName(watchedResidential) ??
+                                    employeeData?.residentialProve ??
+                                    employeeFound?.residentialProve ??
+                                    ""
+                                }
                             </ActualDocument>
 
                             <Input
@@ -334,10 +353,12 @@ const LaborDocuments = ({
                             <FieldLabel>Documentação</FieldLabel>
 
                             <ActualDocument>
-                                {employeeData?.documentation ??
-                                 watchedDocumentation ??
-                                 employeeFound?.documentation ??
-                                 ""}
+                                {
+                                    getDocumentName(watchedDocumentation) ??
+                                    employeeData?.documentation ??
+                                    employeeFound?.documentation ??
+                                    ""
+                                }
                             </ActualDocument>
 
                             <Input
