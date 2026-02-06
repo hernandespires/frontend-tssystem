@@ -10,19 +10,10 @@ import { useState } from "react"
 import { Controller, FieldValues, Path, UseFormReturn } from "react-hook-form"
 import { ZodObject } from "zod"
 
-const DatePicker = <T extends FieldValues>({
-    form,
-    formSchema,
-    fieldName,
-    label,
-    className
-}: {
-    form: UseFormReturn
-    formSchema: ZodObject
-    fieldName: Path<T>
-    label: string
-    className?: string
-}) => {
+const DatePicker = <T extends FieldValues>(
+    { form, formSchema, fieldName, canBeFuture, label, className }:
+    { form: UseFormReturn, formSchema: ZodObject, fieldName: Path<T>, canBeFuture?: boolean, label: string, className?: string }
+) => {
     const [open, setOpen] = useState(false)
 
     const errors = form.formState.errors
@@ -30,40 +21,26 @@ const DatePicker = <T extends FieldValues>({
 
     return (
         <Controller
-            control={form.control}
-            name={fieldName}
+            control={ form.control }
+            name={ fieldName }
             defaultValue={undefined}
             render={({ field }) => {
-                const date =
-                    field.value instanceof Date
-                        ? field.value
-                        : field.value
-                        ? new Date(field.value)
-                        : undefined
-
-                const isValidDate =
-                    date instanceof Date && !isNaN(date.getTime())
+                const date = field.value instanceof Date ? field.value : field.value ? new Date(field.value) : undefined
+                const isValidDate = date instanceof Date && !isNaN(date.getTime()) && (!canBeFuture || date <= new Date())
 
                 return (
-                    <Field className={className}>
-                        <FieldLabel htmlFor={fieldName}>
-                            {label}
+                    <Field className={ className }>
+                        <FieldLabel htmlFor={ fieldName }>
+                            { label }
                         </FieldLabel>
-
                         <Popover open={open} onOpenChange={setOpen}>
                             <PopoverTrigger asChild>
-                                <Button
-                                    id="date"
-                                    variant="outline"
-                                    className="justify-between font-normal"
-                                >
-                                    {isValidDate
-                                        ? date.toLocaleDateString("pt-BR")
-                                        : "Selecione uma data"}
+                                <Button id="date" variant="outline" className="justify-between font-normal">
+                                    {console.log(date?.toLocaleDateString("pt-BR"))}
+                                    {isValidDate ? date.toLocaleDateString("pt-BR") : "Selecione uma data"}
                                     <ChevronDownIcon />
                                 </Button>
                             </PopoverTrigger>
-
                             <PopoverContent align="start">
                                 <Calendar
                                     mode="single"
@@ -76,10 +53,8 @@ const DatePicker = <T extends FieldValues>({
                                 />
                             </PopoverContent>
                         </Popover>
-
                         <FieldError>
-                            {firstErrorKey === fieldName &&
-                                String(form.formState.errors[fieldName]?.message)}
+                            {firstErrorKey === fieldName && String(form.formState.errors[fieldName]?.message)}
                         </FieldError>
                     </Field>
                 )

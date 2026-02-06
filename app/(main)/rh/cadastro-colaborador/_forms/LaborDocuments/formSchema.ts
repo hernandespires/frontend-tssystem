@@ -19,7 +19,7 @@ export const formSchema = z.object({
     laborScale: z.enum(["_5X2", "_4X3", "_6X1"], { error: defaultError("Escala") })
         .nonoptional(defaultEmptyError("Escala")),
 
-    admissionDate: z.date({ error: defaultError("Data de admissão") })
+    admissionDate: z.any()
         .nonoptional(defaultEmptyError("Data de admisão")),
 
     salary: z.string({ error: defaultError("Salário") })

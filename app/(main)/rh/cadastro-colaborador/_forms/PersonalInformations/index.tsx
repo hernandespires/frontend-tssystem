@@ -31,9 +31,17 @@ const PersonalInformation = (
 
     const handleNextStep = (values: SendEmployee) => {
         const conflictFieldMessages: Record<keyof Employee, string> = { rg: "RG", cpf: "CPF", email: "Email", phone: "Celular" }
-        if (["rg", "cpf", "email", "phone"].some((field) => handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
+        if (["rg", "cpf", "email", "phone"].some((field) => 
+            handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
 
-        useIsValidFormField({ form, fields: { ...values, birthday: values.birthday.toLocaleString("pt-BR") }, setData: setEmployeeData, nextStep })
+            const birthdayISO =
+  values.birthday instanceof Date
+    ? values.birthday.toISOString()
+    : values.birthday
+      ? new Date(values.birthday).toISOString()
+      : undefined
+
+        useIsValidFormField({ form, fields: { ...values, birthday: birthdayISO }, setData: setEmployeeData, nextStep })
     }
 
     const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
@@ -60,11 +68,16 @@ const PersonalInformation = (
                             </FieldError>
                         </Field>
                         <div className="w-full">
-                            <DatePicker form={form} formSchema={formSchema} fieldName="birthday" label="Data de nascimento" className="max-w-1/2" />
+                            <DatePicker form={form} formSchema={formSchema} fieldName="birthday" canBeFuture label="Data de nascimento" className="max-w-1/2" />
                         </div>
-                        <DropdownMenu className="max-w-[35%]" form={form} name="civilState" label="Estado Civil" schemaKeys={Object.keys(formSchema.shape)} options={[
-                            { label: "Solteiro(a)", value: "SINGLE" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }
-                        ]} />
+                        <DropdownMenu 
+                            className="max-w-[35%]" 
+                            form={form} 
+                            name="civilState" 
+                            label="Estado Civil" 
+                            schemaKeys={Object.keys(formSchema.shape)} 
+                            options={[{ label: "Solteiro(a)", value: "SINGLE" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }]} 
+                        />
                         {/* <DropdownMenu className="max-w-[57%]" form={form} name="nacionality" label="Nacionalidade" schemaKeys={Object.keys(formSchema.shape)} options={[
                             { label: "Brasileiro(a)", value: "BRAZILIAN" }, { label: "Americano(a)", value: "AMERICAN" }
                         ]} /> */}
@@ -73,9 +86,13 @@ const PersonalInformation = (
                                 RG
                             </FieldLabel>
                             <Controller control={form.control} name="rg" defaultValue="" render={({ field }) => (
-                                <Input id="rg" maxLength={12} placeholder="XX.XXX.XXX-X" {...field} onChange={((event) => {                                    
-                                    field.onChange(formatterRG(event.target.value))
-                                })} />
+                                <Input 
+                                    id="rg" 
+                                    maxLength={12} 
+                                    placeholder="XX.XXX.XXX-X" 
+                                    {...field} 
+                                    onChange={((event) => field.onChange(formatterRG(event.target.value)))}
+                                />
                             )} />
                             <FieldError>
                                 {firstErrorKey === "rg" && String(form.formState.errors.rg?.message)}
@@ -86,9 +103,13 @@ const PersonalInformation = (
                                 CPF
                             </FieldLabel>
                             <Controller control={form.control} name="cpf" defaultValue="" render={({ field }) => (
-                                <Input id="cpf" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...field} onChange={(event) => {
-                                    field.onChange(formatterCPF(event.target.value))
-                                }} />
+                                <Input 
+                                    id="cpf" 
+                                    maxLength={14}
+                                    placeholder="XXX.XXX.XXX-XX" 
+                                    {...field} 
+                                    onChange={(event) => field.onChange(formatterCPF(event.target.value))}
+                                />
                             )} />
                             <FieldError>
                                 {firstErrorKey === "cpf" && String(form.formState.errors.cpf?.message)}
@@ -122,9 +143,13 @@ const PersonalInformation = (
                                 <FieldLabel htmlFor="phone">
                                     Celular
                                 </FieldLabel>
-                                <Input id="phone" maxLength={19} placeholder="+55 (XX) XXXXX-XXXX" {...field} onChange={(event) => {
-                                    field.onChange(formatterPhone(event.target.value))
-                                }} />
+                                <Input 
+                                    id="phone" 
+                                    maxLength={19} 
+                                    placeholder="+55 (XX) XXXXX-XXXX" 
+                                    {...field} 
+                                    onChange={(event) => field.onChange(formatterPhone(event.target.value))}
+                                />
                                 <FieldError>
                                     {firstErrorKey === "phone" && String(form.formState.errors.phone?.message)}
                                 </FieldError>
@@ -150,9 +175,13 @@ const PersonalInformation = (
                                 <FieldLabel htmlFor="postalCode">
                                     Código Postal
                                 </FieldLabel>
-                                <Input id="postalCode" maxLength={10} placeholder="XXXXX-XXX" {...field} onChange={(event) => {
-                                    field.onChange(formatterPostalCode(event.target.value))
-                                }} />
+                                <Input 
+                                    id="postalCode" 
+                                    maxLength={10} 
+                                    placeholder="XXXXX-XXX" 
+                                    {...field} 
+                                    onChange={(event) => field.onChange(formatterPostalCode(event.target.value))}
+                                />
                                 <FieldError>
                                     {firstErrorKey === "postalCode" && String(form.formState.errors.postalCode?.message)}
                                 </FieldError>

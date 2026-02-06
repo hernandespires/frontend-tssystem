@@ -126,13 +126,20 @@ const LaborDocuments = ({
             )
         ) return
 
+                    const admissionISO =
+  values.admissionDate instanceof Date
+    ? values.admissionDate.toISOString()
+    : values.admissionDate
+      ? new Date(values.admissionDate).toISOString()
+      : undefined
+
+
         useIsValidFormField({
             form,
             fields: {
                 ...values,
 
-                admissionDate:
-                    new Date(values.admissionDate).toLocaleDateString("pt-BR"),
+                admissionDate: admissionISO,
 
                 salary:
                     formatterBigDecimal(values.salary),
