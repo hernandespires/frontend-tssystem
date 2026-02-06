@@ -6,7 +6,9 @@ import DataTable from "@/components/DataTable"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { useLogin } from "@/contexts/LoginContext"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
 import { useContext, useEffect } from "react"
 import { BsClipboardData } from "react-icons/bs"
@@ -24,6 +26,7 @@ const Rh = () => {
     const router = useRouter()
     const { setEmployeeFound } = useContext(FindEmployeeContext)
     const { setEmployeeData } = useContext(CreateEmployeeContext)
+    const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     const uploadContext = useContext(UploadContext)
 
     useEffect(() => {
@@ -129,7 +132,7 @@ const Rh = () => {
                     <Button onClick={() => router.push('/')} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
                     <Button onClick={() => router.push('/')} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
                 </div>
-                <DataMetrics department="Recursos Humanos" />
+                <DataMetrics department="Recursos Humanos" datas={allEmployeesDataFound.map((employee: Employee) => employee.sex)} />
             </div>
         </main>
     )
