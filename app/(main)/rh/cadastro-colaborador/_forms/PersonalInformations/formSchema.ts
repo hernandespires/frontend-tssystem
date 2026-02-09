@@ -4,7 +4,7 @@ import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
 export const formSchema = z.object({
     name: z.string({ error: defaultError("Nome") }).nonempty(defaultEmptyError(defaultEmptyError("Nome"))),
     // birthday: z.date({ error: defaultError("Data de nascimento") }).nonoptional(defaultEmptyError("Data de nascimento")),
-    birthday: z.any().nonoptional(defaultEmptyError("Data de nascimento")),
+    birthday: z.any().nonoptional(defaultEmptyError("Data de nascimento")).transform(v => new Date(v)).refine(d => !isNaN(d.getTime()), "Data inválida"),
     sex: z.string({ error: defaultError("Sexo") }).nonoptional(defaultEmptyError("Sexo")),
     civilState: z.enum(["SINGLE", "MARRIED", "WIDOWED"], { error: defaultError("Estado civil") }).nonoptional(defaultEmptyError("Estado civil")),
     // nacionality: z.enum(["BRAZILIAN", "AMERICAN"], { error: defaultError("Nacionalidade") }).nonoptional(defaultEmptyError("Nacionalidade")),

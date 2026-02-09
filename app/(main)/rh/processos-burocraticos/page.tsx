@@ -32,7 +32,6 @@ const Rh = () => {
             </div>
             <div className="flex gap-6">
                 <div className="flex flex-col gap-6">
-                    {/* AQUI ESTÁ A MUDANÇA: O LINK AGORA APONTA PARA A NOVA TELA */}
                     <Button onClick={"/rh/processos-burocraticos"} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
                     <Button onClick={"/rh/processos-burocraticos"} isDashed icon={<FaPlus size={36} color="white" />} text="Novo Processo" />
                 </div>

@@ -34,7 +34,7 @@ const PersonalInformation = (
         if (["rg", "cpf", "email", "phone"].some((field) => 
             handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages))) return
 
-        const birthdayISO = values.birthday instanceof Date ? values.birthday.toISOString() : values.birthday ? new Date(values.birthday).toISOString() : undefined
+        const birthdayISO = values.birthday ? new Date(values.birthday).toISOString() : undefined
         useIsValidFormField({ form, fields: { ...values, birthday: birthdayISO }, setData: setEmployeeData, nextStep })
     }
 

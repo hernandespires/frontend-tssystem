@@ -83,8 +83,6 @@ const Rh = () => {
         fetchAllData()
     }, [])
 
-    console.log(findAllEmployees)
-
     return (
         <main className="flex flex-col gap-6">
             <div className="flex gap-5 justify-between">
@@ -144,7 +142,7 @@ const Rh = () => {
                     <Button onClick={() => router.push('/')} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
                     <Button onClick={() => router.push('/')} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
                 </div>
-                <DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee.sex)} />
+                <DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee)} />
             </div>
         </main>
     )

@@ -44,7 +44,7 @@ const LaborDocuments = ({
 
     const form = useZodForm(formSchema)
 
-    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(false)
+    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(employeeFound.reservist)
 
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
@@ -143,27 +143,23 @@ const LaborDocuments = ({
         })
     }
 
-useEffect(() => {
-    form.setValue("documentation", null)
-    !documentationVisibility && setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
-}, [documentationVisibility])
+    useEffect(() => {
+        form.setValue("documentation", null)
+        !documentationVisibility && setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
+    }, [documentationVisibility])
+
+    console.log(documentationVisibility)
 
     return (
         <section>
-            <RegistrationForm
-                formSchema={formSchema}
-                urlPath={urlPath}
-                form={form}
-                prevStep={prevStep}
-                nextStep={handleNextStep}
-            >
+            <RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         {actualStep}/5 - Documentação Trabalhista
                     </h1>
                     <Progress value={percentageProgress} className="max-w-107.5" />
                 </div>
-                <div className="flex items-stretch gap-22.5 h-112 px-38.75 py-3">
+                <div className="flex items-stretch gap-22.5 max-h-122 px-38.75 py-3">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Controller
                             name="workCard"
@@ -229,36 +225,19 @@ useEffect(() => {
                                 { label: "Home office", value: "HOME_OFFICE" }
                             ]}
                         />
-
                         <DropdownMenu
                             form={form}
                             name="laborScale"
                             label="Escala"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[
-                                { label: "5x2", value: "_5X2" },
-                                { label: "4x3", value: "_4X3" },
-                                { label: "6x1", value: "_6X1" }
-                            ]}
+                            options={[{ label: "5x2", value: "_5X2" }, { label: "4x3", value: "_4X3" }, { label: "6x1", value: "_6X1" }]}
                         />
-
                     </div>
-
                     <Separator orientation="vertical" />
-
-                    {/* DIREITA */}
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-
                         <div className="w-full">
-                            <DatePicker
-                                form={form}
-                                formSchema={formSchema}
-                                fieldName="admissionDate"
-                                label="Data de admisão"
-                                className="max-w-1/2"
-                            />
+                            <DatePicker form={form} formSchema={formSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
                         </div>
-
                         <Field>
                             <FieldLabel>
                                 Salário
@@ -303,8 +282,8 @@ useEffect(() => {
                                     <div className="flex gap-2">
                                         <Checkbox
                                             checked={field.value}
-                                            onCheckedChange={(checked) => {
-                                                setDocumentationVisibility(Boolean(checked))
+                                            onCheckedChange={(checked) => {                                                
+                                                !employeeFound.reservist && setDocumentationVisibility(Boolean(checked))
                                                 field.onChange(checked)
                                             }}
                                         />

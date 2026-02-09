@@ -20,7 +20,7 @@ export const formSchema = z.object({
         .nonoptional(defaultEmptyError("Escala")),
 
     admissionDate: z.any()
-        .nonoptional(defaultEmptyError("Data de admisão")),
+        .nonoptional(defaultEmptyError("Data de admisão")).transform(v => new Date(v)).refine(d => !isNaN(d.getTime()), "Data inválida"),
 
     salary: z.string({ error: defaultError("Salário") })
         .nonempty(defaultEmptyError("Salário"))

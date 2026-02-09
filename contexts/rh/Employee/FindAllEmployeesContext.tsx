@@ -75,7 +75,5 @@ export const FindAllEmployeesProvideer = ({ children }: { children: ReactNode })
         fetchEmployees()    
     }, [findAllEmployees])
 
-    console.log(allEmployeesDataFound, "⚠️⚠️⚠️")
-
     return <FindAllEmployeesContext.Provider value={{ allEmployeesDataFound, setAllEmployeesDataFound, isLoading, error }}>{ children }</FindAllEmployeesContext.Provider>
 }
