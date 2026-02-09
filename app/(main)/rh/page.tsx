@@ -8,9 +8,10 @@ import { useLogin } from "@/contexts/LoginContext"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { findAllEmployees } from "@/services/humanResources/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
 import { IoPersonAddOutline } from "react-icons/io5"
@@ -29,7 +30,8 @@ const Rh = () => {
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     const uploadContext = useContext(UploadContext)
 
-    console.log(allEmployeesDataFound, "allEmployeesDataFound")
+    const[allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
+    const [allEmployeesSex, setAllEmployeesSex] = useState<string[]>([])
 
     useEffect(() => {
         setEmployeeData({
@@ -74,6 +76,14 @@ const Rh = () => {
         
         uploadContext?.clearUploads()
     }, [])
+
+    useEffect(() => {
+        // allEmployees?.map((employee: Employee) => allEmployeesSex.push(employee.sex))
+        const fetchAllData = async () => setAllEmployees(await findAllEmployees())
+        fetchAllData()
+    }, [])
+
+    console.log(findAllEmployees)
 
     return (
         <main className="flex flex-col gap-6">
@@ -134,7 +144,7 @@ const Rh = () => {
                     <Button onClick={() => router.push('/')} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
                     <Button onClick={() => router.push('/')} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
                 </div>
-                <DataMetrics department="Recursos Humanos" datas={allEmployeesDataFound?.map((employee: Employee) => employee.sex)} />
+                <DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee.sex)} />
             </div>
         </main>
     )

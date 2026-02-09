@@ -17,9 +17,11 @@ const DataChart = ({ children, isBorder = false, datas }: { children: string, is
     useEffect(() => {
         const counts: Record<string, number> = {}
 
-        datas.forEach((sex) => {
+        Array.isArray(datas) && datas.forEach((sex) => {
             counts[sex] = (counts[sex] || 0) + 1
         })
+
+        console.log(datas, "datas")
 
         const newChartData = Object.entries(counts).map(([sex, quantity]) => ({ sex, quantity, fill: sex === "FEMALE" ? "var(--chart-5)" : "var(--chart-1)" }))
         setChartData(newChartData)

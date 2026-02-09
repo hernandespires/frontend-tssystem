@@ -37,19 +37,15 @@ const extractNames = (value: unknown): string[] => {
 
     if (!value) return []
 
-    // string
     if (typeof value === "string")
         return [value]
 
-    // array de string
     if (Array.isArray(value))
         return value.filter(v => typeof v === "string")
 
-    // FileList
     if (value instanceof FileList)
         return Array.from(value).map(f => f.name)
 
-    // array de File
     if (Array.isArray(value) && value[0] instanceof File)
         return value.map((f: File) => f.name)
 

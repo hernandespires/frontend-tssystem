@@ -53,7 +53,6 @@
 
 "use client"
 
-import { fetchFindAllEmployees } from "@/fetchs/Employee"
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { FindAllEmployeesContextTypes } from "@/types/contexts/rh/employee"
 import { Employee } from "@/types/services/humanResources/employee"
@@ -70,16 +69,13 @@ export const FindAllEmployeesProvideer = ({ children }: { children: ReactNode })
         const fetchEmployees = async () => {
             setIsLoading(true)
             setError(null)
-
-            const response = await findAllEmployees()
-            setAllEmployeesDataFound(response)
+            setAllEmployeesDataFound(await findAllEmployees())
         }
 
-        fetchEmployees()
-    }, [])
+        fetchEmployees()    
+    }, [findAllEmployees])
 
-    // const res = fetchFindAllEmployees()
-    // setAllEmployeesDataFound(res)
+    console.log(allEmployeesDataFound, "⚠️⚠️⚠️")
 
     return <FindAllEmployeesContext.Provider value={{ allEmployeesDataFound, setAllEmployeesDataFound, isLoading, error }}>{ children }</FindAllEmployeesContext.Provider>
 }
