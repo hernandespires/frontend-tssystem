@@ -29,6 +29,8 @@ const Rh = () => {
     const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
     const uploadContext = useContext(UploadContext)
 
+    console.log(allEmployeesDataFound, "allEmployeesDataFound")
+
     useEffect(() => {
         setEmployeeData({
             id: "",
@@ -132,7 +134,7 @@ const Rh = () => {
                     <Button onClick={() => router.push('/')} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
                     <Button onClick={() => router.push('/')} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
                 </div>
-                <DataMetrics department="Recursos Humanos" datas={allEmployeesDataFound.map((employee: Employee) => employee.sex)} />
+                <DataMetrics department="Recursos Humanos" datas={allEmployeesDataFound?.map((employee: Employee) => employee.sex)} />
             </div>
         </main>
     )
