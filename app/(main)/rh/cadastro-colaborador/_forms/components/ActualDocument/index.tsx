@@ -24,7 +24,7 @@ const ActualDocument = ({ children, className }: { children?: unknown, className
                 Documento(s) atual(is):
             </p>
             <span className="text-blue-400 underline cursor-pointer block">
-                {names.map((name, i) => <Link key={i} className="block" href={`http://localhost:8080/file/download/${name}`}>{name.length > 26 ? `${name.slice(0,26)}...` : name}</Link>)}bem 
+                {names.map((name, i) => <Link key={i} className="block" href={`https://api.trajetoriadosucesso.com/file/download/${name}`}>{name.length > 26 ? `${name.slice(0,26)}...` : name}</Link>)}bem 
             </span>
         </div>
     )
