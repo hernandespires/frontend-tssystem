@@ -61,7 +61,7 @@ const AdditionalDocuments = ({
           </h1>
           <Progress value={percentageProgress} className="max-w-107.5" />
         </div>
-        <ActualDocument>
+        <ActualDocument className="text-center">
           {employeeFound?.additionalDocuments?.length ? employeeFound.additionalDocuments : employeeData.additionalDocuments}
         </ActualDocument>
         <Field className="flex min-h-112 py-3">

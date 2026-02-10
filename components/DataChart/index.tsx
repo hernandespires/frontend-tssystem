@@ -6,23 +6,18 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { useEffect, useState } from "react"
 
 const sexChartConfig = {
-  quantity: { label: "Quantidade" },
-  male: { label: "Masculino", color: "var(--chart-1)" },
-  female: { label: "Feminino", color: "var(--chart-5)" },
+  quantity: { label: "Quantidade" }, male: { label: "Masculino", color: "#1490F5" }, female: { label: "Feminino", color: "#FF5CDC" }
 } satisfies ChartConfig
 
 const chartConfigCivilState = {
   quantity: { label: "Quantidade" },
-  SINGLE: { label: "Solteiro(a)", color: "var(--chart-1)" },
-  MARRIED: { label: "Casado(a)", color: "var(--chart-5)" },
-  WIDOWED: { label: "Viúvo(a)", color: "var(--chart-2)" },
+  SINGLE: { label: "Solteiro(a)", color: "#FFA300" },
+  MARRIED: { label: "Casado(a)", color: "#2577f0" },
+  WIDOWED: { label: "Viúvo(a)", color: "#fffd6a" }
 } satisfies ChartConfig
 
 const chartConfigOperations = {
-  quantity: { label: "Quantidade" },
-  _01: { label: "01", color: "var(--chart-1)" },
-  _02: { label: "02", color: "var(--chart-5)" },
-  _03: { label: "03", color: "var(--chart-2)" },
+  quantity: { label: "Quantidade" }, _01: { label: "01", color: "#1490F5" }, _02: { label: "02", color: "#FFA300" }, _03: { label: "03", color: "#fffd6a" }
 } satisfies ChartConfig
 
 type Employee = {
@@ -51,7 +46,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
       if (d.sex === "FEMALE") female++
     })
 
-    const result: SexChartItem[] = [{ sex: "male", quantity: male, fill: "var(--chart-1)" }, { sex: "female", quantity: female, fill: "var(--chart-5)" }]
+    const result: SexChartItem[] = [{ sex: "male", quantity: male, fill: "#1490F5" }, { sex: "female", quantity: female, fill: "#FF5CDC" }]
 
     setSexChartData(result)
   }, [datas])
@@ -64,7 +59,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
     })
 
     const result = Object.entries(counts).map(([civilState, quantity]) => ({
-      civilState, quantity, fill: civilState === "MARRIED" ? "var(--chart-5)" : civilState === "WIDOWED" ? "var(--chart-2)" : "var(--chart-1)"
+      civilState, quantity, fill: civilState === "MARRIED" ? "#2577f0" : civilState === "WIDOWED" ? "#fffd6a" : "#FFA300"
     }))
 
     setCivilStateChartData(result)
@@ -82,10 +77,10 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
       quantity,
       fill:
         operations === "_02"
-          ? "var(--chart-5)"
+          ? "#FFA300"
           : operations === "_03"
-          ? "var(--chart-2)"
-          : "var(--chart-1)",
+          ? "#fffd6a"
+          : "#1490F5",
     }))
 
     setOperationsChartData(result)
@@ -108,23 +103,6 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
           </ChartContainer>
         </CardContent>
       </Card>
-      {/* <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
-        <CardHeader className="items-center pb-2">
-          <CardTitle className="text-white text-lg text-center">
-            Estado Civil
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-center w-[365px]">
-          <ChartContainer config={chartConfigCivilState} className="aspect-square w-48">
-            <BarChart data={civilStateChartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis dataKey="civilState" tickFormatter={(value) => chartConfigCivilState[value as keyof typeof chartConfigCivilState]?.label ?? value} />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="quantity" radius={8} />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-      </Card> */}
       <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
         <CardHeader className="items-center pb-2">
           <CardTitle className="text-white text-lg text-center">
