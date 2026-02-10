@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "../../../../../../components/ui/progress"
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
@@ -44,8 +44,6 @@ const LaborDocuments = ({
 
     const form = useZodForm(formSchema)
 
-    const [documentationVisibility, setDocumentationVisibility] = useState<boolean>(employeeFound.reservist)
-
     const errors = form.formState.errors
     const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
@@ -54,28 +52,31 @@ const LaborDocuments = ({
 
     const watchedDocumentation = form.watch("documentation")
     const watchedResidential = form.watch("residentialProve")
+    const watchedReservist = form.watch("reservist")
 
-    const getDocumentName = (value: any) => {
-        if (!value) return undefined
+const getDocumentName = (value: any) => {
+    if (!value) return undefined
 
-        if (value instanceof FileList && value.length > 0) {
-            return value[0].name
-        }
-
-        if (typeof value === "string") {
-            return value
-        }
-
-        return undefined
+    if (value instanceof FileList && value.length > 0) {
+        return value[0].name
     }
 
-    useEffect(() => {
-        setDocumentationVisibility(
-            employeeData?.reservist ??
-            employeeFound?.reservist ??
-            false
-        )
-    }, [])
+    if (typeof value === "string") {
+        return value
+    }
+
+    return undefined
+}
+
+useEffect(() => {
+    if (employeeFound?.documentation && employeeFound.documentation.length > 0) {
+        form.reset({
+            ...form.getValues(),
+            reservist: true
+        })
+    }
+}, [employeeFound?.documentation])
+
 
     useEffect(() => {
         if (uploadData.residentialProve)
@@ -94,6 +95,14 @@ const LaborDocuments = ({
         if (employeeData?.residentialProve)
             form.setValue("residentialProve", employeeData.residentialProve)
     }, [])
+
+    // limpa documentação quando não for reservista
+    useEffect(() => {
+        if (!watchedReservist) {
+            form.setValue("documentation", null)
+            setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
+        }
+    }, [watchedReservist])
 
     const handleNextStep = (values: SendEmployee) => {
 
@@ -115,7 +124,11 @@ const LaborDocuments = ({
         ) return
 
         const admissionISO =
-            values.admissionDate instanceof Date ? values.admissionDate.toISOString() : values.admissionDate ? new Date(values.admissionDate).toISOString() : undefined
+            values.admissionDate instanceof Date
+                ? values.admissionDate.toISOString()
+                : values.admissionDate
+                    ? new Date(values.admissionDate).toISOString()
+                    : undefined
 
         useIsValidFormField({
             form,
@@ -143,23 +156,23 @@ const LaborDocuments = ({
         })
     }
 
-    useEffect(() => {
-        form.setValue("documentation", null)
-        !documentationVisibility && setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
-    }, [documentationVisibility])
-
-    console.log(documentationVisibility)
-
     return (
         <section>
-            <RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+            <RegistrationForm
+                formSchema={formSchema}
+                urlPath={urlPath}
+                form={form}
+                prevStep={prevStep}
+                nextStep={handleNextStep}
+            >
                 <div className="flex flex-col justify-center items-center gap-3">
                     <h1 className="text-2xl font-bold text-default-orange">
                         {actualStep}/5 - Documentação Trabalhista
                     </h1>
                     <Progress value={percentageProgress} className="max-w-107.5" />
                 </div>
-                <div className="flex items-stretch gap-22.5 max-h-122 px-38.75 py-3">
+
+                <div className="flex items-stretch gap-22.5 max-h-122 px-38.75 py-3 justify-center">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Controller
                             name="workCard"
@@ -185,6 +198,7 @@ const LaborDocuments = ({
                                 </Field>
                             )}
                         />
+
                         <Controller
                             name="pisPasep"
                             control={form.control}
@@ -198,21 +212,32 @@ const LaborDocuments = ({
                                         {...field}
                                         maxLength={14}
                                         placeholder="XXX.XXXXX.XX-X"
-                                        onChange={(event) => field.onChange(formatterPisPasep(event.target.value))}
+                                        onChange={(event) =>
+                                            field.onChange(
+                                                formatterPisPasep(event.target.value)
+                                            )
+                                        }
                                     />
                                     <FieldError>
-                                        {firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}
+                                        {firstErrorKey === "pisPasep" &&
+                                            String(form.formState.errors.pisPasep?.message)}
                                     </FieldError>
                                 </Field>
                             )}
                         />
+
                         <DropdownMenu
                             form={form}
                             name="typeEmployment"
                             label="Tipo de Vínculo"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "CLT", value: "CLT" }, {label: "CNPJ", value: "CNPJ"}, {label: "Freelance", value: "FREELANCE"}]}
+                            options={[
+                                { label: "CLT", value: "CLT" },
+                                { label: "CNPJ", value: "CNPJ" },
+                                { label: "Freelance", value: "FREELANCE" }
+                            ]}
                         />
+
                         <DropdownMenu
                             className="max-w-[68%]"
                             form={form}
@@ -225,19 +250,35 @@ const LaborDocuments = ({
                                 { label: "Home office", value: "HOME_OFFICE" }
                             ]}
                         />
+
                         <DropdownMenu
                             form={form}
                             name="laborScale"
                             label="Escala"
                             schemaKeys={Object.keys(formSchema.shape)}
-                            options={[{ label: "5x2", value: "_5X2" }, { label: "4x3", value: "_4X3" }, { label: "6x1", value: "_6X1" }]}
+                            options={[
+                                { label: "5x2", value: "_5X2" },
+                                { label: "4x3", value: "_4X3" },
+                                { label: "6x1", value: "_6X1" }
+                            ]}
                         />
                     </div>
-                    <Separator orientation="vertical" />
+
+                    <div>
+                        <Separator orientation="vertical" />
+                    </div>
+
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <div className="w-full">
-                            <DatePicker form={form} formSchema={formSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
+                            <DatePicker
+                                form={form}
+                                formSchema={formSchema}
+                                fieldName="admissionDate"
+                                label="Data de admisão"
+                                className="max-w-1/2"
+                            />
                         </div>
+
                         <Field>
                             <FieldLabel>
                                 Salário
@@ -252,20 +293,29 @@ const LaborDocuments = ({
                                         inputMode="numeric"
                                         maxLength={13}
                                         placeholder="R$ 0000,00"
-                                        onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
+                                        onChange={(event) =>
+                                            field.onChange(
+                                                formatterCurrencyBRL(event.target.value)
+                                            )
+                                        }
                                     />
                                 )}
                             />
                             <FieldError>
-                                {firstErrorKey === "salary" && String(form.formState.errors.salary?.message)}
+                                {firstErrorKey === "salary" &&
+                                    String(form.formState.errors.salary?.message)}
                             </FieldError>
                         </Field>
+
                         <Field>
                             <FieldLabel>
                                 Comprovante de residência
                             </FieldLabel>
                             <ActualDocument>
-                                {getDocumentName(watchedResidential) ?? employeeFound?.residentialProve ?? employeeData?.residentialProve ?? ""}
+                                {getDocumentName(watchedResidential) ??
+                                    employeeFound?.residentialProve ??
+                                    employeeData?.residentialProve ??
+                                    ""}
                             </ActualDocument>
                             <Input
                                 type="file"
@@ -273,19 +323,18 @@ const LaborDocuments = ({
                                 {...form.register("residentialProve")}
                             />
                         </Field>
+
                         <Controller
                             name="reservist"
                             control={form.control}
-                            defaultValue={false}
                             render={({ field }) => (
                                 <Field>
                                     <div className="flex gap-2">
                                         <Checkbox
                                             checked={field.value}
-                                            onCheckedChange={(checked) => {                                                
-                                                !employeeFound.reservist && setDocumentationVisibility(Boolean(checked))
+                                            onCheckedChange={(checked) =>
                                                 field.onChange(checked)
-                                            }}
+                                            }
                                         />
                                         <Label>
                                             Reservista
@@ -294,14 +343,22 @@ const LaborDocuments = ({
                                 </Field>
                             )}
                         />
-                        <Field className={!documentationVisibility ? "hidden" : ""}>
+
+                        <Field className={!watchedReservist ? "hidden" : ""}>
                             <FieldLabel>
                                 Documentação
                             </FieldLabel>
                             <ActualDocument>
-                                {getDocumentName(watchedDocumentation) ?? employeeFound?.documentation ?? employeeData?.documentation ?? ""}
+                                {getDocumentName(watchedDocumentation) ??
+                                    employeeFound?.documentation ??
+                                    employeeData?.documentation ??
+                                    ""}
                             </ActualDocument>
-                            <Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("documentation")} />
+                            <Input
+                                type="file"
+                                accept=".pdf,.png,.docx,.jpg"
+                                {...form.register("documentation")}
+                            />
                         </Field>
                     </div>
                 </div>

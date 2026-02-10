@@ -125,7 +125,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
           </ChartContainer>
         </CardContent>
       </Card> */}
-            <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
+      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
         <CardHeader className="items-center pb-2">
           <CardTitle className="text-white text-lg text-center">
             Estado Civil
@@ -148,7 +148,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
         </CardHeader>
         <CardContent className="flex">
           <ChartContainer config={chartConfigOperations} className="aspect-square w-48">
-            <BarChart data={operationsChartData} layout="vertical">
+            <BarChart data={operationsChartData} dataKey="quantity" layout="vertical">
               <CartesianGrid horizontal={false} />
               <XAxis type="number" dataKey="quantity" hide />
               <YAxis
