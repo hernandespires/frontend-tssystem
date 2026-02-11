@@ -10,27 +10,15 @@ const sexChartConfig = {
 } satisfies ChartConfig
 
 const chartConfigCivilState = {
-  quantity: { label: "Quantidade" },
-  SINGLE: { label: "Solteiro(a)", color: "#FFA300" },
-  MARRIED: { label: "Casado(a)", color: "#2577f0" },
-  WIDOWED: { label: "Viúvo(a)", color: "#fffd6a" }
+  quantity: { label: "Quantidade" }, SINGLE: { label: "Solteiro(a)", color: "#FFA300" }, MARRIED: { label: "Casado(a)", color: "#2577f0" }, WIDOWED: { label: "Viúvo(a)", color: "#fffd6a" }
 } satisfies ChartConfig
 
 const chartConfigOperations = {
-  quantity: { label: "Quantidade" }, _01: { label: "01", color: "#1490F5" }, _02: { label: "02", color: "#FFA300" }, _03: { label: "03", color: "#fffd6a" }
+  quantity: { label: "Quantidade" }, _01: { label: "01", color: "#FFA300" }, _02: { label: "02", color: "#fffd6a" }, _03: { label: "03", color: "#1490F5" }
 } satisfies ChartConfig
 
-type Employee = {
-  sex: "MALE" | "FEMALE"
-  civilState: string
-  operation: string
-}
-
-type SexChartItem = {
-  sex: "male" | "female"
-  quantity: number
-  fill: string
-}
+type Employee = { sex: "MALE" | "FEMALE", civilState: string, operation: string }
+type SexChartItem = { sex: "male" | "female", quantity: number, fill: string }
 
 const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
   const [sexChartData, setSexChartData] = useState<SexChartItem[]>([])
@@ -58,30 +46,19 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
       counts[d.civilState] = (counts[d.civilState] || 0) + 1
     })
 
-    const result = Object.entries(counts).map(([civilState, quantity]) => ({
-      civilState, quantity, fill: civilState === "MARRIED" ? "#2577f0" : civilState === "WIDOWED" ? "#fffd6a" : "#FFA300"
-    }))
+    const result = Object.entries(counts).map(([civilState, quantity]) => ({ civilState, quantity, fill: civilState === "MARRIED" ? "#2577f0" : civilState === "WIDOWED" ? "#fffd6a" : "#FFA300" }))
 
     setCivilStateChartData(result)
   }, [datas])
 
   useEffect(() => {
-    const counts: Record<string, number> = {}
+    const counts: Record<string, number> = { _01: 0, _02: 0, _03: 0 }
 
     datas.forEach((d) => {
       counts[d.operation] = (counts[d.operation] || 0) + 1
     })
 
-    const result = Object.entries(counts).map(([operations, quantity]) => ({
-      operations,
-      quantity,
-      fill:
-        operations === "_02"
-          ? "#FFA300"
-          : operations === "_03"
-          ? "#fffd6a"
-          : "#1490F5",
-    }))
+    const result = Object.entries(counts).map(([operations, quantity]) => ({ operations, quantity, fill: operations === "_02" ? "#fffd6a" : operations === "_03" ? "#1490F5" : "#FFA300" }))
 
     setOperationsChartData(result)
   }, [datas])
@@ -130,12 +107,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
               <CartesianGrid horizontal={false} />
               <XAxis type="number" dataKey="quantity" hide />
               <YAxis
-                dataKey="operations"
-                type="category"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                tickFormatter={(value) => chartConfigOperations[value as keyof typeof chartConfigOperations]?.label ?? value}
+                dataKey="operations" type="category" tickLine={false} axisLine={false} tickMargin={10} tickFormatter={(value) => chartConfigOperations[value as keyof typeof chartConfigOperations]?.label ?? value}
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Bar dataKey="quantity" radius={8} />

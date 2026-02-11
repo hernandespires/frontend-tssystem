@@ -172,7 +172,7 @@ useEffect(() => {
                     <Progress value={percentageProgress} className="max-w-107.5" />
                 </div>
 
-                <div className="flex items-stretch gap-22.5 max-h-122 px-38.75 py-3 justify-center">
+                <div className="flex items-stretch gap-22.5 max-h-132 px-38.75 py-3 justify-center">
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Controller
                             name="workCard"
