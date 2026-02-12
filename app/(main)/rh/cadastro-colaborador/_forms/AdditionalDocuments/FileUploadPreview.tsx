@@ -32,17 +32,9 @@ const FileUploadPreview = ({ fieldName, form, }: { fieldName: string, form: any 
                                 {item.file.type.startsWith("image/") ? (
                                         <Image src={item.url} width={128} height={128} className="object-cover rounded-md" alt={item.file.name} />
                                 ) : (
-                                    <div className="text-sm text-muted-foreground">
-                                        {item.file.name}
-                                    </div>
+                                    <div className="text-sm text-muted-foreground">{item.file.name}</div>
                                 )}
-                                <Button
-                                    type="button"
-                                    size="icon"
-                                    variant="destructive"
-                                    className="absolute top-1 right-1 h-6 w-6"
-                                    onClick={() => setFiles((prev) => prev.filter((_, i) => i !== index))}
-                                >
+                                <Button type="button" size="icon" variant="destructive" className="absolute top-1 right-1 h-6 w-6" onClick={() => setFiles((prev) => prev.filter((_, i) => i !== index))}>
                                     <X size={14} />
                                 </Button>
                             </div>

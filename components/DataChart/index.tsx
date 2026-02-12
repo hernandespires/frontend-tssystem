@@ -10,7 +10,11 @@ const sexChartConfig = {
 } satisfies ChartConfig
 
 const chartConfigCivilState = {
-  quantity: { label: "Quantidade" }, SINGLE: { label: "Solteiro(a)", color: "#FFA300" }, MARRIED: { label: "Casado(a)", color: "#2577f0" }, WIDOWED: { label: "Viúvo(a)", color: "#fffd6a" }
+  quantity: { label: "Quantidade" },
+  SINGLE: { label: "Solteiro(a)", color: "#FFA300" },
+  DATING: { label: "Namorando", color: "#d303fc" },
+  MARRIED: { label: "Casado(a)", color: "#2577f0" },
+  WIDOWED: { label: "Viúvo(a)", color: "#fffd6a" }
 } satisfies ChartConfig
 
 const chartConfigOperations = {
@@ -46,7 +50,9 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
       counts[d.civilState] = (counts[d.civilState] || 0) + 1
     })
 
-    const result = Object.entries(counts).map(([civilState, quantity]) => ({ civilState, quantity, fill: civilState === "MARRIED" ? "#2577f0" : civilState === "WIDOWED" ? "#fffd6a" : "#FFA300" }))
+    const result = Object.entries(counts).map(([civilState, quantity]) => (
+      { civilState, quantity, fill: civilState === "MARRIED" ? "#2577f0" : civilState === "WIDOWED" ? "#fffd6a" : civilState === "DATING" ? "#9415ad" : "#FFA300" }
+    ))
 
     setCivilStateChartData(result)
   }, [datas])

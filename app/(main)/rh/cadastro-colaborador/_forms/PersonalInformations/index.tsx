@@ -78,7 +78,7 @@ const PersonalInformation = (
                             name="civilState" 
                             label="Estado Civil" 
                             schemaKeys={Object.keys(formSchema.shape)} 
-                            options={[{ label: "Solteiro(a)", value: "SINGLE" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }]} 
+                            options={[{ label: "Solteiro(a)", value: "SINGLE" }, { label: "Namorando", value: "DATING" }, { label: "Casado(a)", value: "MARRIED" }, { label: "Viúvo(a)", value: "WIDOWED" }]} 
                         />
                         {/* <DropdownMenu className="max-w-[57%]" form={form} name="nacionality" label="Nacionalidade" schemaKeys={Object.keys(formSchema.shape)} options={[
                             { label: "Brasileiro(a)", value: "BRAZILIAN" }, { label: "Americano(a)", value: "AMERICAN" }

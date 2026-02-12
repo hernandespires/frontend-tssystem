@@ -114,7 +114,6 @@ const BankDetails = (
                     <div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
                         <Controller name="transportationVoucher" control={form.control} defaultValue={false} render={({ field }) => (
                             <Field>
-                                {console.log(field)}
                                 <div className="flex gap-2">
                                     <Checkbox id="transportationVoucher" checked={field.value} onCheckedChange={(isChecked) => {
                                         setTransportationVoucherDocumentationVisibility(Boolean(isChecked))

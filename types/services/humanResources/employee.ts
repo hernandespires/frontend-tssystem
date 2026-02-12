@@ -43,7 +43,7 @@ export interface SendEmployee {
     name: string, 
     birthday: string, 
     sex: string,
-    civilState: "" | "SINGLE" | "MARRIED" | "WIDOWED",
+    civilState: "" | "SINGLE" | "DATING" | "MARRIED" | "WIDOWED",
     // nacionality: "" | "BRAZILIAN" | "AMERICAN",
     rg: string, 
     cpf: string,
@@ -72,9 +72,23 @@ export interface SendEmployee {
     cnpjTransportationVoucher: string,
     monthlyAmount: null | number,
     additionalDocuments: string[],
-    department: "" | "RESEARCH_AND_DEVELOPMENT" | "WEB_DESIGN" | "PAID_TRAFFIC",
+    department: 
+        "" | 
+        "AUDIOVISUAL" | 
+        "DESIGN" | 
+        "STRATEGIC_MANAGER" | 
+        "PROJECT_MANAGER" | 
+        "SOCIAL_MEDIA" | 
+        "TRANSLATION" | 
+        "PAID_TRAFFIC" | 
+        "WEB_DESIGN" | 
+        "FINANCE" | 
+        "HUMAN_RESOURCES" | 
+        "MARKETING" | 
+        "RESEARCH_AND_DEVELOPMENT" | 
+        "SALES",
     operation: "" | "_01" | "_02" | "_03",
-    level: "" | "PUPPY" | "ASSISTANT" | "JUNIOR",
+    level: "" | "TEST" | "PUPPY" | "JUNIOR_EAGLE" | "MID_LEVEL_EAGLE" | "SENIOR_EAGLE" | "JUNIOR_HIGH_EAGLE" | "MID_LEVEL_HIGH_EAGLE" | "SENIOR_HIGH_LEVEL" | "ASSISTANT" | "",
     status: "ACTIVE" | "INACTIVE",
     quitDate: string
 }
