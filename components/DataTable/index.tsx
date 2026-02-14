@@ -22,8 +22,8 @@ const DataTable = ({ filter }: { filter: string }) => {
     }, [])
 
     return (
-        <section className="w-1/2 max-w-147">
-            <section className="flex flex-col gap-1.5 border-1 border-default-border-color px-5.5 py-2.5 rounded-md h-full max-h-102.5 overflow-y-auto">
+        <section className="w-147">
+            <section className="flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md h-full max-h-102.5 overflow-y-auto relative">
                 <h1 className="section-title">
                     Lista de { filter }
                 </h1>
@@ -32,9 +32,9 @@ const DataTable = ({ filter }: { filter: string }) => {
                     <InputGroupAddon>
                         <Search />
                     </InputGroupAddon>
-                </InputGroup>                
+                </InputGroup>
                 <DataTableList data={allEmployees} />
-                <div className="flex justify-end">
+                <div className="sticky bottom-3.5 flex justify-end">
                     <Button variant="outline" size="sm" className="p-4.5">
                         <RiGitRepositoryCommitsFill />
                         Ver todos { filter }

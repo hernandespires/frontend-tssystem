@@ -16,14 +16,14 @@ export const metadata: Metadata = {
 
 const inter = Inter({subsets: ["latin"], variable: "--font-inter"})
 
-const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) => {
+const Layout = async ({ children }: Readonly<{children: React.ReactNode}>) => {
   const session = await getServerSession()
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-[url('/bg.png')] bg-cover bg-center bg-no-repeat`}>
+      <body className={`${inter.className} bg-[url('/bg.png')] bg-cover bg-center bg-no-repeat mb-3`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <LoginProvider initialUser={session?.user || null}>            
+          <LoginProvider initialUser={session?.user || null}>
             <Toaster richColors position="top-center" />
             { children }
           </LoginProvider>
@@ -33,4 +33,4 @@ const RootLayout = async ({ children }: Readonly<{children: React.ReactNode}>) =
   )
 }
 
-export default RootLayout
+export default Layout

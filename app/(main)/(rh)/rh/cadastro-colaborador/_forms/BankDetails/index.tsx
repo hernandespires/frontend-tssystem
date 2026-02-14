@@ -4,7 +4,6 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../../../../../components/ui/progress"
 import { formSchema } from "./formSchema"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -21,6 +20,7 @@ import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
+import { Progress } from "@/components/ui/progress"
 
 const BankDetails = (
     { urlPath, prevStep, actualStep, percentageProgress, nextStep }: 

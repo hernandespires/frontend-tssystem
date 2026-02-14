@@ -1,12 +1,12 @@
 "use client"
 
-import AdditionalDocuments from "@/app/(main)/rh/cadastro-colaborador/_forms/AdditionalDocuments"
-import BankDetails from "@/app/(main)/rh/cadastro-colaborador/_forms/BankDetails"
-import Finalization from "@/app/(main)/rh/cadastro-colaborador/_forms/Finalization"
-import LaborDocuments from "@/app/(main)/rh/cadastro-colaborador/_forms/LaborDocuments"
-import PersonalInformation from "@/app/(main)/rh/cadastro-colaborador/_forms/PersonalInformations"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import PersonalInformation from "./_forms/PersonalInformations"
+import LaborDocuments from "./_forms/LaborDocuments"
+import BankDetails from "./_forms/BankDetails"
+import AdditionalDocuments from "./_forms/AdditionalDocuments"
+import Finalization from "./_forms/Finalization"
 
 const CadastroColaborador = () => {
     const path: { name: string; route: string; }[] = [{ name: "Dashboard", route: "/rh" }, { name: "Cadastro de Colaborador", route: "/rh/cadastro-colaborador" }]

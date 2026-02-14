@@ -1,7 +1,7 @@
 "use client"
 
 import RegistrationForm from "@/components/RegistrationForm"
-import { Progress } from "../../../../../../components/ui/progress"
+import { Progress } from "@/components/ui/progress"
 import { formSchema } from "./formSchema"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useContext } from "react"

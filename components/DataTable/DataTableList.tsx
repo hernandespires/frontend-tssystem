@@ -20,7 +20,7 @@ const DataTableList = ({ data }: { data: Employee[] }) => {
     }
 
     return (
-        <ItemGroup className="h-full">
+        <ItemGroup className="">
             { data && data.length > 0 ? (
                 data.map((data) => (
                     <Fragment key={data.id}>
