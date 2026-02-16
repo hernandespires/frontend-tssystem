@@ -6,7 +6,7 @@ const DataMetrics = ({ department, datas }: { department: string, datas: string[
     const router = useRouter()
 
     return (
-        <section className="border border-default-border-color w-full rounded-md py-4">
+        <section className="border border-default-border-color w-full rounded-md py-3">
             {datas?.length > 0 ? (
                 <>
                     <div className="flex justify-between px-5.5">

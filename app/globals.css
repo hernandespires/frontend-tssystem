@@ -147,3 +147,20 @@ select:-webkit-autofill {
   color: var(--color-default-orange);
   font-weight: bold;
 }
+
+.iframe-wrapper:fullscreen {
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.iframe-wrapper:fullscreen iframe {
+  height: calc(100vh + 20px);
+}
+
+.iframe-wrapper:-webkit-full-screen {
+  padding-bottom: 20px;
+}
+
+.iframe-wrapper:-webkit-full-screen iframe {
+  height: calc(100vh + 20px);
+}

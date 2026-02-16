@@ -71,7 +71,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
 
   return (
     <div className="flex rounded-xl items-center h-81.5">
-      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
+      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r shadow-none">
         <CardHeader className="items-center pb-2">
           <CardTitle className="text-white text-lg text-center">
             Distribuição por Sexo
@@ -86,7 +86,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
           </ChartContainer>
         </CardContent>
       </Card>
-      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r">
+      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 border-r shadow-none">
         <CardHeader className="items-center pb-2">
           <CardTitle className="text-white text-lg text-center">
             Estado Civil
@@ -101,7 +101,7 @@ const DashboardCharts = ({ datas }: { datas: Employee[] }) => {
           </ChartContainer>
         </CardContent>
       </Card>
-      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0">
+      <Card className="bg-transparent w-full border-default-border-color gap-0 rounded-none border-0 shadow-none">
         <CardHeader className="items-center pb-2">
           <CardTitle className="text-white text-lg text-center">
             Operações
