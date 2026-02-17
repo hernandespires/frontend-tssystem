@@ -121,7 +121,7 @@ const PersonalInformation = (
                             <FieldLabel htmlFor="email">
                                 Email para contato (Pessoal)
                             </FieldLabel>
-                            <Input id="email" type="email" maxLength={155} placeholder="Email" {...form.register("email")} />
+                            <Input id="email" maxLength={155} placeholder="Email" {...form.register("email")} />
                             <FieldError>
                                 {firstErrorKey === "email" && String(form.formState.errors.email?.message)}
                             </FieldError>

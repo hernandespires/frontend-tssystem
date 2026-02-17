@@ -73,7 +73,7 @@ const BankDetails = (
                                 <FieldLabel htmlFor="agency">
                                     Agência
                                 </FieldLabel>
-                                <Input id="agency" maxLength={6} placeholder="XXXX-X" {...field} onChange={(event) => {
+                                <Input id="agency" maxLength={6} placeholder="XXXX" {...field} onChange={(event) => {
                                     field.onChange(formatterBankAgencyAndAccount(event.target.value))
                                 }} />
                                 <FieldError>
