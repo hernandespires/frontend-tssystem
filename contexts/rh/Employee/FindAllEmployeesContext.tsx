@@ -10,18 +10,18 @@
 
 //     const [allEmployeesDataFound, setAllEmployeesDataFound] = useState<Employee[]>([{ // fazer com que não seja possível alterar um os dados de todos os employees
 //         id: "",
-//         name: "", 
-//         birthday: "", 
+//         name: "",
+//         birthday: "",
 //         civilState: "",
 //         // nacionality: "" | "BRAZILIAN" | "AMERICAN",
-//         rg: "", 
+//         rg: "",
 //         cpf: "",
-//         email: "", 
-//         motherName: "", 
+//         email: "",
+//         motherName: "",
 //         phone: "",
-//         city: "", 
-//         postalCode: "", 
-//         street: "", 
+//         city: "",
+//         postalCode: "",
+//         street: "",
 //         neighborhood: "",
 //         workCard: "",
 //         pisPasep: "",
@@ -58,22 +58,40 @@ import { FindAllEmployeesContextTypes } from "@/types/contexts/rh/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { createContext, ReactNode, useEffect, useState } from "react"
 
-export const FindAllEmployeesContext = createContext<FindAllEmployeesContextTypes | null>(null)
+export const FindAllEmployeesContext =
+	createContext<FindAllEmployeesContextTypes | null>(null)
 
-export const FindAllEmployeesProvideer = ({ children }: { children: ReactNode }) => {
-    const [allEmployeesDataFound, setAllEmployeesDataFound] = useState<Employee[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null)
+export const FindAllEmployeesProvideer = ({
+	children
+}: {
+	children: ReactNode
+}) => {
+	const [allEmployeesDataFound, setAllEmployeesDataFound] = useState<
+		Employee[]
+	>([])
+	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        const fetchEmployees = async () => {
-            setIsLoading(true)
-            setError(null)
-            setAllEmployeesDataFound(await findAllEmployees())
-        }
+	useEffect(() => {
+		const fetchEmployees = async () => {
+			setIsLoading(true)
+			setError(null)
+			setAllEmployeesDataFound(await findAllEmployees())
+		}
 
-        fetchEmployees()    
-    }, [findAllEmployees])
+		fetchEmployees()
+	}, [findAllEmployees])
 
-    return <FindAllEmployeesContext.Provider value={{ allEmployeesDataFound, setAllEmployeesDataFound, isLoading, error }}>{ children }</FindAllEmployeesContext.Provider>
+	return (
+		<FindAllEmployeesContext.Provider
+			value={{
+				allEmployeesDataFound,
+				setAllEmployeesDataFound,
+				isLoading,
+				error
+			}}
+		>
+			{children}
+		</FindAllEmployeesContext.Provider>
+	)
 }

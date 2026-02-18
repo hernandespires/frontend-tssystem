@@ -21,131 +21,171 @@ import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
 const Rh = () => {
-    const { user } = useLogin()
-    if (!user) redirect("/login")
-        
-    const router = useRouter()
-    const { setEmployeeFound } = useContext(FindEmployeeContext)
-    const { setEmployeeData } = useContext(CreateEmployeeContext)
-    const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
-    const uploadContext = useContext(UploadContext)
+	const { user } = useLogin()
+	if (!user) redirect("/login")
 
-    const[allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
-    const [allEmployeesSex, setAllEmployeesSex] = useState<string[]>([])
+	const router = useRouter()
+	const { setEmployeeFound } = useContext(FindEmployeeContext)
+	const { setEmployeeData } = useContext(CreateEmployeeContext)
+	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
+	const uploadContext = useContext(UploadContext)
 
-    useEffect(() => {
-        setEmployeeData({
-            id: "",
-            name: "", 
-            birthday: "", 
-            civilState: "",
-            // nacionality: "" | "BRAZILIAN" | "AMERICAN",
-            rg: "", 
-            cpf: "",
-            email: "", 
-            motherName: "", 
-            phone: "",
-            city: "", 
-            postalCode: "", 
-            street: "", 
-            neighborhood: "",
-            workCard: "",
-            pisPasep: "",
-            typeEmployment: "",
-            laborModality: "",
-            laborScale: "",
-            admissionDate: "",
-            salary: null,
-            residentialProve: "",
-            reservist: false,
-            documentation: "",
-            bank: "",
-            agency: null,
-            account: null,
-            pix: "",
-            transportationVoucher: false,
-            cnpjTransportationVoucher: "",
-            monthlyAmount: null,
-            additionalDocuments: [],
-            department: "",
-            operation: "",
-            level: "",
-            status: "ACTIVE",
-            quitDate: ""
-        })        
-        
-        uploadContext?.clearUploads()
-    }, [])
+	const [allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
+	const [allEmployeesSex, setAllEmployeesSex] = useState<string[]>([])
 
-    useEffect(() => {
-        // allEmployees?.map((employee: Employee) => allEmployeesSex.push(employee.sex))
-        const fetchAllData = async () => setAllEmployees(await findAllEmployees())
-        fetchAllData()
-    }, [])
+	useEffect(() => {
+		setEmployeeData({
+			id: "",
+			name: "",
+			birthday: "",
+			civilState: "",
+			// nacionality: "" | "BRAZILIAN" | "AMERICAN",
+			rg: "",
+			cpf: "",
+			email: "",
+			motherName: "",
+			phone: "",
+			city: "",
+			postalCode: "",
+			street: "",
+			neighborhood: "",
+			workCard: "",
+			pisPasep: "",
+			typeEmployment: "",
+			laborModality: "",
+			laborScale: "",
+			admissionDate: "",
+			salary: null,
+			residentialProve: "",
+			reservist: false,
+			documentation: "",
+			bank: "",
+			agency: null,
+			account: null,
+			pix: "",
+			transportationVoucher: false,
+			cnpjTransportationVoucher: "",
+			monthlyAmount: null,
+			additionalDocuments: [],
+			department: "",
+			operation: "",
+			level: "",
+			status: "ACTIVE",
+			quitDate: ""
+		})
 
-    return (
-        <main className="flex flex-col gap-6">
-            <div className="flex gap-5 justify-between">
-                <DataTable filter="Colaboradores" />
-                <div className="flex flex-wrap gap-6 max-w-150">
-                    <Button isFulled onClick={() => router.push('/')} icon={<BsClipboardData size={36} color="black" />} text="Relatório Mensal" />
-                    <Button isFulled onClick={() => router.push('/')} icon={<LuScanFace size={36} color="black" />} text="Pontos" />
-                    <Button isFulled onClick={() => router.push('/')} icon={<MdOutlinePersonSearch size={36} color="black" />} text="Banco de currículos" />
-                    <Button onClick={() => {
-                        router.push("/rh/cadastro-colaborador")
-                        setEmployeeFound({
-                            id: "",
-                            name: "", 
-                            birthday: "", 
-                            civilState: "",
-                            // nacionality: "" | "BRAZILIAN" | "AMERICAN",
-                            rg: "", 
-                            cpf: "",
-                            email: "", 
-                            motherName: "", 
-                            phone: "",
-                            city: "", 
-                            postalCode: "", 
-                            street: "", 
-                            neighborhood: "",
-                            workCard: "",
-                            pisPasep: "",
-                            typeEmployment: "",
-                            laborModality: "",
-                            laborScale: "",
-                            admissionDate: "",
-                            salary: null,
-                            residentialProve: "",
-                            reservist: false,
-                            documentation: "",
-                            bank: "",
-                            agency: null,
-                            account: null,
-                            pix: "",
-                            transportationVoucher: false,
-                            cnpjTransportationVoucher: "",
-                            monthlyAmount: null,
-                            additionalDocuments: [],
-                            department: "",
-                            operation: "",
-                            level: "",
-                            status: "ACTIVE",
-                            quitDate: ""
-                        })
-                    }} icon={<IoPersonAddOutline size={36} color="white" />} text="Cadastrar Colaboradores" />
-                    <Button onClick={() => router.push('/')} icon={<MdPeopleOutline size={36} color="white" />} text="Gerenciar Operações" />
-                    <Button onClick={() => router.push('/')} icon={<PiTreeStructure size={36} color="white" />} text="Gerenciar Departamentos" />
-                </div>
-            </div>
-            <div className="flex gap-6">
-                <div className="flex flex-col gap-6">
-                    <Button onClick={() => router.push('/')} isFulled icon={<VscSync size={36} color="black" />} text="Processos Burocráticos" />
-                    <Button onClick={() => router.push('/')} isDashed icon={<FaPlus size={36} color="white" />} text="Processos Burocráticos" />
-                </div>
-                <DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee)} />
-            </div>
-        </main>
-    )
+		uploadContext?.clearUploads()
+	}, [])
+
+	useEffect(() => {
+		// allEmployees?.map((employee: Employee) => allEmployeesSex.push(employee.sex))
+		const fetchAllData = async () => setAllEmployees(await findAllEmployees())
+		fetchAllData()
+	}, [])
+
+	return (
+		<main className="flex flex-col gap-6">
+			<div className="flex gap-5 justify-between">
+				<DataTable filter="Colaboradores" />
+				<div className="flex flex-wrap gap-6 max-w-150">
+					<Button
+						isFulled
+						onClick={() => router.push("/")}
+						icon={<BsClipboardData size={36} color="black" />}
+						text="Relatório Mensal"
+					/>
+					<Button
+						isFulled
+						onClick={() => router.push("/")}
+						icon={<LuScanFace size={36} color="black" />}
+						text="Pontos"
+					/>
+					<Button
+						isFulled
+						onClick={() => router.push("/")}
+						icon={<MdOutlinePersonSearch size={36} color="black" />}
+						text="Banco de currículos"
+					/>
+					<Button
+						onClick={() => {
+							router.push("/rh/cadastro-colaborador")
+							setEmployeeFound({
+								id: "",
+								name: "",
+								birthday: "",
+								civilState: "",
+								// nacionality: "" | "BRAZILIAN" | "AMERICAN",
+								rg: "",
+								cpf: "",
+								email: "",
+								motherName: "",
+								phone: "",
+								city: "",
+								postalCode: "",
+								street: "",
+								neighborhood: "",
+								workCard: "",
+								pisPasep: "",
+								typeEmployment: "",
+								laborModality: "",
+								laborScale: "",
+								admissionDate: "",
+								salary: null,
+								residentialProve: "",
+								reservist: false,
+								documentation: "",
+								bank: "",
+								agency: null,
+								account: null,
+								pix: "",
+								transportationVoucher: false,
+								cnpjTransportationVoucher: "",
+								monthlyAmount: null,
+								additionalDocuments: [],
+								department: "",
+								operation: "",
+								level: "",
+								status: "ACTIVE",
+								quitDate: ""
+							})
+						}}
+						icon={<IoPersonAddOutline size={36} color="white" />}
+						text="Cadastrar Colaboradores"
+					/>
+					<Button
+						onClick={() => router.push("/")}
+						icon={<MdPeopleOutline size={36} color="white" />}
+						text="Gerenciar Operações"
+					/>
+					<Button
+						onClick={() => router.push("/")}
+						icon={<PiTreeStructure size={36} color="white" />}
+						text="Gerenciar Departamentos"
+					/>
+				</div>
+			</div>
+			<div className="flex gap-6">
+				<div className="flex flex-col gap-6">
+					<Button
+						onClick={() => router.push("/")}
+						isFulled
+						icon={<VscSync size={36} color="black" />}
+						text="Processos Burocráticos"
+					/>
+					<Button
+						onClick={() => router.push("/")}
+						isDashed
+						icon={<FaPlus size={36} color="white" />}
+						text="Processos Burocráticos"
+					/>
+				</div>
+				<DataMetrics
+					department="Recursos Humanos"
+					datas={allEmployees?.map((employee: Employee) => employee)}
+				/>
+			</div>
+		</main>
+	)
 }
 
 export default Rh
