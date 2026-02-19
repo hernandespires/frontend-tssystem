@@ -1,5 +1,6 @@
 import z from "zod"
 import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
+import { formatterCurrencyBRL } from "@/utils/formatters"
 
 export const formSchema = z.object({
     bank: z.enum(["SANTANDER", "SICRED", "BANCO_DO_BRASIL"], { error: defaultError("Banco") }).nonoptional(defaultEmptyError("Banco")),
@@ -15,7 +16,7 @@ export const formSchema = z.object({
             ctx.addIssue({ code: "custom", path: ["cnpjTransportationVoucher"], message: defaultEmptyError("CNPJ da empresa do vale transporte") })
         else if (data.cnpjTransportationVoucher.length < 18)
             ctx.addIssue({ code: "custom", path: ["cnpjTransportationVoucher"], message: defaultError("CNPJ da empresa do vale transporte") })
-        else if (!data.monthlyAmount || data.monthlyAmount.length === 0)
+        else if (!data.monthlyAmount || data.monthlyAmount === formatterCurrencyBRL("0"))
             ctx.addIssue({ code: "custom", path: ["monthlyAmount"], message: defaultEmptyError("Valor mensal") })
     }
 })
