@@ -30,7 +30,7 @@ const RegistrationForm = (
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit, onError)} className="border px-5.5 py-3 flex flex-col gap-3 rounded-md">
                     <div className="flex gap-6 items-center">
-                        <Button type="button" variant="secondary" onClick={ prevStep }>
+                        <Button type="button" variant="secondary" className="cursor-pointer" onClick={ prevStep }>
                             <FaArrowLeft />
                             Voltar
                         </Button>
@@ -40,7 +40,7 @@ const RegistrationForm = (
                     </div>
                     { children }
                     <div className="flex justify-center">
-                        <Button className="bg-default-orange h-15.25 w-107.5">
+                        <Button className="bg-default-orange h-15.25 w-107.5 cursor-pointer">
                             <LuArrowBigRight />
                             Avançar
                         </Button>

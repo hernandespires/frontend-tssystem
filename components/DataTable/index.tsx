@@ -58,7 +58,7 @@ const DataTable = ({ filter }: { filter: string }) => {
 			</div>
 			{allEmployees && allEmployees.length > 0 && (
 				<div className="mt-auto flex justify-end">
-					<Button variant="outline" size="sm" className="p-4.5">
+					<Button variant="outline" size="sm" className="p-4.5 cursor-pointer">
 						<RiGitRepositoryCommitsFill />
 						Ver todos {filter}
 					</Button>

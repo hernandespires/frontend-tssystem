@@ -13,7 +13,7 @@ const Header = ({ department }: { department: string }) => {
         <header className="m-4 glass-effect flex py-4.5 border border-default-border-color rounded-md justify-center">
             <section className="flex justify-between gap-130">
                 <div className="flex gap-5">
-                    <Image src="/LOGO-TS2.svg" width="180" height="55" alt="Logo" />
+                    <Image src="/LOGO-TS2.svg" className="cursor-pointer" width="180" height="55" alt="Logo" />
                     <div className="flex-col text-xl">
                         <Wellcome name={user?.name} />
                         <span className="font-bold text-white uppercase">
@@ -22,10 +22,10 @@ const Header = ({ department }: { department: string }) => {
                     </div>
                 </div>
                 <div className="flex gap-6">
-                    <Button size="icon-lg" className="w-16 h-15" variant="outline">
+                    <Button size="icon-lg" variant="outline" className="w-16 h-15 cursor-pointer">
                         <Image src="/line-md_bell-filled.svg" width="32" height="32" alt="Notificações" />
                     </Button>
-                    <Button className="min-w-45 h-15 border border-default-orange bg-transparent gap-2">
+                    <Button className="min-w-45 h-15 border border-default-orange bg-transparent gap-2 cursor-pointer">
                         <Avatar className="w-12 h-12">
                             <AvatarImage src={user?.image} alt="Avatar" />
                             <AvatarFallback>

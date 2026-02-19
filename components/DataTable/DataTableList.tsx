@@ -41,8 +41,8 @@ const DataTableList = ({ data }: { data: Employee[] }) => {
 								</Avatar>
 							</ItemMedia>
 							<ItemContent className="p-0">
-								<ItemTitle>{data.name}</ItemTitle>
-								<ItemDescription>{data.email}</ItemDescription>
+								<ItemTitle>{data.name.length > 35 ? data.name.substring(0, 37) + "..." : data.name}</ItemTitle>
+								<ItemDescription>{data.email.length > 47 ? data.email.substring(0, 47) + "..." : data.email}</ItemDescription>
 							</ItemContent>
 							<ItemActions>
 								<Button
