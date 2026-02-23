@@ -1,14 +1,18 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { useState } from "react"
 import PersonalInformation from "./_forms/PersonalInformations"
 import LaborDocuments from "./_forms/LaborDocuments"
 import BankDetails from "./_forms/BankDetails"
 import AdditionalDocuments from "./_forms/AdditionalDocuments"
 import Finalization from "./_forms/Finalization"
+import { useLogin } from "@/contexts/LoginContext"
 
 const CadastroColaborador = () => {
+    const { user } = useLogin()
+    if (!user) redirect("/login")
+
     const path: { name: string; route: string; }[] = [{ name: "Dashboard", route: "/rh" }, { name: "Cadastro de Colaborador", route: "/rh/cadastro-colaborador" }]
     
     const [actualStep, setActualStep] = useState<number>(1)
