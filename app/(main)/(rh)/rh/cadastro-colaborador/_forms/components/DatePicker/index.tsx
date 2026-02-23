@@ -25,6 +25,9 @@ const DatePicker = <T extends FieldValues>(
             name={ fieldName }
             defaultValue={undefined}
             render={({ field }) => {
+
+                if (canBeFuture && new Date(field.value) > new Date()) field.onChange(new Date(NaN))
+
                 const date = field.value instanceof Date ? field.value : field.value ? new Date(field.value) : undefined
                 const isValidDate = date instanceof Date && !isNaN(date.getTime()) && (!canBeFuture || date <= new Date())
 
@@ -45,8 +48,8 @@ const DatePicker = <T extends FieldValues>(
                                     mode="single"
                                     selected={isValidDate ? date : undefined}
                                     captionLayout="dropdown"
-                                    onSelect={(selectedDate) => {
-                                        field.onChange(selectedDate)
+                                    onSelect={(selectedDate) => {                                        
+                                        field.onChange(selectedDate)                                        
                                         setOpen(false)
                                     }}
                                 />
