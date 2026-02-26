@@ -11,11 +11,13 @@ import { useMemo, useState } from "react"
 const DataTable = ({
 	filter,
 	data,
+	minHeight = "full",
 	setContextInfo,
 	path
 }: {
 	filter: string
 	data: Employee[]
+	minHeight?: string
 	setContextInfo: any
 	path: string
 }) => {
@@ -36,7 +38,9 @@ const DataTable = ({
 	}, [data, searchTerm])
 
 	return (
-		<section className="flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md h-full max-h-102.5 w-147">
+		<section
+			className={`flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md w-147 min-h-${minHeight} max-h-102.5`}
+		>
 			<h1 className="section-title">{filter}</h1>
 			<InputGroup>
 				<InputGroupInput

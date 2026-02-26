@@ -35,11 +35,7 @@ const InfoBadge = ({
 			>
 				{info}
 			</span>
-			<span
-				className={`text-6xl font-bold ${fill ? "text-black" : `text-${valueColor}-500`}`}
-			>
-				{children}
-			</span>
+			<span className={`text-6xl font-bold ${fill ? "text-black" : `text-${valueColor}-500`}`}>{children}</span>
 			{periodDetails()}
 		</div>
 	)

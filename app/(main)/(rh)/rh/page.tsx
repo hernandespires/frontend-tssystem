@@ -75,7 +75,6 @@ const Rh = () => {
 	}, [])
 
 	useEffect(() => {
-		// allEmployees?.map((employee: Employee) => allEmployeesSex.push(employee.sex))
 		const fetchAllData = async () => setAllEmployees(await findAllEmployees())
 		fetchAllData()
 	}, [])
@@ -90,24 +89,15 @@ const Rh = () => {
 					path="/rh/cadastro-colaborador"
 				/>
 				<div className="flex flex-wrap gap-6 max-w-150">
-					<Button
-						isFulled
-						onClick={() => router.push("/")}
-						icon={<BsClipboardData size={36} color="black" />}
-						text="Relatório Mensal"
-					/>
-					<Button
-						isFulled
-						onClick={() => router.push("/")}
-						icon={<LuScanFace size={36} color="black" />}
-						text="Pontos"
-					/>
-					<Button
-						isFulled
-						onClick={() => router.push("/")}
-						icon={<MdOutlinePersonSearch size={36} color="black" />}
-						text="Banco de currículos"
-					/>
+					<Button isFulled onClick={() => router.push("/")} icon={<BsClipboardData size={36} color="black" />}>
+						Relatório Mensal
+					</Button>
+					<Button isFulled onClick={() => router.push("/")} icon={<LuScanFace size={36} color="black" />}>
+						Pontos
+					</Button>
+					<Button isFulled onClick={() => router.push("/")} icon={<MdOutlinePersonSearch size={36} color="black" />}>
+						Banco de currículos
+					</Button>
 					<Button
 						onClick={() => {
 							router.push("/rh/cadastro-colaborador")
@@ -152,39 +142,27 @@ const Rh = () => {
 							})
 						}}
 						icon={<IoPersonAddOutline size={36} color="white" />}
-						text="Cadastrar Colaboradores"
-					/>
-					<Button
-						onClick={() => router.push("/")}
-						icon={<MdPeopleOutline size={36} color="white" />}
-						text="Gerenciar Operações"
-					/>
-					<Button
-						onClick={() => router.push("/")}
-						icon={<PiTreeStructure size={36} color="white" />}
-						text="Gerenciar Departamentos"
-					/>
+					>
+						Cadastrar Colaboradores
+					</Button>
+					<Button onClick={() => router.push("/")} icon={<MdPeopleOutline size={36} color="white" />}>
+						Gerenciar Operações
+					</Button>
+					<Button onClick={() => router.push("/")} icon={<PiTreeStructure size={36} color="white" />}>
+						Gerenciar Departamentos
+					</Button>
 				</div>
 			</div>
 			<div className="flex gap-6">
 				<div className="flex flex-col gap-6">
-					<Button
-						onClick={() => router.push("/")}
-						isFulled
-						icon={<VscSync size={36} color="black" />}
-						text="Processos Burocráticos"
-					/>
-					<Button
-						onClick={() => router.push("/")}
-						isDashed
-						icon={<FaPlus size={36} color="white" />}
-						text="Processos Burocráticos"
-					/>
+					<Button isFulled onClick={() => router.push("/")} icon={<VscSync size={36} color="black" />}>
+						Processos Burocráticos
+					</Button>
+					<Button isDashed onClick={() => router.push("/")} icon={<FaPlus size={36} color="white" />}>
+						Processos Burocráticos
+					</Button>
 				</div>
-				<DataMetrics
-					department="Recursos Humanos"
-					datas={allEmployees?.map((employee: Employee) => employee)}
-				/>
+				<DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee)} />
 			</div>
 		</main>
 	)
