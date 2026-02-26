@@ -25,15 +25,26 @@ const Comercial = () => {
 				<InfoBadge info="Taxa de fechamento">78%</InfoBadge>
 			</section>
 			<section className="flex justify-between gap-x-1.75">
-				<div>
+				<div className="flex flex-col gap-y-1.75">
 					<div>
 						<DataTable
 							filter="Reuniões Agendadas"
 							// data={allEmployees}
 							// setContextInfo={setEmployeeFound}
 							path="/rh/cadastro-colaborador"
-							minHeight="[999px]"
+							minHeight="[399px]"
 						/>
+					</div>
+					<div className="flex justify-between">
+						<Button isFulled onClick={() => ""} icon={<SiGooglemeet size={36} color="black" />}>
+							Reunião
+						</Button>
+						<Button isFulled onClick={() => ""} icon={<SiGooglemeet size={36} color="black" />}>
+							Cadastrar Pré-Briefing
+						</Button>
+						<Button onClick={() => ""} icon={<SiGooglemeet size={36} color="white" />}>
+							Comissão
+						</Button>
 					</div>
 				</div>
 				<div className="flex justify-between w-1/2">

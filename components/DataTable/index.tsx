@@ -53,11 +53,7 @@ const DataTable = ({
 				</InputGroupAddon>
 			</InputGroup>
 			<div className="overflow-y-auto">
-				<DataTableList
-					data={filteredEmployees}
-					setContextInfo={setContextInfo}
-					path={path}
-				/>
+				<DataTableList data={filteredEmployees} setContextInfo={setContextInfo} path={path} />
 			</div>
 			{data && data.length > 0 && (
 				<div className="mt-auto flex justify-end">
