@@ -6,12 +6,11 @@ import DataTable from "@/components/DataTable"
 import { UploadContext } from "@/contexts/files/UploadContext"
 import { useLogin } from "@/contexts/LoginContext"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
-import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
 import { IoPersonAddOutline } from "react-icons/io5"
@@ -27,11 +26,9 @@ const Rh = () => {
 	const router = useRouter()
 	const { setEmployeeFound } = useContext(FindEmployeeContext)
 	const { setEmployeeData } = useContext(CreateEmployeeContext)
-	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
 	const uploadContext = useContext(UploadContext)
 
 	const [allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
-	const [allEmployeesSex, setAllEmployeesSex] = useState<string[]>([])
 
 	useEffect(() => {
 		setEmployeeData({
@@ -86,7 +83,12 @@ const Rh = () => {
 	return (
 		<main className="flex flex-col gap-6">
 			<div className="flex gap-5 justify-between">
-				<DataTable filter="Lista de Colaboradores" />
+				<DataTable
+					filter="Lista de Colaboradores"
+					data={allEmployees}
+					setContextInfo={setEmployeeFound}
+					path="/rh/cadastro-colaborador"
+				/>
 				<div className="flex flex-wrap gap-6 max-w-150">
 					<Button
 						isFulled

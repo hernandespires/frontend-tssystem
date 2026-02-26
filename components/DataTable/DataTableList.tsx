@@ -15,17 +15,22 @@ import { Employee } from "@/types/services/humanResources/employee"
 import { FaUserFriends } from "react-icons/fa"
 import { findEmployeeById } from "@/services/humanResources/employee"
 import { Fragment } from "react/jsx-runtime"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import { useContext } from "react"
 import { useRouter } from "next/navigation"
 
-const DataTableList = ({ data }: { data: Employee[] }) => {
-	const { setEmployeeFound } = useContext(FindEmployeeContext)
+const DataTableList = ({
+	data,
+	setContextInfo,
+	path
+}: {
+	data: Employee[]
+	setContextInfo: any
+	path: string
+}) => {
 	const route = useRouter()
 
 	const handleShowRegisteredEmployee = async (id: string) => {
-		setEmployeeFound(await findEmployeeById(id))
-		route.push("/rh/cadastro-colaborador")
+		setContextInfo(await findEmployeeById(id))
+		route.push(path)
 	}
 
 	return (
