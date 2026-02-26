@@ -86,7 +86,7 @@ const Rh = () => {
 	return (
 		<main className="flex flex-col gap-6">
 			<div className="flex gap-5 justify-between">
-				<DataTable filter="Colaboradores" />
+				<DataTable filter="Lista de Colaboradores" />
 				<div className="flex flex-wrap gap-6 max-w-150">
 					<Button
 						isFulled

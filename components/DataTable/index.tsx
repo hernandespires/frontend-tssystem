@@ -42,7 +42,7 @@ const DataTable = ({ filter }: { filter: string }) => {
 
 	return (
 		<section className="flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md h-full max-h-102.5 w-147">
-			<h1 className="section-title">Lista de {filter}</h1>
+			<h1 className="section-title">{filter}</h1>
 			<InputGroup>
 				<InputGroupInput
 					placeholder={`Buscar em ${filter}...`}
@@ -54,7 +54,9 @@ const DataTable = ({ filter }: { filter: string }) => {
 				</InputGroupAddon>
 			</InputGroup>
 			<div className="overflow-y-auto">
-				<DataTableList data={filteredEmployees} />
+				{filter === "Colaboradores" && (
+					<DataTableList data={filteredEmployees} />
+				)}
 			</div>
 			{allEmployees && allEmployees.length > 0 && (
 				<div className="mt-auto flex justify-end">

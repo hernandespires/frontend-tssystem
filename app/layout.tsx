@@ -32,9 +32,9 @@ const Layout = async ({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<LoginProvider initialUser={session?.user || null}>
+					<LoginProvider initialUser={session?.user || null}>						
 						<Toaster richColors position="top-center" />
-						{children}
+						{children}						
 					</LoginProvider>
 				</ThemeProvider>
 			</body>
