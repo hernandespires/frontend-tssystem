@@ -1,14 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import {
-	Item,
-	ItemActions,
-	ItemContent,
-	ItemDescription,
-	ItemGroup,
-	ItemMedia,
-	ItemSeparator,
-	ItemTitle
-} from "../ui/item"
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemSeparator, ItemTitle } from "../ui/item"
 import { Button } from "../ui/button"
 import { IoIosArrowForward } from "react-icons/io"
 import { Employee } from "@/types/services/humanResources/employee"
@@ -17,15 +8,7 @@ import { findEmployeeById } from "@/services/humanResources/employee"
 import { Fragment } from "react/jsx-runtime"
 import { useRouter } from "next/navigation"
 
-const DataTableList = ({
-	data,
-	setContextInfo,
-	path
-}: {
-	data: Employee[]
-	setContextInfo: any
-	path: string
-}) => {
+const DataTableList = ({ data, setContextInfo, path }: { data: Employee[]; setContextInfo: any; path: string }) => {
 	const route = useRouter()
 
 	const handleShowRegisteredEmployee = async (id: string) => {
@@ -46,24 +29,11 @@ const DataTableList = ({
 								</Avatar>
 							</ItemMedia>
 							<ItemContent className="p-0">
-								<ItemTitle>
-									{data.name.length > 35
-										? data.name.substring(0, 37) + "..."
-										: data.name}
-								</ItemTitle>
-								<ItemDescription>
-									{data.email.length > 47
-										? data.email.substring(0, 47) + "..."
-										: data.email}
-								</ItemDescription>
+								<ItemTitle>{data.name.length > 35 ? data.name.substring(0, 37) + "..." : data.name}</ItemTitle>
+								<ItemDescription>{data.email.length > 47 ? data.email.substring(0, 47) + "..." : data.email}</ItemDescription>
 							</ItemContent>
 							<ItemActions>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="rounded-full"
-									onClick={() => handleShowRegisteredEmployee(data.id)}
-								>
+								<Button variant="ghost" size="icon" className="rounded-full" onClick={() => handleShowRegisteredEmployee(data.id)}>
 									<IoIosArrowForward color="white" />
 								</Button>
 							</ItemActions>
@@ -74,9 +44,7 @@ const DataTableList = ({
 			) : (
 				<div className="flex justify-center items-center h-full flex-col">
 					<FaUserFriends size={150} color="#ffffff2b" />
-					<h1 className="font-bold text-gray-300">
-						Nenhum funcionário cadastrado
-					</h1>
+					<h1 className="font-bold text-gray-300">Nenhum funcionário cadastrado</h1>
 				</div>
 			)}
 			{/* : <div className="flex items-center gap-4"><Skeleton className="w-12 h-12 rounded-full" /><div className="space-y-2"><Skeleton className="w-62.5 h-4" /><Skeleton className="w-50 h-4" /></div></div> */}

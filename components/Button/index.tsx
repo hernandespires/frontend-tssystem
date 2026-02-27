@@ -24,11 +24,7 @@ const Button = ({
 			onClick={onClick}
 		>
 			{icon}
-			<span
-				className={`font-semibold text-xl w-36 ${isFulled && "text-black"}`}
-			>
-				{children}
-			</span>
+			<span className={`font-semibold text-xl w-36 ${isFulled && "text-black"}`}>{children}</span>
 		</button>
 	)
 }

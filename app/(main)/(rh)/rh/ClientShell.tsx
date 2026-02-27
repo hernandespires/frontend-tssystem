@@ -15,9 +15,7 @@ const ClientShell = ({ children }: { children: ReactNode }) => (
 					<FindEmployeeProvider>
 						<Header department="Recursos Humanos" />
 						<div className="flex justify-center flex-1">
-							<section className="flex flex-col justify-center w-303 gap-6">
-								{children}
-							</section>
+							<section className="flex flex-col justify-center w-303 gap-6">{children}</section>
 						</div>
 					</FindEmployeeProvider>
 				</UploadProvider>

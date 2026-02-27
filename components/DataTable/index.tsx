@@ -11,13 +11,13 @@ import { useMemo, useState } from "react"
 const DataTable = ({
 	filter,
 	data,
-	minHeight = "full",
+	className = "w-147 max-h-102.5 min-h-full",
 	setContextInfo,
 	path
 }: {
 	filter: string
 	data: Employee[]
-	minHeight?: string
+	className?: string
 	setContextInfo: any
 	path: string
 }) => {
@@ -38,16 +38,10 @@ const DataTable = ({
 	}, [data, searchTerm])
 
 	return (
-		<section
-			className={`flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md w-147 min-h-${minHeight} max-h-102.5`}
-		>
+		<section className={`flex flex-col gap-1.5 border border-default-border-color px-5.5 py-2.5 rounded-md ${className}`}>
 			<h1 className="section-title">{filter}</h1>
 			<InputGroup>
-				<InputGroupInput
-					placeholder={`Buscar em ${filter}...`}
-					value={searchTerm}
-					onChange={(event) => setSearchTerm(event.target.value)}
-				/>
+				<InputGroupInput placeholder={`Buscar em ${filter}...`} value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />
 				<InputGroupAddon>
 					<Search />
 				</InputGroupAddon>

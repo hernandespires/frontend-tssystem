@@ -7,5 +7,5 @@
 import z from "zod"
 
 export const formSchema = z.object({
-  additionalDocuments: z.array(z.instanceof(File)).default([])
+	additionalDocuments: z.array(z.instanceof(File)).default([])
 })
