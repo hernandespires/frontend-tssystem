@@ -22,7 +22,7 @@ const RegistrationForm = ({
 }: {
 	formSchema: ZodObject
 	urlPath: { name: string; route: string }[]
-	form: UseFormReturn
+	form: UseFormReturn<any>
 	prevStep: () => void
 	children: ReactNode
 	haveAdvanceButton: boolean
@@ -47,7 +47,7 @@ const RegistrationForm = ({
 						</Button>
 						<span className="section-title">Cadastrar Colaborador</span>
 					</div>
-					<div className="flex flex-col gap-y-6">{children}</div>
+					<div className="flex flex-col gap-y-6 flex-1 justify-center mb-35">{children}</div>
 					{haveAdvanceButton && (
 						<div className="flex justify-center">
 							<Button className="bg-default-orange h-15.25 w-107.5 cursor-pointer">

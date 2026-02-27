@@ -1,6 +1,7 @@
-import { z, ZodAny } from "zod"
+import { z } from "zod"
+import type { $ZodType } from "zod/v4/core"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, type FieldValues } from "react-hook-form"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { useContext } from "react"
 import {
@@ -16,13 +17,13 @@ import {
 } from "@/utils/formatters"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 
-export const useZodForm = <TSchema extends ZodAny>(schema: TSchema, department: string) => {
+export const useZodForm = <TOutput extends FieldValues, TInput extends FieldValues, TSchema extends $ZodType<TOutput, TInput>>(schema: TSchema, department: string) => {
 	if (department === "rh") {
 		const { employeeFound } = useContext(FindEmployeeContext)
 		const { employeeData } = useContext(CreateEmployeeContext)
 
-		return useForm<z.infer<TSchema>>({
-			resolver: zodResolver(schema),
+		return useForm<z.input<TSchema>>({
+			resolver: zodResolver(schema) as any,
 			defaultValues: {
 				name: !employeeFound?.name ? employeeData?.name : employeeFound?.name,
 				birthday: new Date(!employeeFound?.birthday ? employeeData?.birthday : employeeFound?.birthday),
@@ -60,14 +61,13 @@ export const useZodForm = <TSchema extends ZodAny>(schema: TSchema, department: 
 				department: !employeeFound?.department ? employeeData?.department : employeeFound?.department,
 				operation: !employeeFound?.operation ? employeeData?.operation : employeeFound?.operation,
 				level: !employeeFound?.level ? employeeData?.level : employeeFound?.level
-			},
+			} as any,
 			criteriaMode: "firstError",
 			mode: "onSubmit"
 		})
 	} else {
-		return useForm<z.infer<TSchema>>({
-			resolver: zodResolver(schema),
-			// defaultValues: { name: "a" },
+		return useForm<z.input<TSchema>>({
+			resolver: zodResolver(schema) as any,
 			criteriaMode: "firstError",
 			mode: "onSubmit"
 		})
