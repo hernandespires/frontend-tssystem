@@ -17,7 +17,7 @@ const ProjectType = ({
 	nextStep
 }: {
 	urlPath: { name: string; route: string }[]
-	prevStep: number
+	prevStep: () => void | number
 	actualStep: number
 	percentageProgress: number
 	nextStep: Dispatch<SetStateAction<number>>

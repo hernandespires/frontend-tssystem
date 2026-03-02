@@ -15,7 +15,8 @@ const PreBriefingRegistration = () => {
 
 	return (
 		<>
-			<ProjectType urlPath={urlPath} prevStep={() => router.replace("/comercial")} actualStep={1} percentageProgress={0} />
+			{/* fazer um setActualStep(actualStep++) */}
+			<ProjectType urlPath={urlPath} prevStep={() => router.replace("/comercial")} actualStep={1} percentageProgress={0} nextStep={() => setActualStep(2)} />
 		</>
 	)
 }
