@@ -10,6 +10,7 @@ import { UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
 import { LuArrowBigRight } from "react-icons/lu"
 import { SendEmployee } from "@/types/services/humanResources/employee"
+import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 
 const RegistrationForm = ({
 	formSchema,
@@ -26,7 +27,7 @@ const RegistrationForm = ({
 	prevStep: () => void
 	children: ReactNode
 	haveAdvanceButton: boolean
-	nextStep: (personalInformation: SendEmployee) => Promise<void>
+	nextStep?: (values: SendEmployee | SendPreBriefing) => Promise<void>
 }) => {
 	const onSubmit = (values: z.infer<typeof formSchema>) => nextStep(values)
 
@@ -45,7 +46,7 @@ const RegistrationForm = ({
 							<FaArrowLeft />
 							Voltar
 						</Button>
-						<span className="section-title">Cadastrar Colaborador</span>
+						<span className="section-title">{urlPath.at(-1).name}</span>
 					</div>
 					<div className="flex flex-col gap-y-6 flex-1 justify-center mb-35">{children}</div>
 					{haveAdvanceButton && (

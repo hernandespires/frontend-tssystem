@@ -37,44 +37,6 @@ const Finalization = ({
 	const department = form.watch("department")
 	const shouldHideOperation = HIDDEN_DEPARTMENTS.includes(department)
 
-	const brToDateString = (value: string): string | null => {
-		if (!value) return null
-
-		const parts = value.split("/")
-		if (parts.length !== 3) return null
-
-		const [dd, mm, yyyy] = parts.map(Number)
-		const date = new Date(yyyy, mm - 1, dd)
-
-		if (isNaN(date.getTime())) return null
-
-		return date.toLocaleDateString("pt-BR")
-	}
-
-	const normalizeToBackendDate = (value: unknown): string | null => {
-		if (!value) return null
-
-		let date: Date | null = null
-
-		if (value instanceof Date) date = value
-		else if (typeof value === "string" && /^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-			const [dd, mm, yyyy] = value.split("/").map(Number)
-			date = new Date(yyyy, mm - 1, dd)
-		} else if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}/.test(value)) {
-			date = new Date(value)
-		} else if (typeof value === "string") {
-			date = new Date(value)
-		}
-
-		if (!date || isNaN(date.getTime())) return null
-
-		const d = String(date.getDate()).padStart(2, "0")
-		const m = String(date.getMonth() + 1).padStart(2, "0")
-		const y = date.getFullYear()
-
-		return `${d}/${m}/${y}`
-	}
-
 	const handleCreateEmployee = async (values: SendEmployee) => {
 		try {
 			const allFiles: File[] = Object.values(uploadData ?? {}).flat()

@@ -78,7 +78,6 @@ const LaborDocuments = ({
 		if (employeeData?.residentialProve) form.setValue("residentialProve", employeeData.residentialProve)
 	}, [])
 
-	// limpa documentação quando não for reservista
 	useEffect(() => {
 		if (!watchedReservist) {
 			form.setValue("documentation", null)

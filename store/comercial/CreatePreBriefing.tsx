@@ -6,33 +6,5 @@ type PreBriefingStore = { allPreBriefings: PreBriefing[]; addPreBriefing: (preBr
 export const usePreBriefingStore = create<PreBriefingStore>((set) => ({
 	allPreBriefings: [],
 	addPreBriefing: (preBriefing) =>
-		set((state) => ({
-			allPreBriefings: [
-				{
-					id: "test",
-					projectType: "",
-					paymentMethod: "",
-					hasInstallments: false,
-					installments: 0,
-					entryValue: 0,
-					clientName: "",
-					nacionality: "",
-					email: "",
-					phone: "",
-					address: "",
-					documentType: "",
-					documentNumber: "",
-					segment: "",
-					bussinessName: "",
-					programType: "",
-					programPeriod: "",
-					projectStartDate: "",
-					contractDate: "",
-					paymentDate: "",
-					leadSource: "",
-					leadArrivalDate: "",
-					meetingLink: ""
-				}
-			]
-		}))
+		set((state) => ({ allPreBriefings: [...state.allPreBriefings, { id: "9d2e98ad-3440-40ec-bd67-384db98c9566", ...preBriefing }] }))
 }))

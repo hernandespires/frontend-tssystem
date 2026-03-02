@@ -23,34 +23,38 @@ const ProjectType = ({
 	nextStep: Dispatch<SetStateAction<number>>
 }) => {
 	const form = useZodForm(formSchema, "comercial")
-	const { allPreBriefings, addPreBriefing } = usePreBriefingStore()
+	const { addPreBriefing } = usePreBriefingStore()
 
-	const handleNextStep = async (values: SendPreBriefing) => {
-		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
+	const handleNextStep = async (value: SendPreBriefing) => {
+		await useIsValidFormField({ form, fields: { projectType: value }, setData: addPreBriefing, nextStep })
 	}
 
 	return (
-		<section>
-			<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} haveAdvanceButton={false} nextStep={handleNextStep}>
-				<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
-				<div className="flex justify-center gap-x-6">
-					<Button
-						isFulled
-						onClick={() => handleNextStep("pontual")}
-						icon={<Image src={"/icons/loop-left-arrow.svg"} width={48} height={48} alt="loop left arrow" />}
-					>
-						Pontual
-					</Button>
-					<Button
-						isFulled
-						onClick={() => handleNextStep("recorrente")}
-						icon={<Image src={"/icons/loop-arrow.svg"} width={48} height={48} alt="loop left arrow" />}
-					>
-						Recorrente
-					</Button>
-				</div>
-			</RegistrationForm>
-		</section>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} haveAdvanceButton={false} nextStep={handleNextStep}>
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<div className="flex justify-center gap-x-6">
+				<Button
+					isFulled
+					onClick={() => {
+						form.setValue("projectType", "pontual")
+						handleNextStep("pontual")
+					}}
+					icon={<Image src={"/icons/loop-left-arrow.svg"} width={48} height={48} alt="loop left arrow" />}
+				>
+					Pontual
+				</Button>
+				<Button
+					isFulled
+					onClick={() => {
+						form.setValue("projectType", "recorrente")
+						handleNextStep("recorrente")
+					}}
+					icon={<Image src={"/icons/loop-arrow.svg"} width={48} height={48} alt="loop arrow" />}
+				>
+					Recorrente
+				</Button>
+			</div>
+		</RegistrationForm>
 	)
 }
 

@@ -5,33 +5,52 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Controller, FieldValues, Path, UseFormReturn } from "react-hook-form"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 
-const DropdownMenu = 
-    <T extends FieldValues>
-    ({ className, form, name, label, options, schemaKeys }: { className?: string, form: UseFormReturn, name: Path<T>, label: string, options: { label: string, value: string | number }[], schemaKeys: string[] }) => 
-{
-    const errors = form.formState.errors
-    const firstErrorKey = useGetFirstErrorKey(errors, schemaKeys)
+const DropdownMenu = <T extends FieldValues>({
+	form,
+	schemaKeys,
+	className,
+	name,
+	label,
+	disabled = false,
+	placeholder = "Selecione",
+	options
+}: {
+	form: UseFormReturn
+	schemaKeys: string[]
+	className?: string
+	name: Path<T>
+	label?: string
+	disabled?: boolean
+	placeholder: string
+	options: { label: string; value: string | number }[]
+}) => {
+	const errors = form.formState.errors
+	const firstErrorKey = useGetFirstErrorKey(errors, schemaKeys)
 
-    return (
-        <Field className={ className }>
-            <FieldLabel htmlFor={ name }>
-                { label }
-            </FieldLabel>
-            <Controller control={ form.control } name={ name } render={({ field }) => (
-                <Select value={field?.value ?? ""} onValueChange={field.onChange}>
-                    <SelectTrigger id={ name }>
-                        <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        { options.map((option: { label: string, value: string | number }) => <SelectItem key={option.value} value={String(option.value)}>{option.label}</SelectItem>) }
-                    </SelectContent>
-                </Select>
-            )} />
-            <FieldError>
-                { firstErrorKey === name && String(form.formState.errors[name]?.message) }
-            </FieldError>
-        </Field>
-    )
+	return (
+		<Field className={className}>
+			<FieldLabel htmlFor={name}>{label}</FieldLabel>
+			<Controller
+				control={form.control}
+				name={name}
+				render={({ field }) => (
+					<Select value={field?.value ?? ""} onValueChange={field.onChange}>
+						<SelectTrigger id={name}>
+							<SelectValue placeholder={placeholder} />
+						</SelectTrigger>
+						<SelectContent>
+							{options.map((option: { label: string; value: string | number }) => (
+								<SelectItem key={option.value} value={String(option.value)}>
+									{option.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				)}
+			/>
+			<FieldError>{firstErrorKey === name && String(form.formState.errors[name]?.message)}</FieldError>
+		</Field>
+	)
 }
 
 export default DropdownMenu
