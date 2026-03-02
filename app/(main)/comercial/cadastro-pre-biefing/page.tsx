@@ -4,6 +4,7 @@ import { useState } from "react"
 import ProjectType from "./_forms/ProjectType"
 import { useRouter } from "next/navigation"
 import PaymentMethod from "./_forms/PaymentMethod"
+import ClientData from "./_forms/ClientData"
 
 const urlPath: { name: string; route: string }[] = [
 	{ name: "Dashboard", route: "/comercial" },
@@ -29,9 +30,11 @@ const PreBriefingRegistration = () => {
 					urlPath={urlPath}
 					prevStep={() => router.replace("/comercial")}
 					actualStep={1}
-					percentageProgress={0}
-					nextStep={() => setActualStep(2)}
+					percentageProgress={17}
+					nextStep={() => setActualStep(3)}
 				/>
+			) : actualStep === 3 ? (
+				<ClientData />
 			) : (
 				<></>
 			)}

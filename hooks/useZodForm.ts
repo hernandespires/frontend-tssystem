@@ -17,7 +17,10 @@ import {
 } from "@/utils/formatters"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 
-export const useZodForm = <TOutput extends FieldValues, TInput extends FieldValues, TSchema extends $ZodType<TOutput, TInput>>(schema: TSchema, department: string) => {
+export const useZodForm = <TOutput extends FieldValues, TInput extends FieldValues, TSchema extends $ZodType<TOutput, TInput>>(
+	schema: TSchema,
+	department: string
+) => {
 	if (department === "rh") {
 		const { employeeFound } = useContext(FindEmployeeContext)
 		const { employeeData } = useContext(CreateEmployeeContext)

@@ -34,7 +34,7 @@ const DropdownMenu = <T extends FieldValues>({
 				control={form.control}
 				name={name}
 				render={({ field }) => (
-					<Select value={field?.value ?? ""} onValueChange={field.onChange}>
+					<Select value={field?.value ?? ""} onValueChange={field.onChange} disabled={disabled}>
 						<SelectTrigger id={name}>
 							<SelectValue placeholder={placeholder} />
 						</SelectTrigger>

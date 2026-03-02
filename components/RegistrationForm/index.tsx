@@ -48,7 +48,7 @@ const RegistrationForm = ({
 						</Button>
 						<span className="section-title">{urlPath.at(-1).name}</span>
 					</div>
-					<div className="flex flex-col gap-y-6 flex-1 justify-center mb-35">{children}</div>
+					<div className="flex flex-col gap-y-6 flex-1 justify-center mb-15">{children}</div>
 					{haveAdvanceButton && (
 						<div className="flex justify-center">
 							<Button className="bg-default-orange h-15.25 w-107.5 cursor-pointer">

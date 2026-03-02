@@ -3,14 +3,17 @@ import StepProgressBar from "@/components/StepProgressBar"
 import { formSchema } from "./formSchema"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
-import { Field } from "@/components/ui/field"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import DropdownMenu from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DropdownMenu"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Controller } from "react-hook-form"
+import { Input } from "@/components/ui/input"
+import { formatterCurrencyBRL } from "@/utils/formatters"
+import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 
 const PaymentMethod = ({
 	urlPath,
@@ -25,10 +28,16 @@ const PaymentMethod = ({
 	actualStep: number
 	percentageProgress: number
 }) => {
-	const form = useZodForm(formSchema, "comercial")
 	const { addPreBriefing } = usePreBriefingStore()
 
+	const [hasInstallments, setHasInstallments] = useState<boolean>(false)
+
+	const form = useZodForm(formSchema, "comercial")
+	const errors = form.formState.errors
+	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
+
 	const handleNextStep = async (values: SendPreBriefing) => {
+		console.log(values)
 		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
 	}
 
@@ -39,9 +48,10 @@ const PaymentMethod = ({
 				<Controller
 					name="paymentMethod"
 					control={form.control}
-					render={({ field }) => (
+					render={() => (
 						<Field>
 							<DropdownMenu
+								id="paymentMethod"
 								form={form}
 								name="paymentMethod"
 								label="Forma de pagamento"
@@ -56,34 +66,62 @@ const PaymentMethod = ({
 					)}
 				/>
 				<Controller
-					name="reservist"
+					name="hasInstallments"
 					control={form.control}
 					render={({ field }) => (
 						<Field className="w-33.25">
-							<div className="flex gap-2">
-								<Checkbox checked={field.value} onCheckedChange={(checked) => field.onChange(checked)} />
+							<div className="flex gap-x-2">
+								<Checkbox
+									id="hasInstallments"
+									checked={field.value}
+									onCheckedChange={(checked) => {
+										field.onChange(checked)
+										setHasInstallments(!hasInstallments)
+									}}
+								/>
 								<Label>Parcelado</Label>
 							</div>
 						</Field>
 					)}
 				/>
 				<Controller
-					name="paymentMethod"
+					name="installments"
 					control={form.control}
-					render={({ field }) => (
+					render={() => (
 						<Field className="w-75.75">
 							<DropdownMenu
-								className={`gap-0 ${"bg-[#737373]"}`}
-								schemaKeys={Object.keys(formSchema.shape)}
-								name="paymentMethod"
+								id="installments"
 								form={form}
+								schemaKeys={Object.keys(formSchema.shape)}
+								className={`gap-0 ${!hasInstallments && "bg-[#737373]"}`}
+								name="installments"
+								disabled={!hasInstallments && true}
+								placeholder="Qtde parcelas"
 								options={[
 									{ label: "Pix", value: "PIX" },
 									{ label: "Invoice", value: "INVOICE" },
 									{ label: "Boleto", value: "PAYMENT_SLIP" }
 								]}
-								placeholder="Qtde parcelas"
 							/>
+						</Field>
+					)}
+				/>
+				<Controller
+					name="entryValue"
+					control={form.control}
+					defaultValue=""
+					render={({ field }) => (
+						<Field>
+							<FieldLabel>Valor do lançamento</FieldLabel>
+							<Input
+								{...field}
+								inputMode="numeric"
+								maxLength={13}
+								placeholder="R$ 0000,00"
+								onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
+							/>
+							<FieldError>{firstErrorKey === "entryValue" && String(form.formState.errors.entryValue?.message)}</FieldError>
+							<p className="text-[#737373]">Caso seja pagamento à vista, coloque o valor inteiro.</p>
 						</Field>
 					)}
 				/>
