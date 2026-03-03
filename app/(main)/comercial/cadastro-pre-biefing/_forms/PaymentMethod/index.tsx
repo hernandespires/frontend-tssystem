@@ -3,7 +3,7 @@ import StepProgressBar from "@/components/StepProgressBar"
 import { formSchema } from "./formSchema"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
 import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
@@ -14,20 +14,9 @@ import { Controller } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { formatterCurrencyBRL } from "@/utils/formatters"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
+import { FormType } from "@/types/form"
 
-const PaymentMethod = ({
-	urlPath,
-	prevStep,
-	nextStep,
-	actualStep,
-	percentageProgress
-}: {
-	urlPath: { name: string; route: string }[]
-	prevStep: () => void | string
-	nextStep: Dispatch<SetStateAction<number>>
-	actualStep: number
-	percentageProgress: number
-}) => {
+const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
 	const { addPreBriefing } = usePreBriefingStore()
 
 	const [hasInstallments, setHasInstallments] = useState<boolean>(false)
@@ -37,7 +26,6 @@ const PaymentMethod = ({
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
 	const handleNextStep = async (values: SendPreBriefing) => {
-		console.log(values)
 		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
 	}
 

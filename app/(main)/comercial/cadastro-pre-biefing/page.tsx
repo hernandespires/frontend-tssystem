@@ -5,6 +5,7 @@ import ProjectType from "./_forms/ProjectType"
 import { useRouter } from "next/navigation"
 import PaymentMethod from "./_forms/PaymentMethod"
 import ClientData from "./_forms/ClientData"
+import CompanyData from "./_forms/CompanyData"
 
 const urlPath: { name: string; route: string }[] = [
 	{ name: "Dashboard", route: "/comercial" },
@@ -17,24 +18,38 @@ const PreBriefingRegistration = () => {
 
 	return (
 		<>
-			{actualStep === 1 ? (
+			{actualStep === 5 ? (
 				<ProjectType
+					nextStep={() => setActualStep(actualStep + 1)}
 					urlPath={urlPath}
 					prevStep={() => router.replace("/comercial")}
-					actualStep={1}
+					actualStep={actualStep}
 					percentageProgress={0}
-					nextStep={() => setActualStep(actualStep + 1)}
 				/>
 			) : actualStep === 2 ? (
 				<PaymentMethod
+					nextStep={() => setActualStep(actualStep + 1)}
 					urlPath={urlPath}
-					prevStep={() => router.replace("/comercial")}
-					actualStep={1}
+					prevStep={() => setActualStep(actualStep - 1)}
+					actualStep={actualStep}
 					percentageProgress={17}
-					nextStep={() => setActualStep(3)}
 				/>
-			) : actualStep === 3 ? (
-				<ClientData />
+			) : actualStep === 4 ? (
+				<ClientData
+					nextStep={() => setActualStep(actualStep + 1)}
+					urlPath={urlPath}
+					prevStep={() => setActualStep(actualStep - 1)}
+					actualStep={actualStep}
+					percentageProgress={34}
+				/>
+			) : actualStep === 1 ? (
+				<CompanyData
+					urlPath={urlPath}
+					prevStep={() => setActualStep(actualStep - 1)}
+					nextStep={() => setActualStep(actualStep + 1)}
+					actualStep={actualStep}
+					percentageProgress={51}
+				/>
 			) : (
 				<></>
 			)}

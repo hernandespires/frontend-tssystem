@@ -2,7 +2,7 @@
 
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
@@ -14,20 +14,9 @@ import FileUploadPreview from "../components/FileUploadPreview"
 import ActualDocument from "../components/ActualDocument"
 import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import StepProgressBar from "@/components/StepProgressBar"
+import { FormType } from "@/types/form"
 
-const AdditionalDocuments = ({
-	urlPath,
-	prevStep,
-	actualStep,
-	percentageProgress,
-	nextStep
-}: {
-	urlPath: { name: string; route: string }[]
-	prevStep: () => void
-	actualStep: number
-	percentageProgress: number
-	nextStep: Dispatch<SetStateAction<number>>
-}) => {
+const AdditionalDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
 	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
 	const { uploadData } = useContext(UploadContext)
 	const { employeeFound } = useContext(FindEmployeeContext)
@@ -50,20 +39,18 @@ const AdditionalDocuments = ({
 	}
 
 	return (
-		<section>
-			<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
-				<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
-				<ActualDocument className="text-center">
-					{employeeFound?.additionalDocuments?.length ? employeeFound.additionalDocuments : employeeData.additionalDocuments}
-				</ActualDocument>
-				<Field className="flex min-h-112 py-3">
-					<div className="flex flex-col items-center w-fit">
-						<FileUploadPreview fieldName="additionalDocuments" form={form} />
-						<FieldError>{firstErrorKey === "additionalDocuments" && String(form.formState.errors.additionalDocuments?.message)}</FieldError>
-					</div>
-				</Field>
-			</RegistrationForm>
-		</section>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<ActualDocument className="text-center">
+				{employeeFound?.additionalDocuments?.length ? employeeFound.additionalDocuments : employeeData.additionalDocuments}
+			</ActualDocument>
+			<Field className="flex min-h-112 py-3">
+				<div className="flex flex-col items-center w-fit">
+					<FileUploadPreview fieldName="additionalDocuments" form={form} />
+					<FieldError>{firstErrorKey === "additionalDocuments" && String(form.formState.errors.additionalDocuments?.message)}</FieldError>
+				</div>
+			</Field>
+		</RegistrationForm>
 	)
 }
 

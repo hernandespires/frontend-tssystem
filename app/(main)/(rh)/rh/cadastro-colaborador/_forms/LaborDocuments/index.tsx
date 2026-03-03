@@ -4,7 +4,7 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { Dispatch, SetStateAction, useContext, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
@@ -22,20 +22,9 @@ import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployees
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import StepProgressBar from "@/components/StepProgressBar"
+import { FormType } from "@/types/form"
 
-const LaborDocuments = ({
-	urlPath,
-	prevStep,
-	actualStep,
-	percentageProgress,
-	nextStep
-}: {
-	urlPath: { name: string; route: string }[]
-	prevStep: () => void
-	actualStep: number
-	percentageProgress: number
-	nextStep: Dispatch<SetStateAction<number>>
-}) => {
+const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
 	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
 	const { employeeFound } = useContext(FindEmployeeContext)
 	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
@@ -118,121 +107,126 @@ const LaborDocuments = ({
 	}
 
 	return (
-		<section>
-			<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
-				<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
-				<div className="flex items-stretch gap-22.5 max-h-132 px-38.75 py-3 justify-center">
-					<div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-						<Controller
-							name="workCard"
-							control={form.control}
-							defaultValue=""
-							render={({ field }) => (
-								<Field>
-									<FieldLabel>Carteira de Trabalho</FieldLabel>
-									<Input {...field} maxLength={14} placeholder="XXX.XXX.XXX-XX" onChange={(e) => field.onChange(formatterCPF(e.target.value))} />
-									<FieldError>{firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}</FieldError>
-								</Field>
-							)}
-						/>
-						<Controller
-							name="pisPasep"
-							control={form.control}
-							defaultValue=""
-							render={({ field }) => (
-								<Field>
-									<FieldLabel>PIS/PASEP</FieldLabel>
-									<Input {...field} maxLength={14} placeholder="XXX.XXXXX.XX-X" onChange={(event) => field.onChange(formatterPisPasep(event.target.value))} />
-									<FieldError>{firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}</FieldError>
-								</Field>
-							)}
-						/>
-						<DropdownMenu
-							form={form}
-							name="typeEmployment"
-							label="Tipo de Vínculo"
-							schemaKeys={Object.keys(formSchema.shape)}
-							options={[
-								{ label: "CLT", value: "CLT" },
-								{ label: "CNPJ", value: "CNPJ" },
-								{ label: "Freelance", value: "FREELANCE" }
-							]}
-						/>
-						<DropdownMenu
-							className="max-w-[68%]"
-							form={form}
-							name="laborModality"
-							label="Modalidade"
-							schemaKeys={Object.keys(formSchema.shape)}
-							options={[
-								{ label: "Presencial", value: "IN_PERSON" },
-								{ label: "Semi-presencial", value: "HYBRID" },
-								{ label: "Home office", value: "HOME_OFFICE" }
-							]}
-						/>
-						<DropdownMenu
-							form={form}
-							name="laborScale"
-							label="Escala"
-							schemaKeys={Object.keys(formSchema.shape)}
-							options={[
-								{ label: "5x2", value: "_5X2" },
-								{ label: "4x3", value: "_4X3" },
-								{ label: "6x1", value: "_6X1" }
-							]}
-						/>
-					</div>
-					<div>
-						<Separator orientation="vertical" />
-					</div>
-					<div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
-						<div className="w-full">
-							<DatePicker form={form} formSchema={formSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
-						</div>
-						<Field>
-							<FieldLabel>Salário</FieldLabel>
-							<Controller
-								name="salary"
-								control={form.control}
-								defaultValue=""
-								render={({ field }) => (
-									<Input
-										{...field}
-										inputMode="numeric"
-										maxLength={13}
-										placeholder="R$ 0000,00"
-										onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
-									/>
-								)}
-							/>
-							<FieldError>{firstErrorKey === "salary" && String(form.formState.errors.salary?.message)}</FieldError>
-						</Field>
-						<Field>
-							<FieldLabel>Comprovante de residência</FieldLabel>
-							<ActualDocument>{getDocumentName(watchedResidential) ?? employeeFound?.residentialProve ?? employeeData?.residentialProve ?? ""}</ActualDocument>
-							<Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("residentialProve")} />
-						</Field>
-						<Controller
-							name="reservist"
-							control={form.control}
-							render={({ field }) => (
-								<Field>
-									<div className="flex gap-2">
-										<Checkbox checked={field.value} onCheckedChange={(checked) => field.onChange(checked)} />
-										<Label>Reservista</Label>
-									</div>
-								</Field>
-							)}
-						/>
-						<Field className={!watchedReservist ? "hidden" : ""}>
-							<FieldLabel>Documentação</FieldLabel>
-							<ActualDocument>{getDocumentName(watchedDocumentation) ?? employeeFound?.documentation ?? employeeData?.documentation ?? ""}</ActualDocument>
-							<Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("documentation")} />
-						</Field>
-					</div>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<div className="flex items-stretch gap-22.5 max-h-132 px-38.75 py-3 justify-center">
+				<div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
+					<Controller
+						name="workCard"
+						control={form.control}
+						defaultValue=""
+						render={({ field }) => (
+							<Field>
+								<FieldLabel>Carteira de Trabalho</FieldLabel>
+								<Input {...field} maxLength={14} placeholder="XXX.XXX.XXX-XX" onChange={(e) => field.onChange(formatterCPF(e.target.value))} />
+								<FieldError>{firstErrorKey === "workCard" && String(form.formState.errors.workCard?.message)}</FieldError>
+							</Field>
+						)}
+					/>
+					<Controller
+						name="pisPasep"
+						control={form.control}
+						defaultValue=""
+						render={({ field }) => (
+							<Field>
+								<FieldLabel>PIS/PASEP</FieldLabel>
+								<Input
+									{...field}
+									maxLength={14}
+									placeholder="XXX.XXXXX.XX-X"
+									onChange={(event) => field.onChange(formatterPisPasep(event.target.value))}
+								/>
+								<FieldError>{firstErrorKey === "pisPasep" && String(form.formState.errors.pisPasep?.message)}</FieldError>
+							</Field>
+						)}
+					/>
+					<DropdownMenu
+						form={form}
+						name="typeEmployment"
+						label="Tipo de Vínculo"
+						schemaKeys={Object.keys(formSchema.shape)}
+						options={[
+							{ label: "CLT", value: "CLT" },
+							{ label: "CNPJ", value: "CNPJ" },
+							{ label: "Freelance", value: "FREELANCE" }
+						]}
+					/>
+					<DropdownMenu
+						className="max-w-[68%]"
+						form={form}
+						name="laborModality"
+						label="Modalidade"
+						schemaKeys={Object.keys(formSchema.shape)}
+						options={[
+							{ label: "Presencial", value: "IN_PERSON" },
+							{ label: "Semi-presencial", value: "HYBRID" },
+							{ label: "Home office", value: "HOME_OFFICE" }
+						]}
+					/>
+					<DropdownMenu
+						form={form}
+						name="laborScale"
+						label="Escala"
+						schemaKeys={Object.keys(formSchema.shape)}
+						options={[
+							{ label: "5x2", value: "_5X2" },
+							{ label: "4x3", value: "_4X3" },
+							{ label: "6x1", value: "_6X1" }
+						]}
+					/>
 				</div>
-			</RegistrationForm>
-		</section>
+				<div>
+					<Separator orientation="vertical" />
+				</div>
+				<div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
+					<div className="w-full">
+						<DatePicker form={form} formSchema={formSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
+					</div>
+					<Field>
+						<FieldLabel>Salário</FieldLabel>
+						<Controller
+							name="salary"
+							control={form.control}
+							defaultValue=""
+							render={({ field }) => (
+								<Input
+									{...field}
+									inputMode="numeric"
+									maxLength={13}
+									placeholder="R$ 0000,00"
+									onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
+								/>
+							)}
+						/>
+						<FieldError>{firstErrorKey === "salary" && String(form.formState.errors.salary?.message)}</FieldError>
+					</Field>
+					<Field>
+						<FieldLabel>Comprovante de residência</FieldLabel>
+						<ActualDocument>
+							{getDocumentName(watchedResidential) ?? employeeFound?.residentialProve ?? employeeData?.residentialProve ?? ""}
+						</ActualDocument>
+						<Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("residentialProve")} />
+					</Field>
+					<Controller
+						name="reservist"
+						control={form.control}
+						render={({ field }) => (
+							<Field>
+								<div className="flex gap-2">
+									<Checkbox checked={field.value} onCheckedChange={(checked) => field.onChange(checked)} />
+									<Label>Reservista</Label>
+								</div>
+							</Field>
+						)}
+					/>
+					<Field className={!watchedReservist ? "hidden" : ""}>
+						<FieldLabel>Documentação</FieldLabel>
+						<ActualDocument>{getDocumentName(watchedDocumentation) ?? employeeFound?.documentation ?? employeeData?.documentation ?? ""}</ActualDocument>
+						<Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("documentation")} />
+					</Field>
+				</div>
+			</div>
+		</RegistrationForm>
 	)
 }
 

@@ -5,23 +5,11 @@ import StepProgressBar from "@/components/StepProgressBar"
 import Button from "@/components/Button"
 import Image from "next/image"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { Dispatch, SetStateAction } from "react"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
+import { FormType } from "@/types/form"
 
-const ProjectType = ({
-	urlPath,
-	prevStep,
-	actualStep,
-	percentageProgress,
-	nextStep
-}: {
-	urlPath: { name: string; route: string }[]
-	prevStep: () => void | number
-	actualStep: number
-	percentageProgress: number
-	nextStep: Dispatch<SetStateAction<number>>
-}) => {
+const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
 	const form = useZodForm(formSchema, "comercial")
 	const { addPreBriefing } = usePreBriefingStore()
 
