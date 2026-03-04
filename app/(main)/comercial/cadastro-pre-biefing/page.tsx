@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation"
 import PaymentMethod from "./_forms/PaymentMethod"
 import ClientData from "./_forms/ClientData"
 import CompanyData from "./_forms/CompanyData"
+import ScheduleDates from "./_forms/ScheduleDates"
+import LeadInfo from "./_forms/LeadInfo"
 
 const urlPath: { name: string; route: string }[] = [
 	{ name: "Dashboard", route: "/comercial" },
@@ -18,7 +20,7 @@ const PreBriefingRegistration = () => {
 
 	return (
 		<>
-			{actualStep === 5 ? (
+			{actualStep === 1 ? (
 				<ProjectType
 					nextStep={() => setActualStep(actualStep + 1)}
 					urlPath={urlPath}
@@ -34,7 +36,7 @@ const PreBriefingRegistration = () => {
 					actualStep={actualStep}
 					percentageProgress={17}
 				/>
-			) : actualStep === 4 ? (
+			) : actualStep === 3 ? (
 				<ClientData
 					nextStep={() => setActualStep(actualStep + 1)}
 					urlPath={urlPath}
@@ -42,7 +44,7 @@ const PreBriefingRegistration = () => {
 					actualStep={actualStep}
 					percentageProgress={34}
 				/>
-			) : actualStep === 1 ? (
+			) : actualStep === 4 ? (
 				<CompanyData
 					urlPath={urlPath}
 					prevStep={() => setActualStep(actualStep - 1)}
@@ -50,8 +52,24 @@ const PreBriefingRegistration = () => {
 					actualStep={actualStep}
 					percentageProgress={51}
 				/>
+			) : actualStep === 5 ? (
+				<ScheduleDates
+					urlPath={urlPath}
+					prevStep={() => setActualStep(actualStep - 1)}
+					nextStep={() => setActualStep(actualStep + 1)}
+					actualStep={actualStep}
+					percentageProgress={68}
+				/>
 			) : (
-				<></>
+				actualStep === 6 && (
+					<LeadInfo
+						urlPath={urlPath}
+						prevStep={() => setActualStep(actualStep - 1)}
+						nextStep={() => setActualStep(actualStep + 1)}
+						actualStep={actualStep}
+						percentageProgress={100}
+					/>
+				)
 			)}
 		</>
 	)
