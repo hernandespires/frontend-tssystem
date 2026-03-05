@@ -1,11 +1,11 @@
-import DropdownMenu from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DropdownMenu"
+import DropdownMenu from "@/components/Form/DropdownMenu"
 import Form from "@/components/Form"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { useZodForm } from "@/hooks/useZodForm"
 import { Controller } from "react-hook-form"
 import { formSchema } from "./formSchema"
 import { FormType } from "@/types/form"
-import DatePicker from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DatePicker"
+import DatePicker from "@/components/Form/DatePicker"
 import { Input } from "@/components/ui/input"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 

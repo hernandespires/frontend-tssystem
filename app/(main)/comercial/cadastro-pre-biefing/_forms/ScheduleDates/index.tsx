@@ -4,8 +4,8 @@ import { formSchema } from "./formSchema"
 import { FormType } from "@/types/form"
 import { Controller } from "react-hook-form"
 import { Field } from "@/components/ui/field"
-import DropdownMenu from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DropdownMenu"
-import DatePicker from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DatePicker"
+import DropdownMenu from "@/components/Form/DropdownMenu"
+import DatePicker from "@/components/Form/DatePicker"
 
 const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
 	const form = useZodForm(formSchema, "comercial")

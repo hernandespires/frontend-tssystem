@@ -17,11 +17,11 @@ const Button = ({
 }) => {
 	return (
 		<button
+			onClick={onClick}
 			className={`
                 flex flex-col justify-center items-center rounded gap-3 w-46 h-46 transition cursor-pointer
                 ${isFulled && !isDashed ? "bg-default-orange" : !isFulled && isDashed ? "border border-dashed" : !isFulled && !isDashed && "border border-default-border-color"}
             `}
-			onClick={onClick}
 		>
 			{icon}
 			<span className={`font-semibold text-xl w-36 ${isFulled && "text-black"}`}>{children}</span>

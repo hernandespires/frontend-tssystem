@@ -1,8 +1,10 @@
-import { defaultEmptyError, defaultError } from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFieldErrors"
 import z from "zod"
 
 export const formSchema = z.object({
-	paymentMethod: z.enum(["PIX", "INVOICE", "PAYMENT_SLIP"], { error: defaultError("Forma de pagamento") }).nonoptional(defaultEmptyError("Forma de pagamento")),
+	paymentMethod: z
+		.enum(["PIX", "INVOICE", "PAYMENT_SLIP"], { error: defaultError("Forma de pagamento") })
+		.nonoptional(defaultEmptyError("Forma de pagamento")),
 	hasInstallments: z.boolean(),
 	installments: z
 		.string({ error: defaultError("Quantidade de parcelas") })

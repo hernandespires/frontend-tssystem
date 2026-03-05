@@ -1,20 +1,20 @@
 export interface PreBriefing {
 	id: string
-	projectType: string
-	paymentMethod: string
+	projectType: "PUNCTUAL" | "APPELLANT"
+	paymentMethod: "PIX" | "INVOICE" | "PAYMENT_SLIP"
 	hasInstallments: boolean
 	installments: number
-	entryValue: number
+	entryValue: string
 	clientName: string
-	nacionality: string
+	nacionality: "BRAZILIAN" | "AMERICAN"
 	email: string
 	phone: string
 	address: string
-	documentType: string
+	documentType: "ITIN" | "EIN" | "CNPJ"
 	documentNumber: string
-	segment: string
+	segment: "FLOORING"
 	bussinessName: string
-	programType: string
+	programType: "ACCELERATOR_PROGRAM"
 	programPeriod: string
 	projectStartDate: string
 	contractDate: string
@@ -37,6 +37,8 @@ export interface SendPreBriefing {
 	address: string
 	documentType: string
 	documentNumber: string
+	bussinessDocumentType: string
+	bussinessDocumentNumber: string
 	segment: string
 	bussinessName: string
 	programType: string

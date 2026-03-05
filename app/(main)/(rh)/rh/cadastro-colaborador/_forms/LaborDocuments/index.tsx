@@ -35,8 +35,8 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
-	const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
+	const DatePicker = dynamic(() => import("../../../../../../../components/Form/DatePicker"), { ssr: false })
+	const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 	const watchedDocumentation = form.watch("documentation")
 	const watchedResidential = form.watch("residentialProve")

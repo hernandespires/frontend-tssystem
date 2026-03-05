@@ -7,7 +7,7 @@ import { useState } from "react"
 import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import DropdownMenu from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DropdownMenu"
+import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Controller } from "react-hook-form"
@@ -81,7 +81,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 								id="installments"
 								form={form}
 								schemaKeys={Object.keys(formSchema.shape)}
-								className={`gap-0 ${!hasInstallments && "bg-[#737373]"}`}
+								className={`gap-0 ${!hasInstallments && "blocked-field"}`}
 								name="installments"
 								disabled={!hasInstallments && true}
 								placeholder="Qtde parcelas"

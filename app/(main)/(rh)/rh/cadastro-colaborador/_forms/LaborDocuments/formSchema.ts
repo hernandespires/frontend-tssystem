@@ -1,5 +1,5 @@
 import z from "zod"
-import { defaultEmptyError, defaultError } from "../defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "../../../../../../../components/Form/defaultFormFieldErrors"
 
 export const formSchema = z.object({
 	workCard: z

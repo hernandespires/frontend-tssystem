@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
-const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
+const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
 	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)

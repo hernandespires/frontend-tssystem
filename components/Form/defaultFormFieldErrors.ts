@@ -1,7 +1,7 @@
 export const defaultError = (field: string) => {
-    return field + " inválido"
+	return field + " inválido"
 }
 
 export const defaultEmptyError = (field: string) => {
-    return field + " é obrigatório"
+	return field + " é obrigatório"
 }

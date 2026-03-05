@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Controller } from "react-hook-form"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import DropdownMenu from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/components/DropdownMenu"
+import DropdownMenu from "@/components/Form/DropdownMenu"
 import { formatterCNPJ, formatterPhone } from "@/utils/formatters"
 
 const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
@@ -57,8 +57,8 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 									label="Nacionalidade"
 									schemaKeys={Object.keys(formSchema.shape)}
 									options={[
-										{ label: "Brasil", value: "BRAZIL" },
-										{ label: "Estados Unidos", value: "EUA" }
+										{ label: "Brasil", value: "BRAZILIAN" },
+										{ label: "Estados Unidos", value: "AMERICAN" }
 									]}
 								/>
 							</Field>
@@ -140,7 +140,7 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 						render={({ field }) => (
 							<Field>
 								<FieldLabel>Número do documento</FieldLabel>
-								<Input {...field} maxLength={155} placeholder="12312321312" onChange={(event) => field.onChange(formatterCNPJ(event.target.value))} />
+								<Input {...field} maxLength={18} placeholder="12312321312" onChange={(event) => field.onChange(formatterCNPJ(event.target.value))} />
 								<FieldError>{firstErrorKey === "documentNumber" && String(form.formState.errors.documentNumber?.message)}</FieldError>
 							</Field>
 						)}

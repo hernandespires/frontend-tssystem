@@ -40,8 +40,8 @@ const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percenta
 		useIsValidFormField({ form, fields: { ...values, birthday: birthdayISO }, setData: setEmployeeData, nextStep })
 	}
 
-	const DatePicker = dynamic(() => import("../components/DatePicker"), { ssr: false })
-	const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
+	const DatePicker = dynamic(() => import("../../../../../../../components/Form/DatePicker"), { ssr: false })
+	const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 	return (
 		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>

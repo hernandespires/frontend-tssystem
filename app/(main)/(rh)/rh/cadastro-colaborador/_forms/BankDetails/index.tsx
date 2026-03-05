@@ -53,7 +53,7 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 		useIsValidFormField({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeData, nextStep })
 	}
 
-	const DropdownMenu = dynamic(() => import("../components/DropdownMenu"), { ssr: false })
+	const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 	return (
 		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
@@ -79,10 +79,10 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 							<Field>
 								<FieldLabel htmlFor="agency">Agência</FieldLabel>
 								<Input
+									{...field}
 									id="agency"
 									maxLength={6}
 									placeholder="XXXX"
-									{...field}
 									onChange={(event) => field.onChange(formatterBankAgencyAndAccount(event.target.value))}
 								/>
 								<FieldError>{firstErrorKey === "agency" && String(form.formState.errors.agency?.message)}</FieldError>
@@ -97,13 +97,11 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 							<Field>
 								<FieldLabel htmlFor="account">Conta</FieldLabel>
 								<Input
+									{...field}
 									id="account"
 									maxLength={6}
 									placeholder="XXXX-X"
-									{...field}
-									onChange={(event) => {
-										field.onChange(formatterBankAgencyAndAccount(event.target.value))
-									}}
+									onChange={(event) => field.onChange(formatterBankAgencyAndAccount(event.target.value))}
 								/>
 								<FieldError>{firstErrorKey === "account" && String(form.formState.errors.account?.message)}</FieldError>
 							</Field>
@@ -117,13 +115,11 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 							<Field>
 								<FieldLabel htmlFor="pix">Chave Pix</FieldLabel>
 								<Input
+									{...field}
 									id="pix"
 									maxLength={155}
 									placeholder="email / documento / celular"
-									{...field}
-									onChange={(event) => {
-										field.onChange(formatterPix(event.target.value))
-									}}
+									onChange={(event) => field.onChange(formatterPix(event.target.value))}
 								/>
 								<FieldError>{firstErrorKey === "pix" && String(form.formState.errors.pix?.message)}</FieldError>
 							</Field>
@@ -162,14 +158,12 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 							<Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
 								<FieldLabel htmlFor="cnpjTransportationVoucher">CNPJ - Empresa vale transporte</FieldLabel>
 								<Input
+									{...field}
 									id="cnpjTransportationVoucher"
 									inputMode="numeric"
 									maxLength={18}
 									placeholder="XX.XXX.XXX/XXXX-XX"
-									{...field}
-									onChange={(event) => {
-										field.onChange(formatterCNPJ(event.target.value))
-									}}
+									onChange={(event) => field.onChange(formatterCNPJ(event.target.value))}
 								/>
 								<FieldError>
 									{firstErrorKey === "cnpjTransportationVoucher" && String(form.formState.errors.cnpjTransportationVoucher?.message)}
@@ -185,11 +179,11 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 							defaultValue=""
 							render={({ field }) => (
 								<Input
+									{...field}
 									id="monthlyAmount"
 									inputMode="numeric"
 									maxLength={13}
 									placeholder="R$ 0000,00"
-									{...field}
 									onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
 								/>
 							)}

@@ -24,8 +24,8 @@ const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 				<Button
 					isFulled
 					onClick={() => {
-						form.setValue("projectType", "pontual")
-						handleNextStep("pontual")
+						form.setValue("projectType", "PUNCTUAL")
+						handleNextStep("PUNCTUAL")
 					}}
 					icon={<Image src={"/icons/loop-left-arrow.svg"} width={48} height={48} alt="loop left arrow" />}
 				>
@@ -34,8 +34,8 @@ const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 				<Button
 					isFulled
 					onClick={() => {
-						form.setValue("projectType", "recorrente")
-						handleNextStep("recorrente")
+						form.setValue("projectType", "APPELLANT")
+						handleNextStep("APPELLANT")
 					}}
 					icon={<Image src={"/icons/loop-arrow.svg"} width={48} height={48} alt="loop arrow" />}
 				>

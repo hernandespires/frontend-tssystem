@@ -1,4 +1,4 @@
-import { defaultEmptyError, defaultError } from "@/app/(main)/(rh)/rh/cadastro-colaborador/_forms/defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFieldErrors"
 import z from "zod"
 
 export const formSchema = z.object({
