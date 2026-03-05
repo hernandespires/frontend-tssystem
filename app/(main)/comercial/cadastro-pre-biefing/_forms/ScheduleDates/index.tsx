@@ -6,9 +6,28 @@ import { Controller } from "react-hook-form"
 import { Field } from "@/components/ui/field"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import DatePicker from "@/components/Form/DatePicker"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
+import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
+import { dateToISO } from "@/utils/dateToISO"
 
 const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
+	const { addPreBriefing } = usePreBriefingStore()
 	const form = useZodForm(formSchema, "comercial")
+
+	const handleNextStep = async (values: SendPreBriefing) => {
+		await useIsValidFormField({
+			form,
+			fields: {
+				...values,
+				projectStartDate: dateToISO(values.projectStartDate),
+				contractDate: dateToISO(values.contractDate),
+				paymentDate: dateToISO(values.paymentDate)
+			},
+			setData: addPreBriefing,
+			nextStep
+		})
+	}
 
 	return (
 		<Form
@@ -16,7 +35,7 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 			urlPath={urlPath}
 			form={form}
 			prevStep={prevStep}
-			nextStep={nextStep}
+			nextStep={handleNextStep}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
 			formContent={
@@ -26,53 +45,24 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 						control={form.control}
 						defaultValue=""
 						render={() => (
-							<>
-								<Field>
-									<DropdownMenu
-										id="programPeriod"
-										form={form}
-										name="programPeriod"
-										label="Tempo de programa"
-										schemaKeys={Object.keys(formSchema.shape)}
-										options={[{ label: "6 meses", value: "SIX_MONTHS" }]}
-									/>
-								</Field>
-							</>
+							<Field>
+								<DropdownMenu
+									id="programPeriod"
+									form={form}
+									name="programPeriod"
+									label="Tempo de programa"
+									schemaKeys={Object.keys(formSchema.shape)}
+									options={[{ label: "6 meses", value: "SIX_MONTHS" }]}
+								/>
+							</Field>
 						)}
 					/>
-					<Controller
-						name="projectStartDate"
-						control={form.control}
-						defaultValue=""
-						render={() => (
-							<>
-								<DatePicker form={form} formSchema={formSchema} fieldName="" label="Data de início do projeto" />
-								<p className="text-[#737373]">Informe a data de quando o projeto ficou combinado de se inciar</p>
-							</>
-						)}
-					/>
-					<Controller
-						name="contractDate"
-						control={form.control}
-						defaultValue=""
-						render={() => (
-							<>
-								<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="" label="Data do contrato" />
-								<p className="text-[#737373]">Data que sairá no final do contrato (geralmente é o dia de hoje)</p>
-							</>
-						)}
-					/>
-					<Controller
-						name="paymentDate"
-						control={form.control}
-						defaultValue=""
-						render={() => (
-							<>
-								<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="" label="Data de pagamento" />
-								<p className="text-[#737373]">Informe a data de quando o cliente fará o pagamento</p>
-							</>
-						)}
-					/>
+					<DatePicker form={form} formSchema={formSchema} fieldName="projectStartDate" label="Data de início do projeto" />
+					<p className="text-[#737373]">Informe a data de quando o projeto ficou combinado de se inciar</p>
+					<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="contractDate" label="Data do contrato" />
+					<p className="text-[#737373]">Data que sairá no final do contrato (geralmente é o dia de hoje)</p>
+					<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="paymentDate" label="Data de pagamento" />
+					<p className="text-[#737373]">Informe a data de quando o cliente fará o pagamento</p>
 				</>
 			}
 		/>

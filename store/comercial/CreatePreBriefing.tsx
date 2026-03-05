@@ -6,5 +6,17 @@ type PreBriefingStore = { allPreBriefings: PreBriefing[]; addPreBriefing: (preBr
 export const usePreBriefingStore = create<PreBriefingStore>((set) => ({
 	allPreBriefings: [],
 	addPreBriefing: (preBriefing) =>
-		set((state) => ({ allPreBriefings: [...state.allPreBriefings, { id: "9d2e98ad-3440-40ec-bd67-384db98c9566", ...preBriefing }] }))
+		set((state) => {
+			const last = state.allPreBriefings[state.allPreBriefings.length - 1]
+
+			if (!last) {
+				return {
+					allPreBriefings: [{ ...preBriefing }]
+				}
+			}
+
+			return {
+				allPreBriefings: [...state.allPreBriefings.slice(0, -1), { ...last, ...preBriefing }]
+			}
+		})
 }))

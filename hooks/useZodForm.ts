@@ -68,7 +68,7 @@ export const useZodForm = <TOutput extends FieldValues, TInput extends FieldValu
 			criteriaMode: "firstError",
 			mode: "onSubmit"
 		})
-	} else {
+	} else if (department === "comercial") {
 		return useForm<z.input<TSchema>>({
 			resolver: zodResolver(schema) as any,
 			criteriaMode: "firstError",

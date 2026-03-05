@@ -15,13 +15,11 @@ import DropdownMenu from "@/components/Form/DropdownMenu"
 import { formatterCNPJ, formatterPhone } from "@/utils/formatters"
 
 const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
-	const { allPreBriefings, addPreBriefing } = usePreBriefingStore()
+	const { addPreBriefing } = usePreBriefingStore()
 
 	const form = useZodForm(formSchema, "comercial")
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
-
-	console.log(allPreBriefings)
 
 	const handleNextStep = async (values: SendPreBriefing) => {
 		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })

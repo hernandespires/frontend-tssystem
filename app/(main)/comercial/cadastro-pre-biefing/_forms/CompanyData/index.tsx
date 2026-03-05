@@ -11,8 +11,12 @@ import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Input } from "@/components/ui/input"
 import { formatterCNPJ } from "@/utils/formatters"
 import { useEffect, useState } from "react"
+import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
+import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 
 const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
+	const { addPreBriefing } = usePreBriefingStore()
 	const [hasDocumentType, setHasDocumentType] = useState<boolean>(false)
 
 	const form = useZodForm(formSchema, "comercial")
@@ -25,7 +29,9 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 		hasValue?.length > 0 ? setHasDocumentType(true) : setHasDocumentType(false)
 	}, [hasValue])
 
-	console.log(hasDocumentType)
+	const handleNextStep = async (values: SendPreBriefing) => {
+		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
+	}
 
 	return (
 		<Form
@@ -33,7 +39,7 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 			urlPath={urlPath}
 			form={form}
 			prevStep={prevStep}
-			nextStep={nextStep}
+			nextStep={handleNextStep}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
 			formContent={
@@ -70,7 +76,7 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 									{...field}
 									maxLength={16}
 									placeholder="12312321312"
-									disabled
+									disabled={!hasDocumentType && true}
 									onChange={(event) => field.onChange(formatterCNPJ(event.target.value))}
 								/>
 								<FieldError>{firstErrorKey === "bussinessDocumentNumber" && String(form.formState.errors.bussinessDocumentNumber?.message)}</FieldError>

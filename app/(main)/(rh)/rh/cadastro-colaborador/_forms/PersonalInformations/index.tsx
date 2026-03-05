@@ -17,6 +17,7 @@ import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import { FormType } from "@/types/form"
+import { dateToISO } from "@/utils/dateToISO"
 
 const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
 	const { setEmployeeData } = useContext(CreateEmployeeContext)
@@ -36,8 +37,7 @@ const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percenta
 		)
 			return
 
-		const birthdayISO = values.birthday ? new Date(values.birthday).toISOString() : undefined
-		useIsValidFormField({ form, fields: { ...values, birthday: birthdayISO }, setData: setEmployeeData, nextStep })
+		useIsValidFormField({ form, fields: { ...values, birthday: dateToISO(values.birthday) }, setData: setEmployeeData, nextStep })
 	}
 
 	const DatePicker = dynamic(() => import("../../../../../../../components/Form/DatePicker"), { ssr: false })

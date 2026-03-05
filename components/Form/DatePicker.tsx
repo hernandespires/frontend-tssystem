@@ -41,6 +41,8 @@ const DatePicker = <T extends FieldValues>({
 				const date = field.value instanceof Date ? field.value : field.value ? new Date(field.value) : undefined
 				const isValidDate = date instanceof Date && !isNaN(date.getTime()) && (!canBeFuture || date <= new Date())
 
+				console.log(field.value)
+
 				return (
 					<Field className={className}>
 						<FieldLabel htmlFor={fieldName}>{label}</FieldLabel>

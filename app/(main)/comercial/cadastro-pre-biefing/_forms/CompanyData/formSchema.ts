@@ -2,5 +2,9 @@ import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFi
 import z from "zod"
 
 export const formSchema = z.object({
-	segment: z.enum(["Flooring", "FLOORING"], { error: defaultError("Segmento") }).nonoptional(defaultEmptyError("Segmento"))
+	bussinessDocumentType: z.enum(["ITIN", "EIN", "CNPJ"], defaultError("Tipo documento")).nonoptional("Tipo documento"),
+	bussinessDocumentNumber: z.string(defaultError("Documento")).max(18, defaultError("Documento")).nonempty(defaultEmptyError("Documento")),
+	segment: z.enum(["FLOORING"], defaultError("Segmento")).nonoptional(defaultEmptyError("Segmento")),
+	bussinessName: z.string(defaultError("Nome da empresa")).max(155, defaultError("Nome da empresa")).nonempty(defaultEmptyError("Nome da empresa")),
+	programType: z.enum(["ACCELERATOR_PROGRAM"], defaultError("Tipo de programa")).nonoptional("Tipo de programa")
 })
