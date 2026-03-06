@@ -12,6 +12,7 @@ import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { dateToISO } from "@/utils/dateToISO"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
+import { createLead } from "@/services/comercial/lead"
 
 const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
 	const { allPreBriefings, addPreBriefing } = usePreBriefingStore()
@@ -21,6 +22,8 @@ const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress 
 
 	const handleCreatePreBriefing = async (values: SendPreBriefing) => {
 		try {
+			const merge = { ...allPreBriefings, ...values }
+			await createLead({ ...merge })
 		} catch (err) {}
 
 		await useIsValidFormField({ form, fields: { ...values, leadArrivalDate: dateToISO(values.leadArrivalDate) }, setData: addPreBriefing, nextStep })

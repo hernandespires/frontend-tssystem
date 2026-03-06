@@ -1,5 +1,6 @@
-export interface Program {
+export interface Service {
 	id?: string
 	name: string
+	category: string
 	description: string
 }
