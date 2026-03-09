@@ -3,10 +3,10 @@ export interface Contract {
 	client: string
 	company: string
 	program: string
-	contractType: string
+	contractType: "PUNCTUAL" | "APPELLANT"
 	contractStatus: string
 	startDate: string
-	endate: string
+	endDate: string
 	value: number
 	paymentMethod: number
 	renovations: number

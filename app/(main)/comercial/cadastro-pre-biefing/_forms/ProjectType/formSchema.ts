@@ -2,5 +2,5 @@ import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFi
 import z from "zod"
 
 export const formSchema = z.object({
-	projectType: z.string({ error: defaultError("Tipo de projeto") }).nonempty(defaultEmptyError(defaultEmptyError("Tipo de projeto")))
+	contractType: z.string({ error: defaultError("Tipo de projeto") }).nonempty(defaultEmptyError(defaultEmptyError("Tipo de projeto")))
 })

@@ -1,7 +1,7 @@
 import { toast } from "sonner"
 import { FieldValues } from "react-hook-form"
 
-export const useIsValidFormField = async <T extends FieldValues>({ form, fields, setData, nextStep }: OnChangeFormStepParams<T>) => {
+export const useIsValidFormField = async <T extends FieldValues>({ form, fields, setData, nextStep }) => {
 	const isValid = await form.trigger()
 
 	if (!isValid) {
@@ -16,7 +16,5 @@ export const useIsValidFormField = async <T extends FieldValues>({ form, fields,
 
 	setData({ ...safeFields })
 
-	if (nextStep) {
-		nextStep((prev) => prev + 1)
-	}
+	if (nextStep) nextStep((prev) => prev + 1)
 }

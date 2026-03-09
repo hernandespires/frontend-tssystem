@@ -1,7 +1,7 @@
-import { PreBriefing, SendPreBriefing } from "@/types/services/comercial/preBriefing"
+import { PreBriefing } from "@/types/services/comercial/preBriefing"
 import { create } from "zustand"
 
-type PreBriefingStore = { allPreBriefings: PreBriefing[]; addPreBriefing: (preBriefing: SendPreBriefing) => void }
+type PreBriefingStore = { allPreBriefings: PreBriefing[]; addPreBriefing: (preBriefing: PreBriefing) => void }
 
 export const usePreBriefingStore = create<PreBriefingStore>((set) => ({
 	allPreBriefings: [],

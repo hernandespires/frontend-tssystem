@@ -5,16 +5,16 @@ import StepProgressBar from "@/components/StepProgressBar"
 import Button from "@/components/Button"
 import Image from "next/image"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { FormType } from "@/types/form"
+import { useContractStore } from "@/store/financial/CreateContract"
+import { Contract } from "@/types/services/financial/contract"
 
 const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
 	const form = useZodForm(formSchema, "comercial")
-	const { addPreBriefing } = usePreBriefingStore()
+	const { addContract } = useContractStore()
 
-	const handleNextStep = async (value: SendPreBriefing) => {
-		await useIsValidFormField({ form, fields: { projectType: value }, setData: addPreBriefing, nextStep })
+	const handleNextStep = async (value: Contract) => {
+		await useIsValidFormField({ form, fields: { contractType: value }, setData: addContract, nextStep })
 	}
 
 	return (
@@ -24,7 +24,7 @@ const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 				<Button
 					isFulled
 					onClick={() => {
-						form.setValue("projectType", "PUNCTUAL")
+						form?.setValue("contractType", "PUNCTUAL")
 						handleNextStep("PUNCTUAL")
 					}}
 					icon={<Image src={"/icons/loop-left-arrow.svg"} width={48} height={48} alt="loop left arrow" />}
@@ -34,7 +34,7 @@ const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 				<Button
 					isFulled
 					onClick={() => {
-						form.setValue("projectType", "APPELLANT")
+						form?.setValue("contractType", "APPELLANT")
 						handleNextStep("APPELLANT")
 					}}
 					icon={<Image src={"/icons/loop-arrow.svg"} width={48} height={48} alt="loop arrow" />}

@@ -4,8 +4,6 @@ import { formSchema } from "./formSchema"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { useState } from "react"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
-import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Label } from "@/components/ui/label"
@@ -15,9 +13,14 @@ import { Input } from "@/components/ui/input"
 import { formatterCurrencyBRL } from "@/utils/formatters"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { FormType } from "@/types/form"
+import { Contract } from "@/types/services/financial/contract"
+import { useContractStore } from "@/store/financial/CreateContract"
+import { useContractInstallmentStore } from "@/store/financial/CreateContractInstallment"
+import { ContractInstallment } from "@/types/services/financial/contractInstallment"
 
 const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
-	const { addPreBriefing } = usePreBriefingStore()
+	const { addContract } = useContractStore()
+	const { addContractInstallment } = useContractInstallmentStore()
 
 	const [hasInstallments, setHasInstallments] = useState<boolean>(false)
 
@@ -25,8 +28,9 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const handleNextStep = async (values: SendPreBriefing) => {
-		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
+	const handleNextStep = async (values: Contract | ContractInstallment) => {
+		if (values.installments) await useIsValidFormField({ form, fields: { installments: values.installments }, setData: addContractInstallment, nextStep })
+		else await useIsValidFormField({ form, fields: { contractType: values.contractType, value: values.value }, setData: addContract, nextStep })
 	}
 
 	return (
@@ -53,25 +57,12 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 						</Field>
 					)}
 				/>
-				<Controller
-					name="hasInstallments"
-					control={form.control}
-					render={({ field }) => (
-						<Field className="w-33.25">
-							<div className="flex gap-x-2">
-								<Checkbox
-									id="hasInstallments"
-									checked={field.value}
-									onCheckedChange={(checked) => {
-										field.onChange(checked)
-										setHasInstallments(!hasInstallments)
-									}}
-								/>
-								<Label>Parcelado</Label>
-							</div>
-						</Field>
-					)}
-				/>
+				<Field className="w-33.25">
+					<div className="flex gap-x-2">
+						<Checkbox checked={hasInstallments} onCheckedChange={() => setHasInstallments(!hasInstallments)} />
+						<Label>Parcelado</Label>
+					</div>
+				</Field>
 				<Controller
 					name="installments"
 					control={form.control}
@@ -95,9 +86,8 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 					)}
 				/>
 				<Controller
-					name="entryValue"
+					name="value"
 					control={form.control}
-					defaultValue=""
 					render={({ field }) => (
 						<Field>
 							<FieldLabel>Valor do lançamento</FieldLabel>
@@ -108,7 +98,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 								placeholder="R$ 0000,00"
 								onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
 							/>
-							<FieldError>{firstErrorKey === "entryValue" && String(form.formState.errors.entryValue?.message)}</FieldError>
+							<FieldError>{firstErrorKey === "value" && String(form.formState.errors.value?.message)}</FieldError>
 							<p className="text-[#737373]">Caso seja pagamento à vista, coloque o valor inteiro.</p>
 						</Field>
 					)}

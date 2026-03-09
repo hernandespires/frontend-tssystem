@@ -5,10 +5,9 @@ export const formSchema = z.object({
 	paymentMethod: z
 		.enum(["PIX", "INVOICE", "PAYMENT_SLIP"], { error: defaultError("Forma de pagamento") })
 		.nonoptional(defaultEmptyError("Forma de pagamento")),
-	hasInstallments: z.boolean().default(false),
 	installments: z
-		.string({ error: defaultError("Quantidade de parcelas") })
-		.max(13, defaultError("Quantidade de parcelas"))
+		.number({ error: defaultError("Quantidade de parcelas") })
+		.default(1)
 		.optional(),
 	entryValue: z
 		.string({ error: defaultError("Valor do lançamento") })
