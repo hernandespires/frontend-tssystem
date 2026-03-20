@@ -56,7 +56,7 @@
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { FindAllEmployeesContextTypes } from "@/types/contexts/rh/employee"
 import { Employee } from "@/types/services/humanResources/employee"
-import { createContext, ReactNode, useEffect, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
 export const FindAllEmployeesContext =
 	createContext<FindAllEmployeesContextTypes | null>(null)
@@ -94,4 +94,10 @@ export const FindAllEmployeesProvideer = ({
 			{children}
 		</FindAllEmployeesContext.Provider>
 	)
+}
+
+export const useFindAllEmployeesContext = () => {
+	const ctx = useContext(FindAllEmployeesContext)
+	if (!ctx) throw new Error("useFindAllEmployeesContext must be used within FindAllEmployeesProvider")
+	return ctx
 }

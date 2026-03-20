@@ -23,3 +23,5 @@ export interface PreBriefing {
 	leadArrivalDate: string
 	meetingLink: string
 }
+
+export type SendPreBriefing = Omit<PreBriefing, 'id'>

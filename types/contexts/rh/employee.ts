@@ -7,11 +7,9 @@ export interface CreateEmployeeContextTypes {
 }
 
 export interface FindEmployeeContextTypes {
-	employeeFound: Employee
-	setEmployeeFound: Dispatch<SetStateAction<Employee>>
+	employeeFound: Employee | null
+	setEmployeeFound: Dispatch<SetStateAction<Employee | null>>
 }
-
-// export interface FindAllEmployeesContextTypes { allEmployeesDataFound: Employee[], setAllEmployeesDataFound: Dispatch<SetStateAction<Employee[]>> }
 
 export interface FindAllEmployeesContextTypes {
 	allEmployeesDataFound: Employee[]

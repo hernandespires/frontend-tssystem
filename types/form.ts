@@ -1,41 +1,12 @@
 import { Dispatch, ReactNode, SetStateAction } from "react"
-import { UseFormReturn } from "react-hook-form"
-import { ZodBoolean, ZodEnum, ZodNonOptional, ZodObject, ZodOptional, ZodString } from "zod"
-import { $strip } from "zod/v4/core"
+import { FieldValues, UseFormReturn } from "react-hook-form"
+import { ZodObject, ZodRawShape } from "zod"
 
 export interface FormType {
-	formSchema?: ZodObject<
-		{
-			paymentMethod: ZodNonOptional<
-				ZodEnum<{
-					PIX: "PIX"
-					INVOICE: "INVOICE"
-					PAYMENT_SLIP: "PAYMENT_SLIP"
-				}>
-			>
-			hasInstallments: ZodBoolean
-			installments: ZodOptional<ZodString>
-			entryValue: ZodString
-		},
-		$strip
-	>
+	formSchema?: ZodObject<ZodRawShape>
 	nextStep: Dispatch<SetStateAction<number>>
 	urlPath: { name: string; route: string }[]
-	form?: UseFormReturn<
-		{
-			paymentMethod: "PIX" | "INVOICE" | "PAYMENT_SLIP"
-			hasInstallments: boolean
-			entryValue: string
-			installments?: string | undefined
-		},
-		any,
-		{
-			paymentMethod: "PIX" | "INVOICE" | "PAYMENT_SLIP"
-			hasInstallments: boolean
-			entryValue: string
-			installments?: string | undefined
-		}
-	>
+	form?: UseFormReturn<FieldValues>
 	prevStep: () => void
 	actualStep: number
 	percentageProgress: number

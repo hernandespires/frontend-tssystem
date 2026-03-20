@@ -2,12 +2,11 @@ import Form from "@/components/Form"
 import { useZodForm } from "@/hooks/useZodForm"
 import { formSchema } from "./formSchema"
 import { FormType } from "@/types/form"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { Field } from "@/components/ui/field"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import DatePicker from "@/components/Form/DatePicker"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { dateToISO } from "@/utils/dateToISO"
 
@@ -15,16 +14,16 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 	const { addPreBriefing } = usePreBriefingStore()
 	const form = useZodForm(formSchema, "comercial")
 
-	const handleNextStep = async (values: SendPreBriefing) => {
+	const handleNextStep = async (values: FieldValues) => {
 		await useIsValidFormField({
 			form,
 			fields: {
 				...values,
-				projectStartDate: dateToISO(values.projectStartDate),
-				contractDate: dateToISO(values.contractDate),
-				paymentDate: dateToISO(values.paymentDate)
-			},
-			setData: addPreBriefing,
+				projectStartDate: dateToISO(values.projectStartDate as string | Date),
+				contractDate: dateToISO(values.contractDate as string | Date),
+				paymentDate: dateToISO(values.paymentDate as string | Date)
+			} as never,
+			setData: addPreBriefing as never,
 			nextStep
 		})
 	}
@@ -43,7 +42,7 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 					<Controller
 						name="programPeriod"
 						control={form.control}
-						defaultValue=""
+						defaultValue={undefined}
 						render={() => (
 							<Field>
 								<DropdownMenu

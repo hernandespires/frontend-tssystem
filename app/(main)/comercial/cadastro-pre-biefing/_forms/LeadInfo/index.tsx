@@ -2,34 +2,30 @@ import DropdownMenu from "@/components/Form/DropdownMenu"
 import Form from "@/components/Form"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { useZodForm } from "@/hooks/useZodForm"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { formSchema } from "./formSchema"
 import { FormType } from "@/types/form"
 import DatePicker from "@/components/Form/DatePicker"
 import { Input } from "@/components/ui/input"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { dateToISO } from "@/utils/dateToISO"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
-import { createLead } from "@/services/comercial/lead"
 
 const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
-	const { allPreBriefings, addPreBriefing } = usePreBriefingStore()
+	const { addPreBriefing } = usePreBriefingStore()
 
 	const form = useZodForm(formSchema, "comercial")
 	const firstErrorKey = useGetFirstErrorKey(form.formState.errors, Object.keys(formSchema.shape))
 
-	const handleCreatePreBriefing = async (values: SendPreBriefing) => {
-		try {
-			const merge = { ...allPreBriefings, ...values }
-			await createLead({ ...merge })
-		} catch (err) {}
-
-		await useIsValidFormField({ form, fields: { ...values, leadArrivalDate: dateToISO(values.leadArrivalDate) }, setData: addPreBriefing, nextStep })
+	const handleCreatePreBriefing = async (values: FieldValues) => {
+		await useIsValidFormField({
+			form,
+			fields: { ...values, leadArrivalDate: dateToISO(values.leadArrivalDate as string | Date) } as never,
+			setData: addPreBriefing as never,
+			nextStep
+		})
 	}
-
-	console.log(allPreBriefings)
 
 	return (
 		<Form
@@ -49,7 +45,6 @@ const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress 
 						render={() => (
 							<Field>
 								<DropdownMenu
-									id="leadSource"
 									form={form}
 									name="leadSource"
 									label="Origem do Lead"

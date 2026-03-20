@@ -13,7 +13,8 @@ const DropdownMenu = <T extends FieldValues>({
 	label,
 	disabled = false,
 	placeholder = "Selecione",
-	options
+	options,
+	id: _id
 }: {
 	form: UseFormReturn
 	schemaKeys: string[]
@@ -21,8 +22,9 @@ const DropdownMenu = <T extends FieldValues>({
 	name: Path<T>
 	label?: string
 	disabled?: boolean
-	placeholder: string
+	placeholder?: string
 	options: { label: string; value: string | number }[]
+	id?: string
 }) => {
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, schemaKeys)

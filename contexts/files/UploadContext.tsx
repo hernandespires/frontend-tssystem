@@ -9,7 +9,7 @@
 //     return <UploadContext.Provider value={{ uploadData, setUploadData }}>{ children }</UploadContext.Provider>
 // }
 
-import { createContext, ReactNode, useState } from "react"
+import { createContext, ReactNode, useContext, useState } from "react"
 
 export type UploadContextType = {
   uploadData: Record<string, File[]>
@@ -39,4 +39,10 @@ export const UploadProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </UploadContext.Provider>
   )
+}
+
+export const useUploadContext = () => {
+  const ctx = useContext(UploadContext)
+  if (!ctx) throw new Error("useUploadContext must be used within UploadProvider")
+  return ctx
 }

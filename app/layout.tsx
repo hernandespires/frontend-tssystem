@@ -21,6 +21,14 @@ const Layout = async ({
 }: Readonly<{ children: React.ReactNode }>) => {
 	const session = await getServerSession()
 
+	const user = session?.user
+		? {
+			name: session.user.name ?? "",
+			email: session.user.email ?? "",
+			image: session.user.image ?? ""
+		}
+		: null
+
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
@@ -32,7 +40,7 @@ const Layout = async ({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<LoginProvider initialUser={session?.user || null}>
+					<LoginProvider initialUser={user}>
 						<Toaster richColors position="top-center" />
 						{children}
 					</LoginProvider>

@@ -4,10 +4,10 @@ import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
 import { useLogin } from "@/contexts/LoginContext"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { Employee } from "@/types/services/humanResources/employee"
-import { redirect } from "next/navigation"
-import { useContext, useMemo, useState } from "react"
+import { redirect, useRouter } from "next/navigation"
+import { useState } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
 import { IoPersonAddOutline } from "react-icons/io5"
@@ -20,70 +20,79 @@ const Rh = () => {
 	const { user } = useLogin()
 	if (!user) redirect("/login")
 
-	const { setEmployeeFound } = useContext(FindEmployeeContext)
-	const [allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
+	const router = useRouter()
+	const { setEmployeeFound } = useFindEmployeeContext()
+	const [allEmployees] = useState<Employee[] | null>(null)
 
 	return (
 		<main className="flex flex-col gap-6">
 			<div className="flex gap-5 items-end justify-between">
 				<DataTable
 					filter="Colaboradores"
-					data={allEmployees}
+					data={allEmployees ?? []}
 					setContextInfo={setEmployeeFound}
 					path="/rh/cadastro-colaborador"
 				/>
 				<div className="flex flex-wrap gap-6 max-w-150">
 					<Button
 						isFulled
-						onClick={"/"}
+						onClick={() => router.push("/")}
 						icon={<BsClipboardData size={36} color="black" />}
-						text="Relatório Mensal"
-					/>
+					>
+						Relatório Mensal
+					</Button>
 					<Button
 						isFulled
-						onClick={"/"}
+						onClick={() => router.push("/")}
 						icon={<LuScanFace size={36} color="black" />}
-						text="Pontos"
-					/>
+					>
+						Pontos
+					</Button>
 					<Button
 						isFulled
-						onClick={"/"}
+						onClick={() => router.push("/")}
 						icon={<MdOutlinePersonSearch size={36} color="black" />}
-						text="Banco de currículos"
-					/>
+					>
+						Banco de currículos
+					</Button>
 					<Button
-						onClick={"/rh/cadastro-colaborador"}
+						onClick={() => router.push("/rh/cadastro-colaborador")}
 						icon={<IoPersonAddOutline size={36} color="white" />}
-						text="Cadastrar Colaboradores"
-					/>
+					>
+						Cadastrar Colaboradores
+					</Button>
 					<Button
-						onClick={"/"}
+						onClick={() => router.push("/")}
 						icon={<MdPeopleOutline size={36} color="white" />}
-						text="Gerenciar Operações"
-					/>
+					>
+						Gerenciar Operações
+					</Button>
 					<Button
-						onClick={"/"}
+						onClick={() => router.push("/")}
 						icon={<PiTreeStructure size={36} color="white" />}
-						text="Gerenciar Departamentos"
-					/>
+					>
+						Gerenciar Departamentos
+					</Button>
 				</div>
 			</div>
 			<div className="flex gap-6">
 				<div className="flex flex-col gap-6">
 					<Button
-						onClick={"/rh/processos-burocraticos"}
+						onClick={() => router.push("/rh/processos-burocraticos")}
 						isFulled
 						icon={<VscSync size={36} color="black" />}
-						text="Processos Burocráticos"
-					/>
+					>
+						Processos Burocráticos
+					</Button>
 					<Button
-						onClick={"/rh/processos-burocraticos"}
+						onClick={() => router.push("/rh/processos-burocraticos")}
 						isDashed
 						icon={<FaPlus size={36} color="white" />}
-						text="Novo Processo"
-					/>
+					>
+						Novo Processo
+					</Button>
 				</div>
-				<DataMetrics department="Recursos Humanos" />
+				<DataMetrics department="Recursos Humanos" datas={[]} />
 			</div>
 		</main>
 	)

@@ -3,41 +3,52 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "@/components/ui/progress"
-import { useContext } from "react"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { formSchema } from "./formSchema"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
-import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import { FormType } from "@/types/form"
 import { dateToISO } from "@/utils/dateToISO"
 
 const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
-	const { setEmployeeData } = useContext(CreateEmployeeContext)
-	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
-	const { employeeFound } = useContext(FindEmployeeContext)
+	const { setEmployeeData } = useCreateEmployeeContext()
+	const { allEmployeesDataFound } = useFindAllEmployeesContext()
+	const { employeeFound } = useFindEmployeeContext()
 
 	const form = useZodForm(formSchema, "rh")
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const handleNextStep = (values: SendEmployee) => {
-		const conflictFieldMessages: Record<keyof Employee, string> = { rg: "RG", cpf: "CPF", email: "Email", phone: "Celular" }
+	const handleNextStep = (values: FieldValues) => {
+		const typedValues = values as SendEmployee
+		const conflictFieldMessages: Partial<Record<keyof Employee, string>> = { rg: "RG", cpf: "CPF", email: "Email", phone: "Celular" }
 		if (
 			["rg", "cpf", "email", "phone"].some((field) =>
-				handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages)
+				handleConflictingValues(
+					employeeFound,
+					allEmployeesDataFound,
+					field as keyof Employee,
+					(typedValues as unknown as Record<string, string>)[field],
+					conflictFieldMessages as Record<keyof Employee, string>
+				)
 			)
 		)
 			return
 
-		useIsValidFormField({ form, fields: { ...values, birthday: dateToISO(values.birthday) }, setData: setEmployeeData, nextStep })
+		useIsValidFormField({
+			form,
+			fields: { ...typedValues, birthday: dateToISO(typedValues.birthday) } as never,
+			setData: setEmployeeData as never,
+			nextStep
+		})
 	}
 
 	const DatePicker = dynamic(() => import("../../../../../../../components/Form/DatePicker"), { ssr: false })

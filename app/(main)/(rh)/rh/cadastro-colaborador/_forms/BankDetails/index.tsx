@@ -5,28 +5,28 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { formatterBankAgencyAndAccount, formatterCNPJ, formatterCurrencyBRL, formatterPix } from "@/utils/formatters"
 import { formatterBigDecimal } from "@/utils/formatters"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-	const { employeeFound } = useContext(FindEmployeeContext)
-	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
+	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
+	const { employeeFound } = useFindEmployeeContext()
+	const { allEmployeesDataFound } = useFindAllEmployeesContext()
 
 	const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
 
@@ -37,20 +37,35 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 
 	useEffect(() => {
 		employeeData.transportationVoucher && setTransportationVoucherDocumentationVisibility(employeeData.transportationVoucher)
-		employeeFound.transportationVoucher && setTransportationVoucherDocumentationVisibility(employeeFound.transportationVoucher)
-	}, [employeeFound, employeeFound])
+		employeeFound?.transportationVoucher && setTransportationVoucherDocumentationVisibility(employeeFound.transportationVoucher)
+	}, [employeeFound, employeeData])
 
-	const handleNextStep = (values: SendEmployee) => {
-		const conflictFieldMessages: Record<keyof Employee, string> = { account: "Conta", pix: "Chave pix" }
+	const handleNextStep = (values: FieldValues) => {
+		const typedValues = values as SendEmployee
+		const conflictFieldMessages: Partial<Record<keyof Employee, string>> = { account: "Conta", pix: "Chave pix" }
 
 		if (
 			["account", "pix"].some((field) =>
-				handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages)
+				handleConflictingValues(
+					employeeFound,
+					allEmployeesDataFound,
+					field as keyof Employee,
+					(typedValues as unknown as Record<string, string>)[field],
+					conflictFieldMessages as Record<keyof Employee, string>
+				)
 			)
 		)
 			return
 
-		useIsValidFormField({ form, fields: { ...values, monthlyAmount: formatterBigDecimal(values.monthlyAmount) }, setData: setEmployeeData, nextStep })
+		const monthlyRaw = typedValues.monthlyAmount
+		const monthlyStr = monthlyRaw != null ? String(monthlyRaw) : ""
+
+		useIsValidFormField({
+			form,
+			fields: { ...typedValues, monthlyAmount: formatterBigDecimal(monthlyStr) } as never,
+			setData: setEmployeeData as never,
+			nextStep
+		})
 	}
 
 	const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
@@ -153,7 +168,7 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 					<Controller
 						name="cnpjTransportationVoucher"
 						control={form.control}
-						defaultValue={false}
+						defaultValue=""
 						render={({ field }) => (
 							<Field className={transportationVoucherDocumentationVisibility ? "flex" : "hidden"}>
 								<FieldLabel htmlFor="cnpjTransportationVoucher">CNPJ - Empresa vale transporte</FieldLabel>

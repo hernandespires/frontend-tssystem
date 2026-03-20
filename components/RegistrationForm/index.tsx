@@ -1,16 +1,14 @@
 "use client"
 
-import { z, ZodObject } from "zod"
+import { z, ZodObject, ZodRawShape } from "zod"
 import { toast } from "sonner"
 import { Form } from "../ui/form"
 import { ReactNode } from "react"
 import { Button } from "../ui/button"
 import { FaArrowLeft } from "react-icons/fa"
-import { UseFormReturn } from "react-hook-form"
+import { FieldValues, SubmitErrorHandler, UseFormReturn } from "react-hook-form"
 import RoutesList from "../RoutesList"
 import { LuArrowBigRight } from "react-icons/lu"
-import { SendEmployee } from "@/types/services/humanResources/employee"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 
 const RegistrationForm = ({
 	formSchema,
@@ -21,19 +19,19 @@ const RegistrationForm = ({
 	haveAdvanceButton = true,
 	nextStep
 }: {
-	formSchema: ZodObject
+	formSchema: ZodObject<ZodRawShape>
 	urlPath: { name: string; route: string }[]
-	form: UseFormReturn<any>
+	form: UseFormReturn<FieldValues>
 	prevStep: () => void
 	children: ReactNode
-	haveAdvanceButton: boolean
-	nextStep?: (values: SendEmployee | SendPreBriefing) => Promise<void>
+	haveAdvanceButton?: boolean
+	nextStep?: (values: FieldValues) => Promise<void> | void
 }) => {
-	const onSubmit = (values: z.infer<typeof formSchema>) => nextStep(values)
+	const onSubmit = (values: z.infer<typeof formSchema>) => nextStep?.(values)
 
-	const onError = (errors: any) => {
-		const firstError = Object.values(errors).find((err: any) => err?.message)
-		if (firstError?.message) toast.error(firstError.message)
+	const onError: SubmitErrorHandler<FieldValues> = (errors) => {
+		const firstError = Object.values(errors).find((err) => err?.message)
+		if (firstError?.message) toast.error(firstError.message as string)
 	}
 
 	return (
@@ -46,7 +44,7 @@ const RegistrationForm = ({
 							<FaArrowLeft />
 							Voltar
 						</Button>
-						<span className="section-title">{urlPath.at(-1).name}</span>
+						<span className="section-title">{urlPath.at(-1)?.name}</span>
 					</div>
 					<div className="flex flex-col gap-y-6 flex-1 justify-center mb-15">{children}</div>
 					{haveAdvanceButton && (

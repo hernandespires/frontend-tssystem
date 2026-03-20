@@ -2,24 +2,23 @@
 
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
-import { useContext, useEffect } from "react"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEffect } from "react"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { SendEmployee } from "@/types/services/humanResources/employee"
 import { Field, FieldError } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
-import { UploadContext } from "@/contexts/files/UploadContext"
+import { useUploadContext } from "@/contexts/files/UploadContext"
 import FileUploadPreview from "../components/FileUploadPreview"
 import ActualDocument from "../components/ActualDocument"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const AdditionalDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-	const { uploadData } = useContext(UploadContext)
-	const { employeeFound } = useContext(FindEmployeeContext)
+	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
+	const { uploadData } = useUploadContext()
+	const { employeeFound } = useFindEmployeeContext()
 
 	const form = useZodForm(formSchema, "rh", {
 		defaultValues: {
@@ -34,12 +33,17 @@ const AdditionalDocuments = ({ urlPath, prevStep, actualStep, percentageProgress
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const handleNextStep = async (values: SendEmployee) => {
-		await useIsValidFormField({ form, fields: values, setData: setEmployeeData, nextStep })
+	const handleNextStep = async (values: unknown) => {
+		await useIsValidFormField({
+			form: form as never,
+			fields: values as never,
+			setData: setEmployeeData as never,
+			nextStep
+		})
 	}
 
 	return (
-		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form as never} prevStep={prevStep} nextStep={handleNextStep}>
 			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
 			<ActualDocument className="text-center">
 				{employeeFound?.additionalDocuments?.length ? employeeFound.additionalDocuments : employeeData.additionalDocuments}

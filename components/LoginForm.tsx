@@ -25,7 +25,7 @@ const LoginForm = () => {
 		setError(null)
 		try {
 			await login({ email, senha })
-			setUser({ email, senha })
+			setUser({ name: email, email, image: "" })
 			router.push("/rh")
 		} catch (err) {
 			setError("Erro ao logar")

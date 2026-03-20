@@ -2,51 +2,51 @@
 
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
-import { useContext } from "react"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { toast } from "sonner"
 import { createEmployee } from "@/services/humanResources/employee"
 import { multipleUpload } from "@/services/file/upload"
-import { UploadContext } from "@/contexts/files/UploadContext"
+import { useUploadContext } from "@/contexts/files/UploadContext"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
+import { FieldValues } from "react-hook-form"
 
 const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
-	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-	const { uploadData } = useContext(UploadContext)
+	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
+	const { uploadData } = useUploadContext()
 	const form = useZodForm(formSchema, "rh")
 	const router = useRouter()
 
 	const HIDDEN_DEPARTMENTS = ["FINANCE", "HUMAN_RESOURCES", "MARKETING", "RESEARCH_AND_DEVELOPMENT", "SALES"]
 
 	const department = form.watch("department")
-	const shouldHideOperation = HIDDEN_DEPARTMENTS.includes(department)
+	const shouldHideOperation = HIDDEN_DEPARTMENTS.includes(department as string)
 
 	const handleCreateEmployee = async (values: SendEmployee) => {
 		try {
-			const allFiles: File[] = Object.values(uploadData ?? {}).flat()
+			const allFiles: File[] = Object.values(uploadData ?? {}).flat() as File[]
 
 			let uploadedNames: string[] = []
 
 			if (allFiles.length) {
 				const result = await multipleUpload(allFiles)
-				uploadedNames = result?.map((f: any) => f.name) ?? []
+				uploadedNames = result?.map((f: { name: string }) => f.name) ?? []
 			}
 
 			const merged = { ...employeeData, ...values, additionalDocuments: uploadedNames }
 
-			const payload: any = { ...merged }
+			const payload = { ...merged } as Record<string, unknown>
 			delete payload.id
 
-			setEmployeeData(payload)
+			setEmployeeData(payload as unknown as SendEmployee)
 
-			const created = await createEmployee(payload)
+			const created = await createEmployee(payload as unknown as SendEmployee)
 
 			return !!created
 		} catch (err) {
@@ -55,8 +55,8 @@ const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: For
 		}
 	}
 
-	const handleNextStep = async (values: SendEmployee) => {
-		const ok = await handleCreateEmployee(values)
+	const handleNextStep = async (values: FieldValues) => {
+		const ok = await handleCreateEmployee(values as SendEmployee)
 
 		if (ok) {
 			toast.success("Colaborador cadastrado com sucesso!")

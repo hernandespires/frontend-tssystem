@@ -11,6 +11,6 @@ export const getUserById = async (id: string): Promise<User> => {
     return (await api.get(defaultRoute + `getUser/${id}`)).data
 }
 
-export const login = async (payload: Login): Promise<User> => {
+export const login = async (payload: Pick<User, "email" | "senha">): Promise<User> => {
     return (await api.post<User>(defaultRoute + "login", payload)).data
 }

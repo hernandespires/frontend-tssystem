@@ -8,15 +8,13 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { formatterCurrencyBRL } from "@/utils/formatters"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { FormType } from "@/types/form"
-import { Contract } from "@/types/services/financial/contract"
 import { useContractStore } from "@/store/financial/CreateContract"
 import { useContractInstallmentStore } from "@/store/financial/CreateContractInstallment"
-import { ContractInstallment } from "@/types/services/financial/contractInstallment"
 
 const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
 	const { addContract } = useContractStore()
@@ -28,9 +26,22 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const handleNextStep = async (values: Contract | ContractInstallment) => {
-		if (values.installments) await useIsValidFormField({ form, fields: { installments: values.installments }, setData: addContractInstallment, nextStep })
-		else await useIsValidFormField({ form, fields: { contractType: values.contractType, value: values.value }, setData: addContract, nextStep })
+	const handleNextStep = async (values: FieldValues) => {
+		if (values.installments) {
+			await useIsValidFormField({
+				form,
+				fields: { installments: values.installments } as never,
+				setData: addContractInstallment as never,
+				nextStep
+			})
+		} else {
+			await useIsValidFormField({
+				form,
+				fields: { entryValue: values.entryValue } as never,
+				setData: addContract as never,
+				nextStep
+			})
+		}
 	}
 
 	return (
@@ -86,7 +97,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 					)}
 				/>
 				<Controller
-					name="value"
+					name="entryValue"
 					control={form.control}
 					render={({ field }) => (
 						<Field>
@@ -98,7 +109,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 								placeholder="R$ 0000,00"
 								onChange={(event) => field.onChange(formatterCurrencyBRL(event.target.value))}
 							/>
-							<FieldError>{firstErrorKey === "value" && String(form.formState.errors.value?.message)}</FieldError>
+							<FieldError>{firstErrorKey === "entryValue" && String(form.formState.errors.entryValue?.message)}</FieldError>
 							<p className="text-[#737373]">Caso seja pagamento à vista, coloque o valor inteiro.</p>
 						</Field>
 					)}

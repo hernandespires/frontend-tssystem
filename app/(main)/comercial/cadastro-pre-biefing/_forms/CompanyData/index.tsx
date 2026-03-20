@@ -4,7 +4,7 @@ import Form from "@/components/Form"
 import { useZodForm } from "@/hooks/useZodForm"
 import { formSchema } from "./formSchema"
 import { FormType } from "@/types/form"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import DropdownMenu from "@/components/Form/DropdownMenu"
@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input"
 import { formatterCNPJ } from "@/utils/formatters"
 import { useEffect, useState } from "react"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 
 const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
@@ -29,8 +28,8 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 		hasValue?.length > 0 ? setHasDocumentType(true) : setHasDocumentType(false)
 	}, [hasValue])
 
-	const handleNextStep = async (values: SendPreBriefing) => {
-		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
+	const handleNextStep = async (values: FieldValues) => {
+		await useIsValidFormField({ form, fields: values as never, setData: addPreBriefing as never, nextStep })
 	}
 
 	return (
@@ -70,7 +69,7 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 						control={form.control}
 						defaultValue=""
 						render={({ field }) => (
-							<Field className={!hasDocumentType && "blocked-field"}>
+							<Field className={!hasDocumentType ? "blocked-field" : undefined}>
 								<FieldLabel>Documento</FieldLabel>
 								<Input
 									{...field}

@@ -1,7 +1,12 @@
+import { FieldValues } from "react-hook-form"
 import { FormType } from "@/types/form"
 import RegistrationForm from "../RegistrationForm"
 import StepProgressBar from "../StepProgressBar"
 import { Separator } from "../ui/separator"
+
+type FormWrapperProps = Omit<FormType, "nextStep"> & {
+	nextStep?: (values: FieldValues) => Promise<void> | void
+}
 
 const Form = ({
 	formSchema,
@@ -15,8 +20,8 @@ const Form = ({
 	formContent,
 	leftFormContent,
 	rightFormContent
-}: FormType) => (
-	<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={nextStep}>
+}: FormWrapperProps) => (
+	<RegistrationForm formSchema={formSchema!} urlPath={urlPath} form={form!} prevStep={prevStep} nextStep={nextStep}>
 		<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
 		{!hasTwoForm ? (
 			<section className="w-115 self-center flex flex-wrap gap-3 justify-between items-center">{formContent}</section>

@@ -7,18 +7,22 @@ import Image from "next/image"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { FormType } from "@/types/form"
 import { useContractStore } from "@/store/financial/CreateContract"
-import { Contract } from "@/types/services/financial/contract"
 
 const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
 	const form = useZodForm(formSchema, "comercial")
 	const { addContract } = useContractStore()
 
-	const handleNextStep = async (value: Contract) => {
-		await useIsValidFormField({ form, fields: { contractType: value }, setData: addContract, nextStep })
+	const handleNextStep = async (value: string) => {
+		await useIsValidFormField({
+			form,
+			fields: { contractType: value } as never,
+			setData: addContract as never,
+			nextStep
+		})
 	}
 
 	return (
-		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} haveAdvanceButton={false} nextStep={handleNextStep}>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} haveAdvanceButton={false} nextStep={() => {}}>
 			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
 			<div className="flex justify-center gap-x-6">
 				<Button

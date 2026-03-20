@@ -36,12 +36,11 @@ const DatePicker = <T extends FieldValues>({
 			name={fieldName}
 			defaultValue={undefined}
 			render={({ field }) => {
-				if (canBeFuture && new Date(field.value) > new Date()) field.onChange(new Date(NaN))
+				if (canBeFuture && new Date(field.value as string) > new Date()) field.onChange(new Date(NaN))
 
-				const date = field.value instanceof Date ? field.value : field.value ? new Date(field.value) : undefined
+				const value = field.value as unknown
+				const date = value instanceof Date ? value : value ? new Date(value as string) : undefined
 				const isValidDate = date instanceof Date && !isNaN(date.getTime()) && (!canBeFuture || date <= new Date())
-
-				console.log(field.value)
 
 				return (
 					<Field className={className}>

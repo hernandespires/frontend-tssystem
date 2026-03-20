@@ -4,8 +4,8 @@ import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { formSchema } from "./formSchema"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { FormType } from "@/types/form"
-import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
+import { FieldValues } from "react-hook-form"
 import StepProgressBar from "@/components/StepProgressBar"
 import { Separator } from "@/components/ui/separator"
 import { Controller } from "react-hook-form"
@@ -21,8 +21,8 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
-	const handleNextStep = async (values: SendPreBriefing) => {
-		await useIsValidFormField({ form, fields: values, setData: addPreBriefing, nextStep })
+	const handleNextStep = async (values: FieldValues) => {
+		await useIsValidFormField({ form, fields: values as never, setData: addPreBriefing as never, nextStep })
 	}
 
 	return (

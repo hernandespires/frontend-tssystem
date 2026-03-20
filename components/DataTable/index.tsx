@@ -31,9 +31,9 @@ const DataTable = ({
 
 		return data.filter((employee) => {
 			const nameMatch = employee.name?.toLowerCase().includes(lowerTerm)
-			const roleMatch = employee.role?.toLowerCase().includes(lowerTerm)
+			const departmentMatch = employee.department?.toLowerCase().includes(lowerTerm)
 
-			return nameMatch || roleMatch
+			return nameMatch || departmentMatch
 		})
 	}, [data, searchTerm])
 

@@ -4,31 +4,31 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
-import { useContext, useEffect } from "react"
+import { useEffect } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 import { useZodForm } from "@/hooks/useZodForm"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
-import { Controller } from "react-hook-form"
+import { Controller, FieldValues } from "react-hook-form"
 import { formatterCPF, formatterCurrencyBRL, formatterPisPasep, formatterBigDecimal } from "@/utils/formatters"
-import { UploadContext } from "@/contexts/files/UploadContext"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useUploadContext } from "@/contexts/files/UploadContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import ActualDocument from "../components/ActualDocument"
-import { FindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
+import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useContext(CreateEmployeeContext)
-	const { employeeFound } = useContext(FindEmployeeContext)
-	const { allEmployeesDataFound } = useContext(FindAllEmployeesContext)
-	const { uploadData } = useContext(UploadContext)
+	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
+	const { employeeFound } = useFindEmployeeContext()
+	const { allEmployeesDataFound } = useFindAllEmployeesContext()
+	const { uploadData } = useUploadContext()
 
 	const form = useZodForm(formSchema, "rh")
 
@@ -42,7 +42,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 	const watchedResidential = form.watch("residentialProve")
 	const watchedReservist = form.watch("reservist")
 
-	const getDocumentName = (value: any) => {
+	const getDocumentName = (value: unknown) => {
 		if (!value) return undefined
 		if (value instanceof FileList && value.length > 0) return value[0].name
 		if (typeof value === "string") return value
@@ -69,39 +69,49 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 
 	useEffect(() => {
 		if (!watchedReservist) {
-			form.setValue("documentation", null)
-			setEmployeeData((prev: Employee) => ({ ...prev, documentation: null }))
+			form.setValue("documentation", "")
+			setEmployeeData((prev: SendEmployee) => ({ ...prev, documentation: "" }))
 		}
 	}, [watchedReservist])
 
-	const handleNextStep = (values: SendEmployee) => {
-		const conflictFieldMessages: Record<keyof Employee, string> = { workCard: "Carteira de trabalho", pisPasep: "PIS/PASEP" }
+	const handleNextStep = (values: FieldValues) => {
+		const typedValues = values as SendEmployee
+		const conflictFieldMessages: Partial<Record<keyof Employee, string>> = { workCard: "Carteira de trabalho", pisPasep: "PIS/PASEP" }
 
 		if (
 			["workCard", "pisPasep"].some((field) =>
-				handleConflictingValues(employeeFound, allEmployeesDataFound, field as keyof Employee, values[field], conflictFieldMessages)
+				handleConflictingValues(
+					employeeFound,
+					allEmployeesDataFound,
+					field as keyof Employee,
+					(typedValues as unknown as Record<string, string>)[field],
+					conflictFieldMessages as Record<keyof Employee, string>
+				)
 			)
 		)
 			return
 
+		const admissionRaw: unknown = typedValues.admissionDate
 		const admissionISO =
-			values.admissionDate instanceof Date
-				? values.admissionDate.toISOString()
-				: values.admissionDate
-					? new Date(values.admissionDate).toISOString()
+			admissionRaw instanceof Date
+				? admissionRaw.toISOString()
+				: admissionRaw
+					? new Date(admissionRaw as string).toISOString()
 					: undefined
+
+		const salaryRaw = typedValues.salary
+		const salaryStr = salaryRaw != null ? String(salaryRaw) : ""
 
 		useIsValidFormField({
 			form,
 			fields: {
-				...values,
+				...typedValues,
 				admissionDate: admissionISO,
-				salary: formatterBigDecimal(values.salary),
-				residentialProve: getDocumentName(values.residentialProve) ?? employeeData?.residentialProve ?? employeeFound?.residentialProve,
-				documentation: getDocumentName(values.documentation) ?? employeeData?.documentation ?? employeeFound?.documentation
-			},
-
-			setData: setEmployeeData,
+				salary: formatterBigDecimal(salaryStr),
+				residentialProve: getDocumentName(typedValues.residentialProve) ?? employeeData?.residentialProve ?? employeeFound?.residentialProve,
+				documentation: getDocumentName(typedValues.documentation) ?? employeeData?.documentation ?? employeeFound?.documentation
+			} as never,
+			setData: setEmployeeData as never,
 			nextStep
 		})
 	}

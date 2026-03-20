@@ -31,7 +31,7 @@ const Comercial = () => {
 			<section className="flex justify-between gap-x-6">
 				<div className="flex flex-col gap-y-6 w-full">
 					<div>
-						<DataTable filter="Reuniões Agendadas" path="/rh/cadastro-colaborador" className="min-h-99.75" />
+						<DataTable filter="Reuniões Agendadas" data={[]} setContextInfo={() => {}} path="/rh/cadastro-colaborador" className="min-h-99.75" />
 					</div>
 					<div className="flex justify-between flex-wrap">
 						<Button isFulled onClick={() => ""} icon={<SiGooglemeet size={36} color="black" />}>
@@ -57,7 +57,7 @@ const Comercial = () => {
 							Comissão
 						</Button>
 					</div>
-					<DataMetrics department="comercial" />
+					<DataMetrics department="comercial" datas={[]} />
 				</div>
 			</section>
 		</>

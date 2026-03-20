@@ -40,7 +40,7 @@ const chartConfigOperations = {
 } satisfies ChartConfig
 
 type Employee = {
-	sex: "MALE" | "FEMALE"
+	sex: string
 	civilState: string
 	operation: string
 }

@@ -2,7 +2,9 @@ import { FaChartPie } from "react-icons/fa"
 import DataChart from "../DataChart"
 import { useRouter } from "next/navigation"
 
-const DataMetrics = ({ department, datas }: { department: string; datas: string[] }) => {
+type DataMetricsItem = { sex: string; civilState: string; operation: string }
+
+const DataMetrics = ({ department, datas }: { department: string; datas: DataMetricsItem[] }) => {
 	const router = useRouter()
 
 	return (

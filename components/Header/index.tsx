@@ -21,7 +21,7 @@ const Header = ({ department }: { department: string }) => {
 						alt="Logo"
 					/>
 					<div className="flex-col text-xl">
-						<Wellcome name={user?.name} />
+						<Wellcome name={user?.name ?? ""} />
 						<span className="font-bold text-white uppercase">{department}</span>
 					</div>
 				</div>

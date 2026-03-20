@@ -3,14 +3,14 @@
 import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
-import { UploadContext } from "@/contexts/files/UploadContext"
+import { useUploadContext } from "@/contexts/files/UploadContext"
 import { useLogin } from "@/contexts/LoginContext"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
-import { useContext, useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
 import { IoPersonAddOutline } from "react-icons/io5"
@@ -24,19 +24,18 @@ const Rh = () => {
 	if (!user) redirect("/login")
 
 	const router = useRouter()
-	const { setEmployeeFound } = useContext(FindEmployeeContext)
-	const { setEmployeeData } = useContext(CreateEmployeeContext)
-	const uploadContext = useContext(UploadContext)
+	const { setEmployeeFound } = useFindEmployeeContext()
+	const { setEmployeeData } = useCreateEmployeeContext()
+	const uploadContext = useUploadContext()
 
-	const [allEmployees, setAllEmployees] = useState<Employee[] | null>(null)
+	const [allEmployees, setAllEmployees] = useState<Employee[]>([])
 
 	useEffect(() => {
 		setEmployeeData({
-			id: "",
 			name: "",
 			birthday: "",
+			sex: "",
 			civilState: "",
-			// nacionality: "" | "BRAZILIAN" | "AMERICAN",
 			rg: "",
 			cpf: "",
 			email: "",
@@ -96,45 +95,7 @@ const Rh = () => {
 					<Button
 						onClick={() => {
 							router.push("/rh/cadastro-colaborador")
-							setEmployeeFound({
-								id: "",
-								name: "",
-								birthday: "",
-								civilState: "",
-								// nacionality: "" | "BRAZILIAN" | "AMERICAN",
-								rg: "",
-								cpf: "",
-								email: "",
-								motherName: "",
-								phone: "",
-								city: "",
-								postalCode: "",
-								street: "",
-								neighborhood: "",
-								workCard: "",
-								pisPasep: "",
-								typeEmployment: "",
-								laborModality: "",
-								laborScale: "",
-								admissionDate: "",
-								salary: null,
-								residentialProve: "",
-								reservist: false,
-								documentation: "",
-								bank: "",
-								agency: null,
-								account: null,
-								pix: "",
-								transportationVoucher: false,
-								cnpjTransportationVoucher: "",
-								monthlyAmount: null,
-								additionalDocuments: [],
-								department: "",
-								operation: "",
-								level: "",
-								status: "ACTIVE",
-								quitDate: ""
-							})
+							setEmployeeFound(null)
 						}}
 						icon={<IoPersonAddOutline size={36} color="white" />}
 					>
@@ -157,7 +118,7 @@ const Rh = () => {
 						Processos Burocráticos
 					</Button>
 				</div>
-				<DataMetrics department="Recursos Humanos" datas={allEmployees?.map((employee: Employee) => employee)} />
+				<DataMetrics department="Recursos Humanos" datas={allEmployees} />
 			</div>
 		</main>
 	)

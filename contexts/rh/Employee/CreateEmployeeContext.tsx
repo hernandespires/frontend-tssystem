@@ -49,7 +49,7 @@
 
 import { CreateEmployeeContextTypes } from "@/types/contexts/rh/employee"
 import { SendEmployee } from "@/types/services/humanResources/employee"
-import { createContext, ReactNode, useEffect, useState } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
 export const CreateEmployeeContext = createContext<CreateEmployeeContextTypes | null>(null)
 
@@ -112,4 +112,10 @@ export const CreateEmployeeProvider = ({ children }: { children: ReactNode }) =>
 	}, [employeeData])
 
 	return <CreateEmployeeContext.Provider value={{ employeeData, setEmployeeData }}>{children}</CreateEmployeeContext.Provider>
+}
+
+export const useCreateEmployeeContext = () => {
+	const ctx = useContext(CreateEmployeeContext)
+	if (!ctx) throw new Error("useCreateEmployeeContext must be used within CreateEmployeeProvider")
+	return ctx
 }
