@@ -26,7 +26,7 @@ const LoginForm = () => {
 		try {
 			await login({ email, senha })
 			setUser({ name: email, email, image: "" })
-			router.push("/rh")
+			router.push("/comercial")
 		} catch (err) {
 			setError("Erro ao logar")
 		}
@@ -57,7 +57,7 @@ const LoginForm = () => {
 				</Button>
 			</form>
 			<div className="w-full">
-				<Button type="button" className="w-full bg-white" onClick={() => signIn("google", { callbackUrl: "/rh" })}>
+				<Button type="button" className="w-full bg-white" onClick={() => signIn("google", { callbackUrl: "/comercial" })}>
 					<FaGoogle />
 					Entrar com o Google
 				</Button>
