@@ -26,6 +26,7 @@ const LoginForm = () => {
 		try {
 			await login({ email, senha })
 			setUser({ name: email, email, image: "" })
+			document.cookie = `auth_token=true; path=/; SameSite=Lax; max-age=${60 * 60 * 24}`
 			router.push("/comercial")
 		} catch (err) {
 			setError("Erro ao logar")
