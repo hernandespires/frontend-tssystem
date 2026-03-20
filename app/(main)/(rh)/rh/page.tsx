@@ -8,7 +8,7 @@ import { useLoginStore } from "@/store/auth/useLoginStore"
 import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
 import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
 import { Employee } from "@/types/services/humanResources/employee"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { BsClipboardData } from "react-icons/bs"
 import { FaPlus } from "react-icons/fa"
@@ -20,9 +20,6 @@ import { VscSync } from "react-icons/vsc"
 import { findAllEmployees } from "@/services/humanResources/employee"
 
 const Rh = () => {
-	const user = useLoginStore((s) => s.user)
-	if (!user) redirect("/login")
-
 	const router = useRouter()
 	const { setEmployeeFound } = useEmployeeStore()
 	const { resetEmployeeData } = useEmployeeFormStore()
