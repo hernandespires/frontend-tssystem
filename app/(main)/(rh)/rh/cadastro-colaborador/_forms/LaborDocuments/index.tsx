@@ -7,7 +7,10 @@ import RegistrationForm from "@/components/RegistrationForm"
 import { useEffect } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
+import { useAllEmployeesStore } from "@/store/rh/employee/useAllEmployeesStore"
+import { useUploadStore } from "@/store/files/useUploadStore"
 import { useZodForm } from "@/hooks/useZodForm"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
@@ -15,20 +18,17 @@ import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { formSchema } from "./formSchema"
 import { Controller, FieldValues } from "react-hook-form"
 import { formatterCPF, formatterCurrencyBRL, formatterPisPasep, formatterBigDecimal } from "@/utils/formatters"
-import { useUploadContext } from "@/contexts/files/UploadContext"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import ActualDocument from "../components/ActualDocument"
-import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
-	const { employeeFound } = useFindEmployeeContext()
-	const { allEmployeesDataFound } = useFindAllEmployeesContext()
-	const { uploadData } = useUploadContext()
+	const { employeeData, setEmployeeData } = useEmployeeFormStore()
+	const { employeeFound } = useEmployeeStore()
+	const { employees } = useAllEmployeesStore()
+	const { uploadData } = useUploadStore()
 
 	const form = useZodForm(formSchema, "rh")
 
@@ -70,7 +70,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 	useEffect(() => {
 		if (!watchedReservist) {
 			form.setValue("documentation", "")
-			setEmployeeData((prev: SendEmployee) => ({ ...prev, documentation: "" }))
+			setEmployeeData({ documentation: "" })
 		}
 	}, [watchedReservist])
 
@@ -82,7 +82,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 			["workCard", "pisPasep"].some((field) =>
 				handleConflictingValues(
 					employeeFound,
-					allEmployeesDataFound,
+					employees,
 					field as keyof Employee,
 					(typedValues as unknown as Record<string, string>)[field],
 					conflictFieldMessages as Record<keyof Employee, string>

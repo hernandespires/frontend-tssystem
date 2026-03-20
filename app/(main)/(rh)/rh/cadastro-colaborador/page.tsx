@@ -7,10 +7,10 @@ import LaborDocuments from "./_forms/LaborDocuments"
 import BankDetails from "./_forms/BankDetails"
 import AdditionalDocuments from "./_forms/AdditionalDocuments"
 import Finalization from "./_forms/Finalization"
-import { useLogin } from "@/contexts/LoginContext"
+import { useLoginStore } from "@/store/auth/useLoginStore"
 
 const CadastroColaborador = () => {
-	const { user } = useLogin()
+	const user = useLoginStore((s) => s.user)
 	if (!user) redirect("/login")
 
 	const path: { name: string; route: string }[] = [

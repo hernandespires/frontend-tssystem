@@ -3,22 +3,22 @@
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
 import { useEffect } from "react"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useUploadStore } from "@/store/files/useUploadStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { Field, FieldError } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
-import { useUploadContext } from "@/contexts/files/UploadContext"
 import FileUploadPreview from "../components/FileUploadPreview"
 import ActualDocument from "../components/ActualDocument"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const AdditionalDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
-	const { uploadData } = useUploadContext()
-	const { employeeFound } = useFindEmployeeContext()
+	const { employeeData, setEmployeeData } = useEmployeeFormStore()
+	const { uploadData } = useUploadStore()
+	const { employeeFound } = useEmployeeStore()
 
 	const form = useZodForm(formSchema, "rh", {
 		defaultValues: {

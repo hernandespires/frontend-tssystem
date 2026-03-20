@@ -8,7 +8,9 @@ import { formSchema } from "./formSchema"
 import { useEffect, useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
+import { useAllEmployeesStore } from "@/store/rh/employee/useAllEmployeesStore"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
@@ -16,17 +18,15 @@ import { Employee, SendEmployee } from "@/types/services/humanResources/employee
 import { Controller, FieldValues } from "react-hook-form"
 import { formatterBankAgencyAndAccount, formatterCNPJ, formatterCurrencyBRL, formatterPix } from "@/utils/formatters"
 import { formatterBigDecimal } from "@/utils/formatters"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import StepProgressBar from "@/components/StepProgressBar"
 import { FormType } from "@/types/form"
 
 const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextStep }: FormType) => {
-	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
-	const { employeeFound } = useFindEmployeeContext()
-	const { allEmployeesDataFound } = useFindAllEmployeesContext()
+	const { employeeData, setEmployeeData } = useEmployeeFormStore()
+	const { employeeFound } = useEmployeeStore()
+	const { employees } = useAllEmployeesStore()
 
 	const [transportationVoucherDocumentationVisibility, setTransportationVoucherDocumentationVisibility] = useState<boolean>(false)
 
@@ -48,7 +48,7 @@ const BankDetails = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 			["account", "pix"].some((field) =>
 				handleConflictingValues(
 					employeeFound,
-					allEmployeesDataFound,
+					employees,
 					field as keyof Employee,
 					(typedValues as unknown as Record<string, string>)[field],
 					conflictFieldMessages as Record<keyof Employee, string>

@@ -2,8 +2,8 @@ import { z } from "zod"
 import type { $ZodType } from "zod/v4/core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, type FieldValues, type UseFormProps, type UseFormReturn } from "react-hook-form"
-import { FindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import { useContext } from "react"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
 import {
 	formatterBankAgencyAndAccount,
 	formatterCNPJ,
@@ -15,18 +15,14 @@ import {
 	formatterPostalCode,
 	formatterRG
 } from "@/utils/formatters"
-import { CreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
 
 export const useZodForm = <TOutput extends FieldValues, TInput extends FieldValues, TSchema extends $ZodType<TOutput, TInput>>(
 	schema: TSchema,
 	department: string,
 	overrideOptions?: Partial<UseFormProps<z.input<TSchema>>>
 ): UseFormReturn<FieldValues> => {
-	const findEmployeeCtx = useContext(FindEmployeeContext)
-	const createEmployeeCtx = useContext(CreateEmployeeContext)
-
-	const employeeFound = findEmployeeCtx?.employeeFound ?? null
-	const employeeData = createEmployeeCtx?.employeeData ?? null
+	const employeeFound = useEmployeeStore((s) => s.employeeFound)
+	const employeeData = useEmployeeFormStore((s) => s.employeeData)
 
 	const rhDefaultValues = {
 		name: employeeFound?.name ?? employeeData?.name,

@@ -3,8 +3,8 @@
 import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
-import { useLogin } from "@/contexts/LoginContext"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
+import { useLoginStore } from "@/store/auth/useLoginStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
 import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
 import { useState } from "react"
@@ -17,11 +17,11 @@ import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
 
 const Rh = () => {
-	const { user } = useLogin()
+	const user = useLoginStore((s) => s.user)
 	if (!user) redirect("/login")
 
 	const router = useRouter()
-	const { setEmployeeFound } = useFindEmployeeContext()
+	const { setEmployeeFound } = useEmployeeStore()
 	const [allEmployees] = useState<Employee[] | null>(null)
 
 	return (

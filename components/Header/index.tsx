@@ -3,10 +3,10 @@ import { Button } from "../ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { FaArrowDown } from "react-icons/fa"
 import Wellcome from "../Wellcome"
-import { useLogin } from "@/contexts/LoginContext"
+import { useLoginStore } from "@/store/auth/useLoginStore"
 
 const Header = ({ department }: { department: string }) => {
-	const { user } = useLogin()
+	const user = useLoginStore((s) => s.user)
 	if (user === undefined) return null
 
 	return (

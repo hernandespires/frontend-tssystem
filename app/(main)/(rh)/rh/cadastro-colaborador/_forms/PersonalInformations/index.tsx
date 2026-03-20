@@ -3,7 +3,9 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import RegistrationForm from "@/components/RegistrationForm"
 import { Progress } from "@/components/ui/progress"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useAllEmployeesStore } from "@/store/rh/employee/useAllEmployeesStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
@@ -11,17 +13,20 @@ import { Employee, SendEmployee } from "@/types/services/humanResources/employee
 import { formSchema } from "./formSchema"
 import { Controller, FieldValues } from "react-hook-form"
 import { formatterCPF, formatterPhone, formatterPostalCode, formatterRG } from "@/utils/formatters"
-import { useFindAllEmployeesContext } from "@/contexts/rh/Employee/FindAllEmployeesContext"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
 import { handleConflictingValues } from "@/utils/handlers"
 import dynamic from "next/dynamic"
 import { FormType } from "@/types/form"
 import { dateToISO } from "@/utils/dateToISO"
+import { useEffect } from "react"
 
 const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
-	const { setEmployeeData } = useCreateEmployeeContext()
-	const { allEmployeesDataFound } = useFindAllEmployeesContext()
-	const { employeeFound } = useFindEmployeeContext()
+	const { setEmployeeData } = useEmployeeFormStore()
+	const { employees, fetchEmployees } = useAllEmployeesStore()
+	const { employeeFound } = useEmployeeStore()
+
+	useEffect(() => {
+		fetchEmployees()
+	}, [])
 
 	const form = useZodForm(formSchema, "rh")
 	const errors = form.formState.errors
@@ -34,7 +39,7 @@ const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percenta
 			["rg", "cpf", "email", "phone"].some((field) =>
 				handleConflictingValues(
 					employeeFound,
-					allEmployeesDataFound,
+					employees,
 					field as keyof Employee,
 					(typedValues as unknown as Record<string, string>)[field],
 					conflictFieldMessages as Record<keyof Employee, string>

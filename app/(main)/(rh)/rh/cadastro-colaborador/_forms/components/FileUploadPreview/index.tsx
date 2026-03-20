@@ -1,11 +1,11 @@
 "use client"
 
-import { useContext, ChangeEvent } from "react"
+import { ChangeEvent } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { UploadContext } from "@/contexts/files/UploadContext"
+import { useUploadStore } from "@/store/files/useUploadStore"
 import { UseFormReturn } from "react-hook-form"
 
 type FileWithPreview = File & { preview?: string }
@@ -18,12 +18,9 @@ const FileUploadPreview = ({
   form: UseFormReturn<any>
 }) => {
 
-  const uploadContext = useContext(UploadContext)
-  if (!uploadContext) return null
+  const { uploadData, setFiles } = useUploadStore()
 
-  const { uploadData, setFiles } = uploadContext
-
-  const localFiles: FileWithPreview[] = (uploadData[fieldName] ?? []).map(file => {
+  const localFiles: FileWithPreview[] = (uploadData[fieldName] ?? []).map((file: File) => {
     if (!(file as FileWithPreview).preview) {
       ;(file as FileWithPreview).preview = URL.createObjectURL(file)
     }

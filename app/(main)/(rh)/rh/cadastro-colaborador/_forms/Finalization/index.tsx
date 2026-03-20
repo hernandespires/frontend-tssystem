@@ -2,13 +2,13 @@
 
 import RegistrationForm from "@/components/RegistrationForm"
 import { formSchema } from "./formSchema"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useUploadStore } from "@/store/files/useUploadStore"
 import { useZodForm } from "@/hooks/useZodForm"
 import { SendEmployee } from "@/types/services/humanResources/employee"
 import { toast } from "sonner"
 import { createEmployee } from "@/services/humanResources/employee"
 import { multipleUpload } from "@/services/file/upload"
-import { useUploadContext } from "@/contexts/files/UploadContext"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import StepProgressBar from "@/components/StepProgressBar"
@@ -18,8 +18,8 @@ import { FieldValues } from "react-hook-form"
 const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
 
 const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
-	const { employeeData, setEmployeeData } = useCreateEmployeeContext()
-	const { uploadData } = useUploadContext()
+	const { employeeData, setEmployeeData, resetEmployeeData } = useEmployeeFormStore()
+	const { uploadData, clearUploads } = useUploadStore()
 	const form = useZodForm(formSchema, "rh")
 	const router = useRouter()
 
@@ -44,7 +44,7 @@ const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: For
 			const payload = { ...merged } as Record<string, unknown>
 			delete payload.id
 
-			setEmployeeData(payload as unknown as SendEmployee)
+			setEmployeeData(payload as unknown as Partial<SendEmployee>)
 
 			const created = await createEmployee(payload as unknown as SendEmployee)
 
@@ -60,6 +60,8 @@ const Finalization = ({ urlPath, prevStep, actualStep, percentageProgress }: For
 
 		if (ok) {
 			toast.success("Colaborador cadastrado com sucesso!")
+			resetEmployeeData()
+			clearUploads()
 			router.push("/rh")
 		} else {
 			toast.error("Erro ao cadastrar colaborador")

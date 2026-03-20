@@ -3,11 +3,10 @@
 import Button from "@/components/Button"
 import DataMetrics from "@/components/DataMetrics"
 import DataTable from "@/components/DataTable"
-import { useUploadContext } from "@/contexts/files/UploadContext"
-import { useLogin } from "@/contexts/LoginContext"
-import { useCreateEmployeeContext } from "@/contexts/rh/Employee/CreateEmployeeContext"
-import { useFindEmployeeContext } from "@/contexts/rh/Employee/FindEmployeeContext"
-import { findAllEmployees } from "@/services/humanResources/employee"
+import { useUploadStore } from "@/store/files/useUploadStore"
+import { useLoginStore } from "@/store/auth/useLoginStore"
+import { useEmployeeFormStore } from "@/store/rh/employee/useEmployeeFormStore"
+import { useEmployeeStore } from "@/store/rh/employee/useEmployeeStore"
 import { Employee } from "@/types/services/humanResources/employee"
 import { redirect, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -18,59 +17,22 @@ import { LuScanFace } from "react-icons/lu"
 import { MdOutlinePersonSearch, MdPeopleOutline } from "react-icons/md"
 import { PiTreeStructure } from "react-icons/pi"
 import { VscSync } from "react-icons/vsc"
+import { findAllEmployees } from "@/services/humanResources/employee"
 
 const Rh = () => {
-	const { user } = useLogin()
+	const user = useLoginStore((s) => s.user)
 	if (!user) redirect("/login")
 
 	const router = useRouter()
-	const { setEmployeeFound } = useFindEmployeeContext()
-	const { setEmployeeData } = useCreateEmployeeContext()
-	const uploadContext = useUploadContext()
+	const { setEmployeeFound } = useEmployeeStore()
+	const { resetEmployeeData } = useEmployeeFormStore()
+	const { clearUploads } = useUploadStore()
 
 	const [allEmployees, setAllEmployees] = useState<Employee[]>([])
 
 	useEffect(() => {
-		setEmployeeData({
-			name: "",
-			birthday: "",
-			sex: "",
-			civilState: "",
-			rg: "",
-			cpf: "",
-			email: "",
-			motherName: "",
-			phone: "",
-			city: "",
-			postalCode: "",
-			street: "",
-			neighborhood: "",
-			workCard: "",
-			pisPasep: "",
-			typeEmployment: "",
-			laborModality: "",
-			laborScale: "",
-			admissionDate: "",
-			salary: null,
-			residentialProve: "",
-			reservist: false,
-			documentation: "",
-			bank: "",
-			agency: null,
-			account: null,
-			pix: "",
-			transportationVoucher: false,
-			cnpjTransportationVoucher: "",
-			monthlyAmount: null,
-			additionalDocuments: [],
-			department: "",
-			operation: "",
-			level: "",
-			status: "ACTIVE",
-			quitDate: ""
-		})
-
-		uploadContext?.clearUploads()
+		resetEmployeeData()
+		clearUploads()
 	}, [])
 
 	useEffect(() => {

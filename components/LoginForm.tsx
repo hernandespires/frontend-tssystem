@@ -8,7 +8,7 @@ import { login } from "@/services/user"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { AlertCircleIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useLogin } from "@/contexts/LoginContext"
+import { useLoginStore } from "@/store/auth/useLoginStore"
 import { FaGoogle } from "react-icons/fa"
 import { signIn } from "next-auth/react"
 
@@ -18,7 +18,7 @@ const LoginForm = () => {
 	const [error, setError] = useState<string | null>(null)
 
 	const router = useRouter()
-	const { setUser } = useLogin()
+	const setUser = useLoginStore((s) => s.setUser)
 
 	const isLogged = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()

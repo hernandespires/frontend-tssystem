@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { LoginProvider } from "@/contexts/LoginContext"
+import AuthInitializer from "@/components/AuthInitializer"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { getServerSession } from "next-auth"
@@ -40,10 +40,9 @@ const Layout = async ({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<LoginProvider initialUser={user}>
-						<Toaster richColors position="top-center" />
-						{children}
-					</LoginProvider>
+					<AuthInitializer initialUser={user} />
+					<Toaster richColors position="top-center" />
+					{children}
 				</ThemeProvider>
 			</body>
 		</html>
