@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(node -e \":*)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystemcontexts -type f -name *.ts -o -name *.tsx)",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystemstore -type f -name *.ts -o -name *.tsx)",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystemtypes -type f -name *.ts -o -name *.tsx)",
+      "Bash(ls \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)/\\(rh\\)/rh/cadastro-colaborador/\")",
+      "Bash(find c:/Users/Luiz/Desktop/frontend-tssystem/hooks -name *.ts)",
+      "Bash(find \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)\" -name \"layout.tsx\")",
+      "Bash(xargs ls:*)",
+      "Bash(find \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)\" -name \"ClientShell*\")"
+    ]
+  }
+}
