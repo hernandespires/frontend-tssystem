@@ -111,23 +111,6 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 							</Field>
 						)}
 					/>
-					<Controller
-						name="programType"
-						control={form.control}
-						defaultValue=""
-						render={() => (
-							<Field>
-								<DropdownMenu
-									id="programType"
-									form={form}
-									name="programType"
-									label="Tipo de programa"
-									schemaKeys={Object.keys(formSchema.shape)}
-									options={[{ label: "Programa Acelerador", value: "ACCELERATOR_PROGRAM" }]}
-								/>
-							</Field>
-						)}
-					/>
 				</>
 			}
 		/>

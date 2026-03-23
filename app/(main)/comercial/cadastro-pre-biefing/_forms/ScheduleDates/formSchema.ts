@@ -1,13 +1,8 @@
-import { defaultEmptyError } from "@/components/Form/defaultFormFieldErrors"
+import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFieldErrors"
 import z from "zod"
 
 export const formSchema = z.object({
-	programPeriod: z.enum(["SIX_MONTHS"]).nonoptional(defaultEmptyError("Tempo de programa")),
-	projectStartDate: z
-		.any()
-		.nonoptional(defaultEmptyError("Data de início do projeto"))
-		.transform((v) => new Date(v))
-		.refine((d) => !isNaN(d.getTime()), "Data inválida"),
+	programType: z.enum(["ACCELERATOR_PROGRAM"], defaultError("Tipo de programa")).nonoptional(defaultEmptyError("Tipo de programa")),
 	contractDate: z
 		.any()
 		.nonoptional(defaultEmptyError("Data do contrato"))

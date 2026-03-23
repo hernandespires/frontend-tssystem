@@ -19,7 +19,6 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 			form,
 			fields: {
 				...values,
-				projectStartDate: dateToISO(values.projectStartDate as string | Date),
 				contractDate: dateToISO(values.contractDate as string | Date),
 				paymentDate: dateToISO(values.paymentDate as string | Date)
 			} as never,
@@ -40,24 +39,22 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 			formContent={
 				<>
 					<Controller
-						name="programPeriod"
+						name="programType"
 						control={form.control}
 						defaultValue={undefined}
 						render={() => (
 							<Field>
 								<DropdownMenu
-									id="programPeriod"
+									id="programType"
 									form={form}
-									name="programPeriod"
-									label="Tempo de programa"
+									name="programType"
+									label="Tipo de programa"
 									schemaKeys={Object.keys(formSchema.shape)}
-									options={[{ label: "6 meses", value: "SIX_MONTHS" }]}
+									options={[{ label: "Programa Acelerador", value: "ACCELERATOR_PROGRAM" }]}
 								/>
 							</Field>
 						)}
 					/>
-					<DatePicker form={form} formSchema={formSchema} fieldName="projectStartDate" label="Data de início do projeto" />
-					<p className="text-[#737373]">Informe a data de quando o projeto ficou combinado de se inciar</p>
 					<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="contractDate" label="Data do contrato" />
 					<p className="text-[#737373]">Data que sairá no final do contrato (geralmente é o dia de hoje)</p>
 					<DatePicker form={form} formSchema={formSchema} canBeFuture fieldName="paymentDate" label="Data de pagamento" />

@@ -9,14 +9,11 @@ export interface PreBriefing {
 	nacionality: "BRAZILIAN" | "AMERICAN"
 	email: string
 	phone: string
-	address: string
-	documentType: "ITIN" | "EIN" | "CNPJ"
-	documentNumber: string
+	bussinessDocumentType: "ITIN" | "EIN" | "CNPJ"
+	bussinessDocumentNumber: string
 	segment: "FLOORING"
 	bussinessName: string
 	programType: "ACCELERATOR_PROGRAM"
-	programPeriod: string
-	projectStartDate: string
 	contractDate: string
 	paymentDate: string
 	leadSource: string
