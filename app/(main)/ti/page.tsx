@@ -8,24 +8,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { IoIosArrowForward } from "react-icons/io"
 import { RiGitRepositoryCommitsFill } from "react-icons/ri"
-import { Search } from "lucide-react"
+import { Search, LifeBuoy, Lock, Laptop, Cctv, HardDriveDownload, Package, BarChart3 } from "lucide-react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import {
-	Settings,
-	Lock,
-	Package,
-	Cctv,
-	UserPlus,
-	Box
-} from "lucide-react"
 import {
 	Pie,
 	PieChart,
 	Cell,
 	ResponsiveContainer,
-	Legend,
 	Tooltip
 } from "recharts"
+
+// --- Constants ---
+
+const CHART_COLOR_PINK = "#FF4081"
+const CHART_COLOR_BLUE = "#29B6F6"
+const TOTAL_USERS = 70
 
 // --- Mock Data ---
 
@@ -35,7 +32,7 @@ const MOCK_TICKETS: ActivityItem[] = [
 		avatarFallback: "C",
 		description: (
 			<span className="text-white">
-				<strong>Colaborador</strong> solicitou um{" "}
+				<span className="text-default-orange font-semibold">Colaborador</span> solicitou um{" "}
 				<span className="text-default-orange font-bold">chamado Crítico</span>
 			</span>
 		),
@@ -46,7 +43,7 @@ const MOCK_TICKETS: ActivityItem[] = [
 		avatarFallback: "C",
 		description: (
 			<span className="text-white">
-				<strong>Colaborador</strong> solicitou um{" "}
+				<span className="text-default-orange font-semibold">Colaborador</span> solicitou um{" "}
 				<span className="text-default-orange font-bold">chamado</span>
 			</span>
 		),
@@ -60,128 +57,128 @@ const MOCK_USERS = [
 	{ id: "3", name: "Colaborador", email: "colaborador@trajetoriadosucesso.com" }
 ]
 
-const TOTAL_USERS = 70
-
 const MOCK_GENDER_CHART_1 = [
-	{ name: "Feminino", value: 45, color: "#FF5CDC" },
-	{ name: "Masculino", value: 55, color: "#1490F5" }
+	{ name: "Feminino", value: 48.0, color: CHART_COLOR_PINK },
+	{ name: "Masculino", value: 52.0, color: CHART_COLOR_BLUE }
 ]
 
 const MOCK_GENDER_CHART_2 = [
-	{ name: "Feminino", value: 40, color: "#FF5CDC" },
-	{ name: "Masculino", value: 60, color: "#1490F5" }
+	{ name: "Feminino", value: 48.7, color: CHART_COLOR_PINK },
+	{ name: "Masculino", value: 51.3, color: CHART_COLOR_BLUE }
 ]
+
+// --- Donut Chart Component ---
+
+interface DonutChartWithLabelsProps {
+	data: { name: string; value: number; color: string }[]
+}
+
+const DonutChartWithLabels = ({ data }: DonutChartWithLabelsProps) => {
+	return (
+		<div className="flex items-center justify-center gap-4">
+			{/* Left label */}
+			<div className="flex flex-col items-end gap-0.5 min-w-[60px]">
+				<span className="text-xs text-[#A09E9C]">{data[0].name}</span>
+				<span className="text-sm font-bold" style={{ color: data[0].color }}>
+					{data[0].value.toFixed(1).replace(".", ",")}%
+				</span>
+			</div>
+
+			{/* Chart */}
+			<div className="w-[120px] h-[120px]">
+				<ResponsiveContainer width="100%" height="100%">
+					<PieChart>
+						<Pie
+							data={data}
+							dataKey="value"
+							nameKey="name"
+							cx="50%"
+							cy="50%"
+							innerRadius={36}
+							outerRadius={55}
+							strokeWidth={0}
+						>
+							{data.map((entry) => (
+								<Cell key={entry.name} fill={entry.color} />
+							))}
+						</Pie>
+						<Tooltip
+							contentStyle={{
+								backgroundColor: "#1A1510",
+								border: "1px solid #2A241D",
+								borderRadius: "8px",
+								color: "white",
+								fontSize: "12px"
+							}}
+							formatter={(value: number) => [`${value.toFixed(1)}%`, ""]}
+						/>
+					</PieChart>
+				</ResponsiveContainer>
+			</div>
+
+			{/* Right label */}
+			<div className="flex flex-col items-start gap-0.5 min-w-[60px]">
+				<span className="text-xs text-[#A09E9C]">{data[1].name}</span>
+				<span className="text-sm font-bold" style={{ color: data[1].color }}>
+					{data[1].value.toFixed(1).replace(".", ",")}%
+				</span>
+			</div>
+		</div>
+	)
+}
+
+// --- Page Component ---
 
 const Ti = () => {
 	const router = useRouter()
 
 	return (
-		<>
-			{/* Row 1 — Stats + Top Action Buttons */}
-			<section className="flex gap-6 items-stretch">
-				<div className="flex gap-4 w-1/2">
+		<div className="grid grid-cols-[45%_55%] gap-6">
+			{/* ========== LEFT COLUMN ========== */}
+			<div className="flex flex-col gap-4">
+				{/* Ticket Counters */}
+				<div className="grid grid-cols-3 gap-4">
 					<InfoBadge fill info="Novos Chamados">03</InfoBadge>
 					<InfoBadge info="Resolvidos">10</InfoBadge>
 					<InfoBadge info="Não Resolvidos">03</InfoBadge>
 				</div>
 
-				<div className="flex gap-4 w-1/2">
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/controle-chamados")}
-						icon={<Settings size={38} color="black" strokeWidth={2} />}
-					>
-						Controle de Chamados
-					</ActionButton>
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/controle-acessos")}
-						icon={<Lock size={38} color="black" strokeWidth={2} />}
-					>
-						Controle de Acessos
-					</ActionButton>
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/controle-patrimonios")}
-						icon={<Package size={38} color="black" strokeWidth={2} />}
-					>
-						Controle de Patrimônios
-					</ActionButton>
-				</div>
-			</section>
+				{/* Latest Tickets */}
+				<ActivityList
+					title="Últimos chamados"
+					items={MOCK_TICKETS}
+					emptyMessage="Nenhum chamado encontrado"
+					footerLabel="Ver todos os chamados"
+					onFooterClick={() => router.push("/ti/chamados")}
+				/>
 
-			{/* Row 2 — Tickets + Bottom Action Buttons */}
-			<section className="flex gap-6 items-stretch">
-				<div className="w-1/2">
-					<ActivityList
-						title="Últimos chamados"
-						items={MOCK_TICKETS}
-						emptyMessage="Nenhum chamado encontrado"
-						footerLabel="Ver todos os chamados"
-						onFooterClick={() => router.push("/ti/chamados")}
-					/>
-				</div>
-
-				<div className="flex gap-4 w-1/2">
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/controle-cameras")}
-						icon={<Cctv size={38} color="black" strokeWidth={2} />}
-					>
-						Controle de Câmeras
-					</ActionButton>
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/cadastro-usuarios")}
-						icon={<UserPlus size={38} color="black" strokeWidth={2} />}
-					>
-						Cadastro de Usuários
-					</ActionButton>
-					<ActionButton
-						isFulled
-						flexible
-						onClick={() => router.push("/ti/cadastro-patrimonios")}
-						icon={<Box size={38} color="black" strokeWidth={2} />}
-					>
-						Cadastro de Patrimônios
-					</ActionButton>
-				</div>
-			</section>
-
-			{/* Row 3 — User List + Metrics */}
-			<section className="flex gap-6 items-stretch">
 				{/* User List */}
-				<div className="flex flex-col border border-default-border-color rounded-md px-6 py-5 w-1/2">
+				<div className="flex flex-col border border-[#2A241D] rounded-[12px] px-6 py-5">
 					<h2 className="section-title mb-3">Lista de usuários</h2>
 
 					<div className="flex items-center gap-3 mb-4">
-						<InputGroup className="flex-1">
+						<InputGroup className="flex-1 border-[#2A241D] bg-[#1A1510]">
 							<InputGroupAddon>
 								<Search size={18} />
 							</InputGroupAddon>
 							<InputGroupInput placeholder="Procurar colaboradores" />
 						</InputGroup>
-						<span className="text-sm text-gray-400 whitespace-nowrap">
+						<span className="text-sm text-[#A09E9C] whitespace-nowrap">
 							{TOTAL_USERS} colaboradores
 						</span>
 					</div>
 
-					<div className="flex flex-col flex-1">
+					<div className="flex flex-col">
 						{MOCK_USERS.map((user, index) => (
 							<div
 								key={user.id}
 								className={`
 									flex items-center justify-between py-4
-									${index < MOCK_USERS.length - 1 ? "border-b border-default-border-color" : ""}
+									${index < MOCK_USERS.length - 1 ? "border-b border-[#2A241D]" : ""}
 								`}
 							>
 								<div className="flex items-center gap-3.5">
-									<Avatar className="w-11 h-11 shrink-0">
+									<Avatar className="w-11 h-11 shrink-0 grayscale">
 										<AvatarImage src="" />
 										<AvatarFallback className="bg-default-orange/20 text-default-orange font-bold text-sm">
 											{user.name.charAt(0)}
@@ -189,21 +186,21 @@ const Ti = () => {
 									</Avatar>
 									<div className="flex flex-col gap-0.5">
 										<span className="text-default-orange text-sm font-semibold">{user.name}</span>
-										<span className="text-xs text-gray-500">{user.email}</span>
+										<span className="text-xs text-[#A09E9C]">{user.email}</span>
 									</div>
 								</div>
-								<button className="text-white hover:text-default-orange cursor-pointer p-1">
+								<button className="text-white hover:text-default-orange cursor-pointer p-1 transition-colors">
 									<IoIosArrowForward size={20} />
 								</button>
 							</div>
 						))}
 					</div>
 
-					<div className="flex justify-center pt-4 mt-auto">
+					<div className="flex justify-center pt-4">
 						<Button
 							variant="outline"
 							size="sm"
-							className="px-5 py-2.5 cursor-pointer text-sm gap-2"
+							className="px-5 py-2.5 cursor-pointer text-sm gap-2 rounded-md"
 							onClick={() => router.push("/ti/usuarios")}
 						>
 							<RiGitRepositoryCommitsFill size={16} />
@@ -211,104 +208,83 @@ const Ti = () => {
 						</Button>
 					</div>
 				</div>
+			</div>
 
-				{/* Metrics */}
-				<div className="flex flex-col border border-default-border-color rounded-md px-6 py-5 w-1/2">
-					<h2 className="section-title mb-3">Métricas do TI</h2>
+			{/* ========== RIGHT COLUMN ========== */}
+			<div className="flex flex-col gap-4">
+				{/* Quick Actions Grid (3 columns, 2 rows) */}
+				<div className="grid grid-cols-3 gap-4">
+					<ActionButton
+						isFulled
+						flexible
+						onClick={() => router.push("/ti/controle-chamados")}
+						icon={<LifeBuoy size={38} color="black" strokeWidth={2} />}
+					>
+						{"Controle de\nChamados"}
+					</ActionButton>
+					<ActionButton
+						isFulled
+						flexible
+						onClick={() => router.push("/ti/controle-acessos")}
+						icon={<Lock size={38} color="black" strokeWidth={2} />}
+					>
+						{"Controle de\nAcessos"}
+					</ActionButton>
+					<ActionButton
+						isFulled
+						flexible
+						onClick={() => router.push("/ti/controle-patrimonios")}
+						icon={<Laptop size={38} color="black" strokeWidth={2} />}
+					>
+						{"Controle de\nPatrimônios"}
+					</ActionButton>
+					<ActionButton
+						isFulled
+						flexible
+						onClick={() => router.push("/ti/controle-cameras")}
+						icon={<Cctv size={38} color="black" strokeWidth={2} />}
+					>
+						{"Controle de\nCâmeras"}
+					</ActionButton>
+					<ActionButton
+						flexible
+						onClick={() => router.push("/ti/cadastro-usuarios")}
+						icon={<HardDriveDownload size={38} color="white" strokeWidth={2} />}
+					>
+						{"Cadastro de\nUsuários"}
+					</ActionButton>
+					<ActionButton
+						flexible
+						onClick={() => router.push("/ti/cadastro-patrimonios")}
+						icon={<Package size={38} color="white" strokeWidth={2} />}
+					>
+						{"Cadastro de\nPatrimônios"}
+					</ActionButton>
+				</div>
 
-					<div className="flex-1 flex items-center justify-center gap-2">
-						<div className="w-1/2 h-56">
-							<ResponsiveContainer width="100%" height="100%">
-								<PieChart>
-									<Pie
-										data={MOCK_GENDER_CHART_1}
-										dataKey="value"
-										nameKey="name"
-										cx="50%"
-										cy="50%"
-										innerRadius={50}
-										outerRadius={80}
-										strokeWidth={0}
-									>
-										{MOCK_GENDER_CHART_1.map((entry) => (
-											<Cell key={entry.name} fill={entry.color} />
-										))}
-									</Pie>
-									<Tooltip
-										contentStyle={{
-											backgroundColor: "#1a1a1a",
-											border: "1px solid #404040",
-											borderRadius: "6px",
-											color: "white"
-										}}
-									/>
-									<Legend
-										verticalAlign="middle"
-										align="left"
-										layout="vertical"
-										iconType="circle"
-										iconSize={8}
-										formatter={(value: string) => (
-											<span className="text-xs text-gray-300">{value}</span>
-										)}
-									/>
-								</PieChart>
-							</ResponsiveContainer>
-						</div>
-						<div className="w-1/2 h-56">
-							<ResponsiveContainer width="100%" height="100%">
-								<PieChart>
-									<Pie
-										data={MOCK_GENDER_CHART_2}
-										dataKey="value"
-										nameKey="name"
-										cx="50%"
-										cy="50%"
-										innerRadius={50}
-										outerRadius={80}
-										strokeWidth={0}
-									>
-										{MOCK_GENDER_CHART_2.map((entry) => (
-											<Cell key={entry.name} fill={entry.color} />
-										))}
-									</Pie>
-									<Tooltip
-										contentStyle={{
-											backgroundColor: "#1a1a1a",
-											border: "1px solid #404040",
-											borderRadius: "6px",
-											color: "white"
-										}}
-									/>
-									<Legend
-										verticalAlign="middle"
-										align="left"
-										layout="vertical"
-										iconType="circle"
-										iconSize={8}
-										formatter={(value: string) => (
-											<span className="text-xs text-gray-300">{value}</span>
-										)}
-									/>
-								</PieChart>
-							</ResponsiveContainer>
-						</div>
+				{/* TI Metrics */}
+				<div className="flex flex-col border border-[#2A241D] rounded-[12px] px-6 py-5">
+					<h2 className="section-title mb-4">Métricas do TI</h2>
+
+					<div className="flex items-center justify-around flex-1 py-4">
+						<DonutChartWithLabels data={MOCK_GENDER_CHART_1} />
+						<DonutChartWithLabels data={MOCK_GENDER_CHART_2} />
 					</div>
 
 					<div className="flex justify-center pt-4">
 						<Button
 							variant="outline"
 							size="sm"
-							className="px-5 py-2.5 cursor-pointer text-sm gap-2"
+							className="px-5 py-2.5 cursor-pointer text-sm gap-2 rounded-md"
 							onClick={() => router.push("/ti/metricas")}
 						>
-							<RiGitRepositoryCommitsFill size={16} />
+							<BarChart3 size={16} />
 							Ver todas as métricas
 						</Button>
 					</div>
 				</div>
-			</section>
-		</>
+			</div>
+		</div>
 	)
 }
 

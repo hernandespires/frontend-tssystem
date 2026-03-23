@@ -60,7 +60,7 @@ const ActionButton = ({
 			`}
 		>
 			{icon}
-			<span className={`font-bold text-center leading-tight ${textSizeClass} ${textColor}`}>
+			<span className={`font-bold text-center leading-tight whitespace-pre-line ${textSizeClass} ${textColor}`}>
 				{children}
 			</span>
 		</button>
