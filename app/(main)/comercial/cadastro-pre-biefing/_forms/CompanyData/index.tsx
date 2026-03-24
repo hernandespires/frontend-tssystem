@@ -9,8 +9,8 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Input } from "@/components/ui/input"
-import { formatterCNPJ } from "@/utils/formatters"
-import { useEffect, useState } from "react"
+import { formatterCNPJ, formatterEIN, formatterITIN } from "@/utils/formatters"
+import { useEffect, useState, useRef } from "react"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
@@ -32,10 +32,18 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
 	const hasValue = form.watch("bussinessDocumentType")
+	const isFirstRender = useRef(true)
 
 	useEffect(() => {
 		hasValue?.length > 0 ? setHasDocumentType(true) : setHasDocumentType(false)
-	}, [hasValue])
+
+		if (!isFirstRender.current) {
+			form.setValue("bussinessDocumentNumber", "")
+			form.clearErrors("bussinessDocumentNumber")
+		}
+
+		isFirstRender.current = false
+	}, [hasValue, form])
 
 	const saveFormState = () => {
 		const values = form.getValues()
@@ -45,6 +53,24 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 			segment: values.segment ?? "",
 			bussinessName: values.bussinessName ?? ""
 		})
+	}
+
+	const handleDocumentChange = (value: string, type: string) => {
+		if (type === "EIN") return formatterEIN(value)
+		if (type === "ITIN") return formatterITIN(value)
+		return formatterCNPJ(value)
+	}
+
+	const getDocumentPlaceholder = (type: string) => {
+		if (type === "EIN") return "00-0000000"
+		if (type === "ITIN") return "000-00-0000"
+		return "00.000.000/0000-00"
+	}
+
+	const getDocumentMaxLength = (type: string) => {
+		if (type === "EIN") return 10
+		if (type === "ITIN") return 11
+		return 18
 	}
 
 	const handlePrevStep = () => {
@@ -66,6 +92,8 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 			nextStep={handleNextStep}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
+			maxSteps={6}
+			title="Dados da empresa"
 			formContent={
 				<>
 					<Controller
@@ -96,10 +124,10 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 								<FieldLabel>Documento</FieldLabel>
 								<Input
 									{...field}
-									maxLength={16}
-									placeholder="12312321312"
+									maxLength={getDocumentMaxLength(hasValue)}
+									placeholder={getDocumentPlaceholder(hasValue)}
 									disabled={!hasDocumentType && true}
-									onChange={(event) => field.onChange(formatterCNPJ(event.target.value))}
+									onChange={(event) => field.onChange(handleDocumentChange(event.target.value, hasValue))}
 								/>
 								<FieldError>{firstErrorKey === "bussinessDocumentNumber" && String(form.formState.errors.bussinessDocumentNumber?.message)}</FieldError>
 							</Field>
@@ -116,7 +144,13 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 									name="segment"
 									label="Segmento"
 									schemaKeys={Object.keys(formSchema.shape)}
-									options={[{ label: "Flooring", value: "FLOORING" }]}
+									options={[
+										{ label: "Construção", value: "CONSTRUCTION" },
+										{ label: "Limpeza", value: "CLEANING" },
+										{ label: "Medicina", value: "MEDICINE" },
+										{ label: "Refrigeração", value: "REFRIGERATION" },
+										{ label: "Outro", value: "OTHER" }
+									]}
 								/>
 							</Field>
 						)}

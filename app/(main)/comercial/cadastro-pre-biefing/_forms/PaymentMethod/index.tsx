@@ -22,10 +22,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 	const { addContractInstallment } = useContractInstallmentStore()
 	const formStore = usePreBriefingFormStore()
 
-	const [hasInstallments, setHasInstallments] = [
-		formStore.hasInstallments,
-		(value: boolean) => formStore.setFormState({ hasInstallments: value })
-	] as const
+	const [hasInstallments, setHasInstallments] = [formStore.hasInstallments, (value: boolean) => formStore.setFormState({ hasInstallments: value })] as const
 
 	const form = useZodForm(formSchema, "comercial", {
 		defaultValues: {
@@ -79,7 +76,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 
 	return (
 		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={handlePrevStep} nextStep={handleNextStep}>
-			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} maxSteps={6} title="Forma de pagamento" />
 			<section className="w-115 self-center flex flex-wrap gap-3 justify-between items-center">
 				<Controller
 					name="paymentMethod"
@@ -103,7 +100,17 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 				/>
 				<Field className="w-33.25">
 					<div className="flex gap-x-2">
-						<Checkbox checked={hasInstallments} onCheckedChange={() => setHasInstallments(!hasInstallments)} />
+						<Checkbox 
+							checked={hasInstallments} 
+							onCheckedChange={() => {
+								const newValue = !hasInstallments
+								setHasInstallments(newValue)
+								if (!newValue) {
+									form.setValue("installments", "")
+									form.clearErrors("installments")
+								}
+							}} 
+						/>
 						<Label>Parcelado</Label>
 					</div>
 				</Field>
@@ -157,4 +164,3 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 }
 
 export default PaymentMethod
-

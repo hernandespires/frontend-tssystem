@@ -42,7 +42,7 @@ const ProjectType = ({ urlPath, prevStep, actualStep, percentageProgress, nextSt
 
 	return (
 		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={handlePrevStep} haveAdvanceButton={false} nextStep={() => {}}>
-			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} maxSteps={6} title="Tipo de projeto" />
 			<div className="flex justify-center gap-x-6">
 				<Button
 					isFulled

@@ -51,7 +51,7 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 
 	return (
 		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={handlePrevStep} nextStep={handleNextStep}>
-			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} maxSteps={6} title="Dados do cliente" />
 			<section className="flex justify-center items-stretch w-230 py-3 self-center">
 				<div className="w-115 flex flex-col gap-y-3">
 					<Controller
@@ -77,8 +77,9 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 									label="Nacionalidade"
 									schemaKeys={Object.keys(formSchema.shape)}
 									options={[
-										{ label: "Brasil", value: "BRAZILIAN" },
-										{ label: "Estados Unidos", value: "AMERICAN" }
+										{ label: "Brasileiro", value: "BRAZILIAN" },
+										{ label: "Americano", value: "AMERICAN" },
+										{ label: "Outro", value: "OTHER" }
 									]}
 								/>
 							</Field>

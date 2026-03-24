@@ -6,12 +6,12 @@ export interface PreBriefing {
 	installments: number
 	entryValue: string
 	clientName: string
-	nacionality: "BRAZILIAN" | "AMERICAN"
+	nacionality: "BRAZILIAN" | "AMERICAN" | "OTHER"
 	email: string
 	phone: string
 	bussinessDocumentType: "ITIN" | "EIN" | "CNPJ"
 	bussinessDocumentNumber: string
-	segment: "FLOORING"
+	segment: "CONSTRUCTION" | "CLEANING" | "MEDICINE" | "REFRIGERATION" | "OTHER"
 	bussinessName: string
 	programType: "ACCELERATOR_PROGRAM"
 	contractDate: string

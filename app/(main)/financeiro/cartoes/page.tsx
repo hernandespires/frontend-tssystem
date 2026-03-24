@@ -119,6 +119,7 @@ const CardsPage = () => {
 					{/* Right Group */}
 					<button
 						type="button"
+						onClick={() => router.push("/financeiro/cartoes/cadastrar-cartao")}
 						className="flex items-center gap-2 rounded-[4px] bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors duration-200 hover:bg-gray-100 cursor-pointer"
 					>
 						<Plus size={16} />

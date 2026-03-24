@@ -19,10 +19,12 @@ const Form = ({
 	hasTwoForm = false,
 	formContent,
 	leftFormContent,
-	rightFormContent
+	rightFormContent,
+	maxSteps,
+	title
 }: FormWrapperProps) => (
 	<RegistrationForm formSchema={formSchema!} urlPath={urlPath} form={form!} prevStep={prevStep} nextStep={nextStep}>
-		<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
+		<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} maxSteps={maxSteps} title={title} />
 		{!hasTwoForm ? (
 			<section className="w-115 self-center flex flex-wrap gap-3 justify-between items-center">{formContent}</section>
 		) : (

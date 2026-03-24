@@ -112,3 +112,18 @@ export const formatterPix = (value: string): string => {
 
     return formatterCNPJ(digits)
 }
+
+export const formatterEIN = (value: string): string => {
+    if (!value) return ""
+    return value.replace(/\D/g, '')
+        .replace(/^(\d{2})(\d)/, '$1-$2')
+        .slice(0, 10)
+}
+
+export const formatterITIN = (value: string): string => {
+    if (!value) return ""
+    return value.replace(/\D/g, '')
+        .replace(/^(\d{3})(\d)/, '$1-$2')
+        .replace(/^(\d{3})-(\d{2})(\d)/, '$1-$2-$3')
+        .slice(0, 11)
+}

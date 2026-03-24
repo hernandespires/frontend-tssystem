@@ -62,13 +62,7 @@ const PreBriefingRegistration = () => {
 				/>
 			) : (
 				actualStep == 6 && (
-					<LeadInfo
-						urlPath={urlPath}
-						prevStep={() => setActualStep(actualStep - 1)}
-						nextStep={() => {}}
-						actualStep={actualStep}
-						percentageProgress={100}
-					/>
+					<LeadInfo urlPath={urlPath} prevStep={() => setActualStep(actualStep - 1)} nextStep={() => {}} actualStep={actualStep} percentageProgress={100} />
 				)
 			)}
 		</>

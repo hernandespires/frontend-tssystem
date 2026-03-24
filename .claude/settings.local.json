@@ -11,7 +11,26 @@
       "Bash(find c:/Users/Luiz/Desktop/frontend-tssystem/hooks -name *.ts)",
       "Bash(find \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)\" -name \"layout.tsx\")",
       "Bash(xargs ls:*)",
-      "Bash(find \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)\" -name \"ClientShell*\")"
+      "Bash(find \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)\" -name \"ClientShell*\")",
+      "mcp__claude_ai_Figma__get_design_context",
+      "mcp__claude_ai_Figma__whoami",
+      "Bash(npx next:*)",
+      "Bash(ls \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem\\\\app\\\\\\(main\\)\"\")",
+      "Bash(ls \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)/\")",
+      "WebFetch(domain:localhost)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/financeiro)",
+      "Bash(ls -la /c/Users/Luiz/Desktop/frontend-tssystem/app/\\\\\\(main\\\\\\)/)",
+      "Bash(ls app/\\\\\\(main\\\\\\)/financeiro/)",
+      "Bash(ls \"app/\\(main\\)/financeiro/\" \"app/\\(main\\)/ti/\" \"components/ActivityList/\" \"components/MonthlyChart/\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(mvn compile:*)",
+      "Bash(pushd /c/Users/Luiz/IdeaProjects/Backend-Sistema-TS)",
+      "Bash(popd)",
+      "Bash(find /c/Users/Luiz/Desktop/frontend-tssystem/contexts -type f -name *.ts -o -name *.tsx)",
+      "Bash(xargs grep:*)",
+      "Bash(ls c:/Users/Luiz/Desktop/frontend-tssystem/app/\\\\\\(main\\\\\\)/financeiro/)"
     ]
   }
 }

@@ -109,13 +109,7 @@ const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percenta
 							name="rg"
 							defaultValue=""
 							render={({ field }) => (
-								<Input
-									id="rg"
-									maxLength={12}
-									placeholder="XX.XXX.XXX-X"
-									{...field}
-									onChange={(event) => field.onChange(formatterRG(event.target.value))}
-								/>
+								<Input id="rg" maxLength={12} placeholder="XX.XXX.XXX-X" {...field} onChange={(event) => field.onChange(formatterRG(event.target.value))} />
 							)}
 						/>
 						<FieldError>{firstErrorKey === "rg" && String(form.formState.errors.rg?.message)}</FieldError>
@@ -127,13 +121,7 @@ const PersonalInformation = ({ urlPath, prevStep, nextStep, actualStep, percenta
 							name="cpf"
 							defaultValue=""
 							render={({ field }) => (
-								<Input
-									id="cpf"
-									maxLength={14}
-									placeholder="XXX.XXX.XXX-XX"
-									{...field}
-									onChange={(event) => field.onChange(formatterCPF(event.target.value))}
-								/>
+								<Input id="cpf" maxLength={14} placeholder="XXX.XXX.XXX-XX" {...field} onChange={(event) => field.onChange(formatterCPF(event.target.value))} />
 							)}
 						/>
 						<FieldError>{firstErrorKey === "cpf" && String(form.formState.errors.cpf?.message)}</FieldError>

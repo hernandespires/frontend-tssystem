@@ -14,4 +14,6 @@ export interface FormType {
 	formContent?: ReactNode
 	leftFormContent?: ReactNode
 	rightFormContent?: ReactNode
+	maxSteps?: number
+	title?: string
 }

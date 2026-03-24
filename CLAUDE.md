@@ -212,6 +212,54 @@ export const findAllEmployees = async (): Promise<Employee[]> => (await api.get(
 
 ---
 
+### 4.3 Alterações Cross-Project — Frontend ↔ Backend
+
+> Claude tem **permissão explícita** para alterar ambos os projetos (frontend e backend) dentro de uma mesma sessão de trabalho, sempre que necessário para o funcionamento completo de uma feature, correção de bug ou qualquer outra tarefa.
+
+**Quando é permitido e esperado:**
+
+- Uma feature no frontend exige a criação ou modificação de um endpoint no backend (novo controller, service, DTO, migration, etc.)
+- Uma correção de bug no backend impacta o contrato da API e exige ajuste correspondente no frontend (types, services, componentes)
+- Uma mudança de schema no banco (nova migration Flyway) requer atualização nas entidades JPA do backend **e** nos types/services do frontend
+- Refatorações que envolvem renomear campos, alterar payloads ou mudar fluxos que cruzam a fronteira entre os projetos
+
+**Regras ao trabalhar cross-project:**
+
+- ✅ Seguir **todas** as regras de cada projeto individualmente (convenções de código, clean architecture, tipagem, etc.)
+- ✅ Manter a **consistência do contrato da API** — se alterar o backend, garantir que o frontend reflita a mudança e vice-versa
+- ✅ Aplicar as **regras de branch** (`_claude`) em **ambos os repositórios** quando houver alterações nos dois
+- ✅ Commitar de forma **coesa em cada repositório** — o commit do backend e o commit do frontend devem ser independentes mas logicamente relacionados
+- ✅ Ao criar ou modificar um endpoint no backend, criar ou atualizar o **service correspondente** no frontend (`services/{dominio}/`)
+- ✅ Ao criar ou modificar um DTO no backend, criar ou atualizar o **type correspondente** no frontend (`types/services/{dominio}/`)
+
+**O que nunca fazer:**
+
+- ❌ Alterar o backend sem verificar o impacto no frontend (e vice-versa)
+- ❌ Criar um endpoint no backend e deixar o frontend sem o service/type correspondente
+- ❌ Assumir que a outra camada "já está pronta" sem confirmar — sempre verificar
+- ❌ Misturar alterações de frontend e backend em um único commit — cada repo tem seus próprios commits
+
+**Exemplo de fluxo cross-project correto:**
+
+```
+Tarefa: "Implementar listagem de contratos no painel financeiro"
+
+1. Backend:
+   - Criar/ajustar endpoint GET /financeiro/allContracts
+   - Criar ContractResponseDTO com os campos necessários
+   - Implementar service + repository
+   - Migration Flyway se necessário
+   - Commit: "feat(financeiro): add endpoint to list all contracts"
+
+2. Frontend:
+   - Criar/atualizar type Contract em types/services/financial/
+   - Criar service findAllContracts em services/financial/
+   - Implementar a tela conforme design do Figma
+   - Commit: "feat(financeiro): add contracts listing page"
+```
+
+---
+
 ## 5. Banco de Dados
 
 **Conexão:** Supabase PostgreSQL (região `aws-1-sa-east-1`)
@@ -296,6 +344,7 @@ git push origin <nome-da-branch-atual>_claude
 - ✅ Criar branch com sufixo `_claude` antes de qualquer modificação
 - ✅ Commitar toda mudança coesa e funcional nessa branch
 - ✅ Fazer push da branch `_claude` ao final de cada sessão
+- ✅ Fazer **pelo menos um commit** ao final de qualquer alteração significativa — nunca encerrar uma sessão com mudanças não commitadas
 
 **O que Claude NUNCA deve fazer:**
 
@@ -303,6 +352,10 @@ git push origin <nome-da-branch-atual>_claude
 - ❌ Fazer qualquer alteração diretamente em `main`
 - ❌ Fazer merge, rebase ou qualquer operação em outras branches — essa responsabilidade é exclusiva do desenvolvedor
 - ❌ Assumir que já está na branch correta sem verificar com `git branch`
+
+**Regra de commit obrigatório ao final de alterações significativas:**
+
+> Ao concluir uma alteração grande ou uma sessão de trabalho, Claude **deve obrigatoriamente** fazer pelo menos um commit coeso e funcional antes de encerrar. Mudanças não commitadas são trabalho perdido — não existe cenário aceitável para deixar alterações significativas apenas no working tree. Se a alteração envolver múltiplos arquivos ou etapas, Claude deve commitar incrementalmente ao longo do processo, garantindo que cada commit represente um estado funcional do código.
 
 #### Fluxo de PR (responsabilidade do desenvolvedor):
 
@@ -490,6 +543,8 @@ enum EmployeeStatus {
 ## 9. Design e Fidelidade ao Figma — CRÍTICO, SEM EXCEÇÕES
 
 > ⚠️ Nenhuma tela ou componente visual deve ser implementado sem referência de design. Esta regra não tem exceção.
+>
+> **O objetivo é que a implementação seja visualmente idêntica ao Figma.** Claude deve tratar o design como especificação absoluta — qualquer desvio visual é um bug.
 
 ### 9.1 Regra principal
 
@@ -502,13 +557,186 @@ enum EmployeeStatus {
 
 ### 9.2 Comportamento obrigatório ao receber um design
 
-Ao receber o design, Claude deve:
+Ao receber o design, Claude deve **analisar exaustivamente antes de escrever qualquer linha de código**. A análise deve cobrir todos os itens abaixo:
 
-1. **Analisar antes de codificar** — identificar layout, hierarquia visual, espaçamentos, cores, tipografia e estados do componente (hover, loading, empty, error)
-2. **Seguir o design com fidelidade pixel a pixel** — usar os tokens de cor, tamanho e espaçamento exatamente como definidos no Figma
-3. **Usar os componentes shadcn/ui existentes** como base sempre que aplicável — customizar via Tailwind para atingir o visual do Figma, nunca criar do zero se já existe equivalente
-4. **Mapear estados** — implementar todos os estados visíveis no design (loading skeleton, estado vazio, erro, sucesso)
-5. **Respeitar responsividade** — se o Figma mostrar variações de breakpoint, implementar todas
+#### 9.2.1 Checklist de análise visual (obrigatório antes de codificar)
+
+**Layout e estrutura:**
+
+- Identificar a hierarquia de containers (header, sidebar, main content, footer)
+- Mapear o grid/layout system usado (colunas, gaps, alinhamentos)
+- Identificar se há scroll areas, áreas fixas ou sticky elements
+- Determinar a direção do fluxo de conteúdo (row vs column, wrapping behavior)
+
+**Espaçamentos — extrair valores exatos:**
+
+- Padding interno de cada container e card
+- Margin entre seções e elementos
+- Gap entre itens em listas, grids e flex containers
+- Espaçamento entre label e input em formulários
+- Distância entre ícone e texto quando estão lado a lado
+
+**Tipografia — mapear cada nível de texto:**
+
+- Tamanho da fonte (`text-sm`, `text-base`, `text-lg`, `text-xl`, etc.)
+- Peso (`font-normal`, `font-medium`, `font-semibold`, `font-bold`)
+- Cor exata do texto (primário, secundário, muted, placeholder)
+- Line-height e letter-spacing quando visualmente distintos do padrão
+- Truncamento (`truncate`, `line-clamp-*`) se o design indicar overflow
+
+**Cores — extrair e usar valores exatos:**
+
+- Cor de fundo de cada container, card, header, sidebar
+- Cores de borda (incluindo espessura e estilo: `solid`, `dashed`)
+- Cores de texto por hierarquia (título, subtítulo, body, caption, muted)
+- Cores de estado: hover, active, focus, disabled, selected
+- Gradientes, se existirem
+- Opacidade de overlays e backdrops
+
+**Bordas e sombras:**
+
+- Border-radius exato de cada elemento (cards, buttons, inputs, avatars, badges)
+- Espessura de borda (`border`, `border-2`, etc.)
+- Box-shadow (nível de elevação: `shadow-sm`, `shadow-md`, `shadow-lg`)
+- Dividers entre seções (linha, cor, espessura)
+
+**Ícones e imagens:**
+
+- Qual ícone exato é usado (mapear para Lucide React ou React Icons)
+- Tamanho do ícone em relação ao texto adjacente
+- Cor do ícone (pode ser diferente do texto)
+- Posição do ícone (antes do texto, depois, centralizado)
+- Placeholders de imagem e aspect ratio
+
+**Componentes interativos:**
+
+- Estilo exato de botões: primário, secundário, outline, ghost, destructive — cor, padding, border-radius, height
+- Estilo de inputs: altura, padding, cor de borda normal vs focus, placeholder color
+- Estilo de selects, checkboxes, radio buttons, switches, toggles
+- Estilo de tabs: ativa vs inativa, indicador, transição
+- Estilo de tabelas: header, rows, zebra striping, hover state, bordas
+
+#### 9.2.2 Regras de implementação pixel-perfect
+
+**Fidelidade é inegociável. Claude deve reproduzir o design de forma idêntica.**
+
+- **Usar os componentes shadcn/ui como base** sempre que aplicável — customizar via Tailwind para atingir o visual exato do Figma, nunca criar um componente do zero se já existe equivalente
+- **Se o Figma mostra `12px` de padding**, usar `p-3` — não `p-2` nem `p-4`. Se não houver classe Tailwind exata, usar valor arbitrário: `p-[12px]`
+- **Se o Figma mostra um border-radius de `8px`**, usar `rounded-lg` — não `rounded` nem `rounded-xl`. Se necessário, usar valor arbitrário: `rounded-[8px]`
+- **Se o Figma mostra uma cor específica**, usar a cor exata — nunca "uma cor parecida". Se a cor não existe nos tokens do projeto, definir com valor arbitrário: `bg-[#1E293B]`, `text-[#64748B]`
+- **Se o Figma mostra um espaçamento de `24px` entre cards**, usar `gap-6` — contar os pixels, não chutar
+- **Se o Figma mostra um ícone específico**, encontrar o ícone exato na biblioteca (Lucide ou React Icons) — nunca substituir por "um ícone parecido"
+- **Se o design mostra um elemento com opacidade reduzida**, implementar com a opacidade exata: `opacity-50`, `bg-black/20`
+
+**Hierarquia de prioridade ao implementar:**
+
+```
+1. Cores e tipografia exatas          → Token/valor do Figma, sem aproximação
+2. Espaçamentos exatos               → Medir em pixels, mapear para Tailwind class ou valor arbitrário
+3. Bordas, sombras e border-radius   → Extrair valor exato, usar classe Tailwind mais próxima ou arbitrária
+4. Ícones corretos                   → Encontrar o ícone exato na lib, nunca substituir
+5. Estados visuais completos         → Hover, focus, active, disabled, loading, empty, error
+6. Responsividade                    → Implementar breakpoints se o Figma mostrar variações
+```
+
+#### 9.2.3 Criação e Modificação de Componentes para Fidelidade Visual e UX — OBRIGATÓRIO
+
+> ⚠️ **Claude deve criar novos componentes ou modificar componentes existentes sempre que necessário para reproduzir o design do Figma com fidelidade pixel-perfect e garantir a melhor experiência do usuário (UX).** A preservação de código existente **nunca** tem prioridade sobre a fidelidade ao design e a qualidade da experiência do usuário.
+
+Esta regra se aplica a qualquer situação em que um componente existente — seja da pasta `components/ui/` (shadcn/ui) ou dos componentes customizados do projeto — **não atenda exatamente** ao que o design exige em termos visuais ou de interação.
+
+**Quando criar um novo componente:**
+
+- O design apresenta um padrão visual ou interativo que **não existe** em nenhum componente atual do projeto
+- Nenhum componente shadcn/ui base pode ser customizado via Tailwind para atingir o resultado exato do Figma
+- O elemento visual aparece (ou tem potencial para aparecer) em **mais de um contexto** — extrair como componente reutilizável
+- A composição de componentes existentes resultaria em código confuso, acoplado ou difícil de manter
+- O design exige um comportamento de UX específico (animações, micro-interações, feedback visual) que não é suportado por nenhum componente existente
+
+**Quando modificar um componente existente:**
+
+- O componente atual está **visualmente próximo** do design, mas precisa de ajustes em espaçamentos, cores, bordas, estados ou comportamento interativo para atingir fidelidade pixel-perfect
+- O design exige um **novo estado ou variante** (ex: `loading`, `selected`, `compact`, `highlighted`) que o componente não suporta atualmente
+- O componente existente tem **problemas de UX** que o design corrige — ex: área de clique insuficiente, feedback visual ausente, transições faltantes, falta de acessibilidade
+- A modificação **não quebra** outros locais onde o componente já é utilizado — se quebrar, criar uma nova variante via prop ou um componente derivado
+
+**Regras ao criar/modificar componentes:**
+
+- ✅ Seguir a estrutura existente: componentes base em `components/ui/`, componentes compostos e de domínio em `components/`
+- ✅ Usar **composição sobre herança** — compor a partir de componentes shadcn/ui base sempre que possível
+- ✅ Expor variantes via props tipadas (ex: `variant`, `size`, `state`) em vez de criar componentes separados para cada variação visual
+- ✅ Garantir que o componente implemente **todos os estados de interação**: hover, focus, active, disabled, loading
+- ✅ Priorizar UX em toda decisão:
+  - Áreas de clique adequadas (mínimo `44x44px` para touch targets)
+  - Feedback visual imediato em toda interação (hover, click, submit)
+  - Transições suaves e consistentes (`transition-all duration-200` ou conforme o design)
+  - Acessibilidade obrigatória: ARIA labels, keyboard navigation, focus visible
+  - Estados de loading com skeleton ou spinner — nunca tela vazia
+  - Empty states descritivos e visualmente alinhados ao design
+- ✅ Nomear o componente em inglês seguindo `PascalCase`, com nome que revela sua função: `StatusBadge`, `MetricCard`, `CollapsibleSection`
+- ✅ Tipar todas as props com `interface` explícita
+- ✅ Ao modificar um componente existente, **verificar todos os locais onde ele é usado** antes de alterar — garantir que a mudança não introduz regressão visual
+
+**O que nunca fazer:**
+
+- ❌ Forçar um componente existente a atender o design com hacks (overrides inline excessivos, `!important`, CSS arbitrário que conflita com o design system)
+- ❌ Duplicar um componente inteiro só para mudar uma cor ou espaçamento — usar variantes via props
+- ❌ Criar componente sem considerar reusabilidade — se ele só será usado uma vez e é simples, pode ficar inline na página
+- ❌ Modificar componentes shadcn/ui base de forma que quebre seu uso em outros locais sem verificar impacto
+- ❌ Sacrificar UX ou fidelidade visual para manter um componente existente inalterado — **a fidelidade ao design e a experiência do usuário têm prioridade absoluta sobre a preservação de código existente**
+- ❌ Implementar um componente "funcional mas feio" com a intenção de ajustar depois — a primeira implementação já deve ser pixel-perfect
+- ❌ Ignorar micro-interações presentes no design (tooltips, animações de entrada, transições de estado)
+
+**Exemplo de decisão correta:**
+
+```
+Design mostra um card de métricas com ícone circular colorido, valor em destaque
+e variação percentual com seta para cima/baixo.
+
+Componente existente `DataMetrics` não suporta ícone circular nem variação com seta.
+
+Claude (correto):
+  → Analisa se DataMetrics pode ser estendido com novas props (icon, trend, trendDirection)
+  → Se a extensão é limpa e não quebra uso existente: modifica DataMetrics adicionando as variantes
+  → Se a extensão seria forçada ou quebraria outros usos: cria MetricCard como novo componente
+  → Em ambos os casos: implementa pixel-perfect com todos os estados (loading skeleton, empty, error)
+
+Claude (errado — nunca fazer):
+  → Usa DataMetrics como está e ignora o ícone e a variação porque "já existe um componente parecido"
+  → Cria o card inline na página com 200 linhas de JSX sem extrair componente
+  → Implementa o visual "mais ou menos parecido" sem conferir cores, espaçamentos e ícones exatos
+```
+
+**Princípio fundamental:**
+
+> O design entregue pelo desenvolvedor é a **especificação absoluta** da interface. Claude deve fazer **o que for necessário** — criar, modificar, estender, compor ou refatorar componentes — para que o resultado final seja **visualmente idêntico ao Figma** e ofereça a **melhor experiência possível ao usuário**. Nenhuma limitação de componente existente justifica um desvio visual ou de UX.
+
+#### 9.2.4 Estados obrigatórios
+
+**Todo componente deve implementar TODOS os estados visíveis no design, mais os estados implícitos:**
+
+| Estado        | O que implementar                                                                                     |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| **Default**   | Estado normal como mostrado no design                                                                 |
+| **Hover**     | Efeito visual ao passar o mouse (se o design mostrar ou se o componente for interativo)               |
+| **Focus**     | Ring/outline para acessibilidade em inputs, buttons e links                                           |
+| **Active**    | Estado ativo/pressionado para tabs, menu items, seleções                                              |
+| **Disabled**  | Opacidade reduzida + cursor not-allowed para elementos que podem ser desabilitados                    |
+| **Loading**   | Skeleton ou spinner enquanto dados estão sendo carregados — **nunca mostrar tela vazia sem feedback** |
+| **Empty**     | Mensagem descritiva e visual quando não há dados para exibir                                          |
+| **Error**     | Feedback visual para erros de validação, falha de API, timeout                                        |
+| **Success**   | Toast ou indicação visual de operação concluída com sucesso                                           |
+| **Truncated** | Texto com overflow deve ter `truncate` ou `line-clamp` + tooltip se necessário                        |
+
+#### 9.2.5 Acessando dados do Figma via MCP
+
+Quando o design for acessível via integração Figma MCP, Claude deve **usar os dados estruturados do Figma para extrair valores exatos**, não apenas olhar a imagem visualmente:
+
+- Usar as propriedades de design (fill, stroke, effect, typography) diretamente dos dados do nó
+- Extrair cores em formato hex/rgb diretamente das propriedades
+- Extrair espaçamentos, paddings e gaps dos valores de auto-layout
+- Mapear fontes e pesos exatamente como definidos no Figma
+- Identificar componentes reutilizáveis (instances) e mapear para componentes shadcn/ui existentes
 
 ### 9.3 Comportamento obrigatório quando NÃO há design
 
@@ -521,19 +749,62 @@ Claude **não deve**:
 - ❌ Inventar um layout por conta própria
 - ❌ Usar "bom senso" ou "consistência com o restante do projeto" como justificativa para implementar sem design
 - ❌ Perguntar se pode continuar mesmo assim — a resposta sempre será não
+- ❌ Sugerir "posso fazer um layout básico e você ajusta depois" — a resposta sempre será não
+- ❌ Implementar parcialmente esperando ajustes visuais posteriores
 
 A única exceção é para alterações puramente funcionais que não afetam nenhum elemento visual (ex: corrigir uma chamada de API, ajustar validação de formulário sem mudar o layout).
 
-### 9.4 Fidelidade ao implementar
+### 9.4 Fluxo completo de implementação visual
 
 ```
-Design Figma recebido
-  └─► Identificar: cores, tipografia, espaçamentos, bordas, sombras, ícones
-        └─► Mapear para: classes Tailwind v4 + tokens shadcn/ui existentes
-              └─► Implementar: estrutura HTML/JSX fiel ao layout
-                    └─► Verificar: todos os estados (loading, vazio, erro, sucesso)
-                          └─► Nunca: improvisar elementos que não estão no design
+Design Figma recebido (MCP ou imagem)
+  │
+  ├─► ETAPA 1: Análise exaustiva (checklist 9.2.1)
+  │     └─► Documentar mentalmente: cores, tipografia, espaçamentos, bordas, ícones, estados
+  │
+  ├─► ETAPA 2: Mapear para stack (Tailwind + shadcn/ui)
+  │     ├─► Identificar componentes shadcn/ui reutilizáveis
+  │     ├─► Definir classes Tailwind exatas (ou valores arbitrários quando necessário)
+  │     ├─► Mapear ícones exatos (Lucide React / React Icons)
+  │     └─► Decidir se componentes existentes atendem ou se é necessário criar/modificar (regra 9.2.3)
+  │
+  ├─► ETAPA 3: Implementar estrutura
+  │     ├─► Layout/grid primeiro, do macro para o micro
+  │     ├─► Criar ou modificar componentes conforme necessário para fidelidade pixel-perfect (regra 9.2.3)
+  │     ├─► Estilizar cada elemento conforme valores extraídos do Figma
+  │     └─► Nunca usar valores "aproximados" — pixel-perfect ou valor arbitrário
+  │
+  ├─► ETAPA 4: Implementar estados e UX
+  │     ├─► Default, hover, focus, active, disabled
+  │     ├─► Loading (skeleton/spinner), empty state, error state
+  │     ├─► Micro-interações: tooltips, transições, animações de entrada
+  │     ├─► Acessibilidade: ARIA labels, keyboard navigation, focus management
+  │     └─► Transições e animações se presentes no design
+  │
+  └─► ETAPA 5: Auto-revisão
+        ├─► Comparar visualmente a implementação com o design
+        ├─► Verificar se algum espaçamento, cor ou ícone está diferente
+        ├─► Garantir que nenhum elemento foi inventado ou omitido
+        ├─► Verificar que todos os componentes criados/modificados seguem as regras da seção 9.2.3
+        └─► Corrigir qualquer desvio antes de considerar a tarefa concluída
 ```
+
+### 9.5 O que configura violação desta seção
+
+Qualquer um dos itens abaixo é considerado um **bug de fidelidade visual** e deve ser corrigido imediatamente:
+
+- Usar uma cor "parecida" em vez da cor exata do Figma
+- Usar espaçamento diferente do design (ex: `gap-4` quando o design mostra `gap-6`)
+- Substituir um ícone por "um similar" em vez de encontrar o exato
+- Omitir bordas, sombras ou border-radius presentes no design
+- Implementar apenas o estado default e ignorar hover, loading, empty ou error
+- Adicionar elementos visuais que não existem no design (decorações extras, bordas, etc.)
+- Alterar a hierarquia visual (ex: trocar um heading por body text, alterar peso da fonte)
+- Ignorar a ordem visual dos elementos como disposta no design
+- Usar padding/margin "de olho" em vez de medir e mapear para Tailwind
+- **Reutilizar um componente existente que não atende ao design em vez de criar ou modificar para atingir fidelidade pixel-perfect**
+- **Ignorar problemas de UX (áreas de clique pequenas, falta de feedback visual, ausência de transições) que o design resolve**
+- **Deixar de criar um componente reutilizável quando o design apresenta um padrão visual que aparece em múltiplos contextos**
 
 ---
 
@@ -739,14 +1010,26 @@ const success = "Registration completed"
 - Criar funções que fazem mais de uma coisa
 - Deixar tipos implícitos em funções exportadas ou props de componentes
 
----
-
 **Design:**
 
 - Implementar qualquer tela ou componente visual sem design do Figma enviado
 - Inventar layouts, espaçamentos ou cores por conta própria
 - Ignorar estados do componente (loading, vazio, erro) presentes no design
 - Usar "bom senso visual" como substituto para o design oficial
+- Usar cor, espaçamento, ícone ou fonte "parecida" em vez do valor exato do Figma
+- Omitir bordas, sombras, border-radius ou opacidade presentes no design
+- Adicionar elementos visuais que não existem no design
+
+**Componentes e UX:**
+
+- Reutilizar um componente existente que não atende ao design — criar ou modificar conforme necessário (regra 9.2.3)
+- Forçar um componente existente com hacks (overrides inline, `!important`) em vez de estendê-lo corretamente ou criar um novo
+- Sacrificar fidelidade visual ou UX para evitar criar/modificar componentes
+- Ignorar micro-interações, transições ou feedback visual presentes no design
+- Implementar componente "funcional mas feio" com intenção de ajustar depois
+- Deixar de verificar impacto em outros locais ao modificar um componente existente
+- Criar componente com áreas de clique menores que 44x44px para elementos interativos
+- Omitir acessibilidade (ARIA labels, keyboard navigation, focus visible)
 
 **Qualidade e Bibliotecas:**
 
@@ -755,6 +1038,8 @@ const success = "Registration completed"
 - Preferir solução complexa quando código limpo simples resolve
 - Instalar nova lib sem informar proativamente o motivo e a justificativa
 
+**Linguagem:**
+
 - Escrever qualquer nome de variável, função, classe, método, arquivo ou coluna nova em português
 - Misturar convenções de linguagem (ex: `snake_case` em variável TypeScript, `camelCase` em coluna SQL)
 - Usar prefixo `I` em interfaces TypeScript
@@ -762,9 +1047,13 @@ const success = "Registration completed"
 - Escrever SQL keywords em minúsculo
 - Exibir mensagens de UI em inglês para o usuário final
 
+**Fluxo de Dados:**
+
 - Implementar qualquer leitura ou escrita no banco sem confirmar tabela, endpoint e origem/destino dos dados
 - Assumir que um endpoint existente serve para o novo caso sem verificar
 - Montar payload de POST/PATCH sem confirmar de onde cada campo vem
+
+---
 
 ## 14. .gitignore Obrigatório (ambos os repos)
 
