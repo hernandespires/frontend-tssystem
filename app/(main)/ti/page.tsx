@@ -255,7 +255,7 @@ const Ti = () => {
 					</ActionButton>
 					<ActionButton
 						flexible
-						onClick={() => router.push("/ti/cadastro-patrimonios")}
+						onClick={() => router.push("/ti/cadastro_patrimonio")}
 						icon={<Package size={38} color="white" strokeWidth={2} />}
 					>
 						{"Cadastro de\nPatrimônios"}
