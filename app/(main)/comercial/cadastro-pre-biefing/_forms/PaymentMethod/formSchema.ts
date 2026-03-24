@@ -6,8 +6,9 @@ export const formSchema = z.object({
 		.enum(["PIX", "INVOICE", "PAYMENT_SLIP"], { error: defaultError("Forma de pagamento") })
 		.nonoptional(defaultEmptyError("Forma de pagamento")),
 	installments: z
-		.number({ error: defaultError("Quantidade de parcelas") })
-		.default(1)
+		.string({ error: defaultError("Quantidade de parcelas") })
+		.max(2, defaultError("Quantidade de parcelas"))
+		.default("")
 		.optional(),
 	entryValue: z
 		.string({ error: defaultError("Valor do lançamento") })

@@ -3,7 +3,6 @@ import StepProgressBar from "@/components/StepProgressBar"
 import { formSchema } from "./formSchema"
 import { useZodForm } from "@/hooks/useZodForm"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { useState } from "react"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import { Label } from "@/components/ui/label"
@@ -15,19 +14,53 @@ import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { FormType } from "@/types/form"
 import { useContractStore } from "@/store/financial/CreateContract"
 import { useContractInstallmentStore } from "@/store/financial/CreateContractInstallment"
+import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
+import { toast } from "sonner"
 
 const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
 	const { addContract } = useContractStore()
 	const { addContractInstallment } = useContractInstallmentStore()
+	const formStore = usePreBriefingFormStore()
 
-	const [hasInstallments, setHasInstallments] = useState<boolean>(false)
+	const [hasInstallments, setHasInstallments] = [
+		formStore.hasInstallments,
+		(value: boolean) => formStore.setFormState({ hasInstallments: value })
+	] as const
 
-	const form = useZodForm(formSchema, "comercial")
+	const form = useZodForm(formSchema, "comercial", {
+		defaultValues: {
+			paymentMethod: formStore.paymentMethod,
+			entryValue: formStore.entryValue,
+			installments: formStore.installments
+		} as never
+	})
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
+	const saveFormState = () => {
+		const values = form.getValues()
+		formStore.setFormState({
+			paymentMethod: values.paymentMethod ?? "",
+			entryValue: values.entryValue ?? "",
+			installments: values.installments ?? ""
+		})
+	}
+
+	const handlePrevStep = () => {
+		saveFormState()
+		prevStep()
+	}
+
 	const handleNextStep = async (values: FieldValues) => {
-		if (values.installments) {
+		if (hasInstallments && (!values.installments || values.installments === "")) {
+			toast.error("Informe a quantidade de parcelas para prosseguir com o pagamento parcelado.")
+			return
+		}
+
+		saveFormState()
+		addContract({ paymentMethod: values.paymentMethod, entryValue: values.entryValue } as never)
+
+		if (hasInstallments) {
 			await useIsValidFormField({
 				form,
 				fields: { installments: values.installments } as never,
@@ -45,7 +78,7 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 	}
 
 	return (
-		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={handlePrevStep} nextStep={handleNextStep}>
 			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
 			<section className="w-115 self-center flex flex-wrap gap-3 justify-between items-center">
 				<Controller
@@ -77,22 +110,26 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 				<Controller
 					name="installments"
 					control={form.control}
-					render={() => (
+					render={({ field }) => (
 						<Field className="w-75.75">
-							<DropdownMenu
+							<Input
+								{...field}
+								value={field.value ?? ""}
 								id="installments"
-								form={form}
-								schemaKeys={Object.keys(formSchema.shape)}
-								className={`gap-0 ${!hasInstallments && "blocked-field"}`}
-								name="installments"
-								disabled={!hasInstallments && true}
+								inputMode="numeric"
+								maxLength={2}
 								placeholder="Qtde parcelas"
-								options={[
-									{ label: "Pix", value: "PIX" },
-									{ label: "Invoice", value: "INVOICE" },
-									{ label: "Boleto", value: "PAYMENT_SLIP" }
-								]}
+								disabled={!hasInstallments}
+								className={!hasInstallments ? "blocked-field" : ""}
+								onChange={(event) => {
+									const value = event.target.value.replace(/\D/g, "")
+									const num = Number(value)
+									if (value === "" || (num >= 1 && num <= 12)) {
+										field.onChange(value)
+									}
+								}}
 							/>
+							<FieldError>{firstErrorKey === "installments" && String(form.formState.errors.installments?.message)}</FieldError>
 						</Field>
 					)}
 				/>
@@ -120,3 +157,4 @@ const PaymentMethod = ({ nextStep, urlPath, prevStep, actualStep, percentageProg
 }
 
 export default PaymentMethod
+

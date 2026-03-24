@@ -9,12 +9,36 @@ import DatePicker from "@/components/Form/DatePicker"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
 import { dateToISO } from "@/utils/dateToISO"
+import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
 
 const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
 	const { addPreBriefing } = usePreBriefingStore()
-	const form = useZodForm(formSchema, "comercial")
+	const formStore = usePreBriefingFormStore()
+
+	const form = useZodForm(formSchema, "comercial", {
+		defaultValues: {
+			programType: formStore.programType,
+			contractDate: formStore.contractDate,
+			paymentDate: formStore.paymentDate
+		} as never
+	})
+
+	const saveFormState = () => {
+		const values = form.getValues()
+		formStore.setFormState({
+			programType: values.programType ?? "",
+			contractDate: values.contractDate,
+			paymentDate: values.paymentDate
+		})
+	}
+
+	const handlePrevStep = () => {
+		saveFormState()
+		prevStep()
+	}
 
 	const handleNextStep = async (values: FieldValues) => {
+		saveFormState()
 		await useIsValidFormField({
 			form,
 			fields: {
@@ -32,7 +56,7 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 			formSchema={formSchema}
 			urlPath={urlPath}
 			form={form}
-			prevStep={prevStep}
+			prevStep={handlePrevStep}
 			nextStep={handleNextStep}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
@@ -41,7 +65,6 @@ const ScheduleDates = ({ urlPath, prevStep, nextStep, actualStep, percentageProg
 					<Controller
 						name="programType"
 						control={form.control}
-						defaultValue={undefined}
 						render={() => (
 							<Field>
 								<DropdownMenu

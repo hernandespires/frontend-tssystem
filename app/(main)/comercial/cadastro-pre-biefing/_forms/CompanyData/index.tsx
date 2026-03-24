@@ -13,12 +13,21 @@ import { formatterCNPJ } from "@/utils/formatters"
 import { useEffect, useState } from "react"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
+import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
 
 const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
 	const { addPreBriefing } = usePreBriefingStore()
-	const [hasDocumentType, setHasDocumentType] = useState<boolean>(false)
+	const formStore = usePreBriefingFormStore()
+	const [hasDocumentType, setHasDocumentType] = useState<boolean>(!!formStore.bussinessDocumentType)
 
-	const form = useZodForm(formSchema, "comercial")
+	const form = useZodForm(formSchema, "comercial", {
+		defaultValues: {
+			bussinessDocumentType: formStore.bussinessDocumentType,
+			bussinessDocumentNumber: formStore.bussinessDocumentNumber,
+			segment: formStore.segment,
+			bussinessName: formStore.bussinessName
+		} as never
+	})
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
@@ -28,7 +37,23 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 		hasValue?.length > 0 ? setHasDocumentType(true) : setHasDocumentType(false)
 	}, [hasValue])
 
+	const saveFormState = () => {
+		const values = form.getValues()
+		formStore.setFormState({
+			bussinessDocumentType: values.bussinessDocumentType ?? "",
+			bussinessDocumentNumber: values.bussinessDocumentNumber ?? "",
+			segment: values.segment ?? "",
+			bussinessName: values.bussinessName ?? ""
+		})
+	}
+
+	const handlePrevStep = () => {
+		saveFormState()
+		prevStep()
+	}
+
 	const handleNextStep = async (values: FieldValues) => {
+		saveFormState()
 		await useIsValidFormField({ form, fields: values as never, setData: addPreBriefing as never, nextStep })
 	}
 
@@ -37,7 +62,7 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 			formSchema={formSchema}
 			urlPath={urlPath}
 			form={form}
-			prevStep={prevStep}
+			prevStep={handlePrevStep}
 			nextStep={handleNextStep}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
@@ -46,7 +71,6 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 					<Controller
 						name="bussinessDocumentType"
 						control={form.control}
-						defaultValue=""
 						render={() => (
 							<Field>
 								<DropdownMenu
@@ -67,7 +91,6 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 					<Controller
 						name="bussinessDocumentNumber"
 						control={form.control}
-						defaultValue=""
 						render={({ field }) => (
 							<Field className={!hasDocumentType ? "blocked-field" : undefined}>
 								<FieldLabel>Documento</FieldLabel>
@@ -85,7 +108,6 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 					<Controller
 						name="segment"
 						control={form.control}
-						defaultValue=""
 						render={() => (
 							<Field>
 								<DropdownMenu
@@ -102,7 +124,6 @@ const CompanyData = ({ urlPath, prevStep, nextStep, actualStep, percentageProgre
 					<Controller
 						name="bussinessName"
 						control={form.control}
-						defaultValue=""
 						render={({ field }) => (
 							<Field>
 								<FieldLabel>Nome da empresa</FieldLabel>

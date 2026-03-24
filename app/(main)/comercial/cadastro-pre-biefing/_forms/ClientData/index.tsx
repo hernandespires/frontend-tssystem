@@ -12,27 +12,51 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import DropdownMenu from "@/components/Form/DropdownMenu"
 import { formatterPhone } from "@/utils/formatters"
+import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
 
 const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgress }: FormType) => {
 	const { addPreBriefing } = usePreBriefingStore()
+	const formStore = usePreBriefingFormStore()
 
-	const form = useZodForm(formSchema, "comercial")
+	const form = useZodForm(formSchema, "comercial", {
+		defaultValues: {
+			clientName: formStore.clientName,
+			nacionality: formStore.nacionality,
+			email: formStore.email,
+			phone: formStore.phone
+		} as never
+	})
 	const errors = form.formState.errors
 	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
 
+	const saveFormState = () => {
+		const values = form.getValues()
+		formStore.setFormState({
+			clientName: values.clientName ?? "",
+			nacionality: values.nacionality ?? "",
+			email: values.email ?? "",
+			phone: values.phone ?? ""
+		})
+	}
+
+	const handlePrevStep = () => {
+		saveFormState()
+		prevStep()
+	}
+
 	const handleNextStep = async (values: FieldValues) => {
+		saveFormState()
 		await useIsValidFormField({ form, fields: values as never, setData: addPreBriefing as never, nextStep })
 	}
 
 	return (
-		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={prevStep} nextStep={handleNextStep}>
+		<RegistrationForm formSchema={formSchema} urlPath={urlPath} form={form} prevStep={handlePrevStep} nextStep={handleNextStep}>
 			<StepProgressBar actualStep={actualStep} percentageProgress={percentageProgress} />
 			<section className="flex justify-center items-stretch w-230 py-3 self-center">
-				<div className="w-full flex flex-col gap-y-3">
+				<div className="w-115 flex flex-col gap-y-3">
 					<Controller
 						name="clientName"
 						control={form.control}
-						defaultValue=""
 						render={({ field }) => (
 							<Field>
 								<FieldLabel>Nome completo</FieldLabel>
@@ -44,7 +68,6 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 					<Controller
 						name="nacionality"
 						control={form.control}
-						defaultValue=""
 						render={() => (
 							<Field>
 								<DropdownMenu
@@ -64,7 +87,6 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 					<Controller
 						name="email"
 						control={form.control}
-						defaultValue=""
 						render={() => (
 							<Field>
 								<FieldLabel htmlFor="email">E-mail</FieldLabel>
@@ -76,9 +98,8 @@ const ClientData = ({ nextStep, urlPath, prevStep, actualStep, percentageProgres
 					<Controller
 						name="phone"
 						control={form.control}
-						defaultValue=""
 						render={({ field }) => (
-							<Field className="w-52.75">
+							<Field>
 								<FieldLabel htmlFor="phone">Telefone</FieldLabel>
 								<Input
 									{...field}

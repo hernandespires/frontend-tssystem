@@ -12,57 +12,107 @@ import { Input } from "@/components/ui/input"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
 import { dateToISO } from "@/utils/dateToISO"
-import { usePreBriefingStore } from "@/store/comercial/CreatePreBriefing"
-import { useContractStore } from "@/store/financial/CreateContract"
-import { useContractInstallmentStore } from "@/store/financial/CreateContractInstallment"
 import { savePreBriefing } from "@/services/comercial/preBriefing"
 import { SendPreBriefing } from "@/types/services/comercial/preBriefing"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { usePreBriefingFormStore } from "@/store/comercial/PreBriefingFormStore"
 
 const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress }: FormType) => {
-	const { addPreBriefing, allPreBriefings } = usePreBriefingStore()
-	const { allContracts } = useContractStore()
-	const { allContractInstallments } = useContractInstallmentStore()
+	const formStore = usePreBriefingFormStore()
 	const router = useRouter()
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-	const form = useZodForm(formSchema, "comercial")
+	const form = useZodForm(formSchema, "comercial", {
+		defaultValues: {
+			leadSource: formStore.leadSource,
+			leadArrivalDate: formStore.leadArrivalDate,
+			meetingLink: formStore.meetingLink
+		} as never
+	})
 	const firstErrorKey = useGetFirstErrorKey(form.formState.errors, Object.keys(formSchema.shape))
 
+	const saveFormState = () => {
+		const values = form.getValues()
+		formStore.setFormState({
+			leadSource: values.leadSource ?? "",
+			leadArrivalDate: values.leadArrivalDate,
+			meetingLink: values.meetingLink ?? ""
+		})
+	}
+
+	const handlePrevStep = () => {
+		saveFormState()
+		prevStep()
+	}
+
 	const handleCreatePreBriefing = async (values: FieldValues) => {
-		const leadFields = {
-			...values,
-			leadArrivalDate: dateToISO(values.leadArrivalDate as string | Date)
-		}
+		saveFormState()
 
 		await useIsValidFormField({
 			form,
-			fields: leadFields as never,
-			setData: addPreBriefing as never,
+			fields: values as never,
+			setData: (() => {}) as never,
 			nextStep: async () => {
-				await submitPreBriefing(leadFields)
+				await submitPreBriefing(values)
 			}
 		})
 	}
 
-	const submitPreBriefing = async (leadFields: Record<string, unknown>): Promise<void> => {
+	const submitPreBriefing = async (values: FieldValues): Promise<void> => {
 		setIsSubmitting(true)
 
 		try {
-			const preBriefingData = allPreBriefings[allPreBriefings.length - 1] ?? {}
-			const contractData = allContracts[allContracts.length - 1] ?? {}
-			const installmentData = allContractInstallments[allContractInstallments.length - 1] ?? {}
+			const currentState = usePreBriefingFormStore.getState()
 
 			const mergedData: SendPreBriefing = {
-				...preBriefingData,
-				...contractData,
-				...installmentData,
-				...leadFields
-			} as SendPreBriefing
+				projectType: currentState.contractType as SendPreBriefing["projectType"],
+				paymentMethod: currentState.paymentMethod as SendPreBriefing["paymentMethod"],
+				hasInstallments: currentState.hasInstallments,
+				installments: currentState.hasInstallments ? Number(currentState.installments) : 1,
+				entryValue: currentState.entryValue,
+				clientName: currentState.clientName,
+				nacionality: currentState.nacionality as SendPreBriefing["nacionality"],
+				email: currentState.email,
+				phone: currentState.phone,
+				bussinessDocumentType: currentState.bussinessDocumentType as SendPreBriefing["bussinessDocumentType"],
+				bussinessDocumentNumber: currentState.bussinessDocumentNumber,
+				segment: currentState.segment as SendPreBriefing["segment"],
+				bussinessName: currentState.bussinessName,
+				programType: currentState.programType as SendPreBriefing["programType"],
+				contractDate: dateToISO(currentState.contractDate as string | Date) ?? "",
+				paymentDate: dateToISO(currentState.paymentDate as string | Date) ?? "",
+				leadSource: values.leadSource as string,
+				leadArrivalDate: dateToISO(values.leadArrivalDate as string | Date) ?? "",
+				meetingLink: values.meetingLink as string
+			}
 
 			await savePreBriefing(mergedData)
+			
+			// Clear form store on success
+			formStore.setFormState({
+				contractType: "",
+				paymentMethod: "",
+				entryValue: "",
+				installments: "",
+				hasInstallments: false,
+				clientName: "",
+				nacionality: "",
+				email: "",
+				phone: "",
+				bussinessDocumentType: "",
+				bussinessDocumentNumber: "",
+				segment: "",
+				bussinessName: "",
+				programType: "",
+				contractDate: undefined,
+				paymentDate: undefined,
+				leadSource: "",
+				leadArrivalDate: undefined,
+				meetingLink: ""
+			})
+
 			toast.success("Pré-briefing cadastrado com sucesso!")
 			router.replace("/comercial")
 		} catch {
@@ -77,7 +127,7 @@ const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress 
 			formSchema={formSchema}
 			urlPath={urlPath}
 			form={form}
-			prevStep={prevStep}
+			prevStep={handlePrevStep}
 			nextStep={handleCreatePreBriefing}
 			actualStep={actualStep}
 			percentageProgress={percentageProgress}
@@ -86,7 +136,6 @@ const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress 
 					<Controller
 						name="leadSource"
 						control={form.control}
-						defaultValue=""
 						render={() => (
 							<Field>
 								<DropdownMenu
@@ -104,7 +153,6 @@ const LeadInfo = ({ urlPath, prevStep, nextStep, actualStep, percentageProgress 
 					<Controller
 						name="meetingLink"
 						control={form.control}
-						defaultValue=""
 						render={({ field }) => (
 							<Field>
 								<FieldLabel>Link da reunião</FieldLabel>

@@ -16,6 +16,6 @@ export const useContractInstallmentStore = create<ContractInstallmentStore>((set
 				return { allContractInstallments: [{ ...contractInstallment }] }
 			}
 
-			return { allContracts: [...state.allContractInstallments.slice(0, -1), { ...last, ...contractInstallment }] }
+			return { allContractInstallments: [...state.allContractInstallments.slice(0, -1), { ...last, ...contractInstallment }] }
 		})
 }))
