@@ -40,7 +40,13 @@ const Rh = () => {
 	return (
 		<main className="flex flex-col gap-6">
 			<div className="flex gap-5 justify-between">
-				<DataTable filter="Lista de Colaboradores" data={allEmployees} setContextInfo={setEmployeeFound} path="/rh/cadastro-colaborador" />
+				<DataTable
+					filter="Lista de Colaboradores"
+					data={allEmployees}
+					setContextInfo={setEmployeeFound}
+					path="/rh/cadastro-colaborador"
+					viewAllPath="/lista-colaboradores?from=rh"
+				/>
 				<div className="flex flex-wrap gap-6 max-w-150">
 					<Button isFulled onClick={() => router.push("/")} icon={<BsClipboardData size={36} color="black" />}>
 						Relatório Mensal

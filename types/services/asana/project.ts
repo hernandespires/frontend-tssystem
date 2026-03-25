@@ -34,6 +34,23 @@ export interface AsanaCustomField {
 	type: string
 }
 
+export interface AsanaEnumOption {
+	gid: string
+	name: string
+	color: string
+	enabled: boolean
+}
+
+export interface AsanaCustomFieldSetting {
+	gid: string
+	custom_field: {
+		gid: string
+		name: string
+		type: string
+		enum_options?: AsanaEnumOption[]
+	}
+}
+
 export interface AsanaProject {
 	gid: string
 	name: string

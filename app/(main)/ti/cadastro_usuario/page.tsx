@@ -1,16 +1,60 @@
 "use client"
 
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Search, ArrowDown, Rocket, ArrowLeft } from "lucide-react"
 import { IoDocumentTextOutline } from "react-icons/io5"
 
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
+import { findAllEmployees } from "@/services/humanResources/employee"
+import { Employee } from "@/types/services/humanResources/employee"
+
 export default function CadastroPatrimonioPage() {
 	const router = useRouter()
+	const [employees, setEmployees] = useState<Employee[]>([])
+	const [searchQuery, setSearchQuery] = useState("")
+	const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+	
+	const dropdownRef = useRef<HTMLDivElement>(null)
+
+	// Fetch employees
+	useEffect(() => {
+		const fetchEmployees = async () => {
+			try {
+				const data = await findAllEmployees()
+				setEmployees(data)
+			} catch (error) {
+				console.error("Error fetching employees:", error)
+			}
+		}
+		fetchEmployees()
+	}, [])
+
+	// Filter
+	const filteredEmployees = employees.filter(
+		(emp) => emp.name.toLowerCase().includes(searchQuery.toLowerCase())
+	)
+
+	// Close dropdown when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+				setIsDropdownOpen(false)
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside)
+		return () => document.removeEventListener("mousedown", handleClickOutside)
+	}, [])
+
+	const handleSelectEmployee = (employee: Employee) => {
+		setSelectedEmployee(employee)
+		setSearchQuery(employee.name)
+		setIsDropdownOpen(false)
+	}
 
 	return (
 		<div className="flex flex-col w-full gap-8 pb-10">
@@ -67,7 +111,7 @@ export default function CadastroPatrimonioPage() {
 								<span className="text-white font-medium text-sm">E-mail do Colaborador</span>
 								<span className="text-[#A09E9C] text-[13px]">(Para acesso ao TS AGÊNCIA.)</span>
 							</div>
-							<Input type="password" placeholder="*********" className="bg-[#0C0907] border-[#332C24] text-white p-3 rounded h-auto w-full" />
+							<Input type="email" placeholder="*********" className="bg-[#0C0907] border-[#332C24] text-white p-3 rounded h-auto w-full" />
 						</div>
 
 						{/* Password Input */}
@@ -88,11 +132,54 @@ export default function CadastroPatrimonioPage() {
 						<span className="text-white font-medium text-sm">Vincular conta à um colaborador cadastrado</span>
 
 						{/* Search Input Group */}
-						<div className="flex items-center bg-[#0C0907] border border-[#332C24] rounded px-4 py-3 gap-3">
-							<Search className="text-white" size={18} />
-							<input type="text" placeholder="Colaborador" className="flex-1 bg-transparent border-none text-white outline-none placeholder:text-[#A09E9C]" />
-							<ArrowDown className="text-white" size={18} />
+						<div className="relative" ref={dropdownRef}>
+							<div className="flex items-center bg-[#0C0907] border border-[#332C24] rounded px-4 py-3 gap-3">
+								<Search className="text-white shrink-0" size={18} />
+								<input 
+									type="text" 
+									placeholder="Colaborador" 
+									className="flex-1 bg-transparent border-none text-white outline-none placeholder:text-[#A09E9C]" 
+									value={searchQuery}
+									onChange={(e) => {
+										setSearchQuery(e.target.value)
+										setIsDropdownOpen(true)
+									}}
+									onFocus={() => setIsDropdownOpen(true)}
+								/>
+								<ArrowDown className="text-white shrink-0" size={18} />
+							</div>
+
+							{/* Dropdown Options */}
+							{isDropdownOpen && (
+								<div className="absolute top-full left-0 w-full mt-1 bg-[#1A1510] border border-[#332C24] rounded-md shadow-lg max-h-[250px] overflow-y-auto z-10 flex flex-col p-1">
+									{filteredEmployees.length > 0 ? (
+										filteredEmployees.map((emp) => (
+											<button
+												key={emp.id}
+												className="flex items-center w-full px-3 py-2 text-left text-white text-sm hover:bg-[#332C24] rounded transition-colors"
+												onClick={() => handleSelectEmployee(emp)}
+											>
+												{emp.name}
+											</button>
+										))
+									) : (
+										<div className="p-3 text-[#A09E9C] text-sm text-center">Nenhum colaborador encontrado</div>
+									)}
+								</div>
+							)}
 						</div>
+
+						{/* Collaborator Preview Card */}
+						{selectedEmployee && (
+							<div className="flex flex-col justify-center gap-2 bg-[#0C0907] border border-[#332C24] rounded min-w-[300px] w-full p-3 px-4">
+								<span className="text-white text-sm font-medium leading-[1.2]">
+									{selectedEmployee.name}
+								</span>
+								<span className="text-[#A09E9C] text-[13px] font-normal leading-[1.2]">
+									{selectedEmployee.email}
+								</span>
+							</div>
+						)}
 
 						{/* Submit Button */}
 						<Button className="bg-default-orange hover:bg-default-orange/90 text-black font-bold h-12 w-full mt-2 gap-2 text-[15px] rounded">

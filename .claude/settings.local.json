@@ -30,7 +30,21 @@
       "Bash(popd)",
       "Bash(find /c/Users/Luiz/Desktop/frontend-tssystem/contexts -type f -name *.ts -o -name *.tsx)",
       "Bash(xargs grep:*)",
-      "Bash(ls c:/Users/Luiz/Desktop/frontend-tssystem/app/\\\\\\(main\\\\\\)/financeiro/)"
+      "Bash(ls c:/Users/Luiz/Desktop/frontend-tssystem/app/\\\\\\(main\\\\\\)/financeiro/)",
+      "Bash(ls -la \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem\\\\app\\\\\\(main\\\\\\)\\\\ti\\\\cadastro-patrimonio\")",
+      "Bash(ls -la \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem\\\\app\\\\\\(main\\\\\\)\")",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystem -type f -path *ti* -name *.ts -o -path *ti* -name *.tsx)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Luiz\\\\IdeaProjects\\\\Backend-Sistema-TS\\\\src\\\\main\\\\java\\\\br\\\\com\\\\api\\\\tsagencia\\\\tsagencia\\\\model\\\\ti\")",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Luiz\\\\IdeaProjects\\\\Backend-Sistema-TS\\\\src\\\\main\\\\java\\\\br\\\\com\\\\api\\\\tsagencia\\\\tsagencia\\\\repository\\\\ti\")",
+      "Bash(curl -s -H 'Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a' \"https://app.asana.com/api/1.0/projects?workspace=1213230135608773&opt_fields=name,gid\")",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/workspaces\")",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects?workspace=1200562986979232&opt_fields=name,gid&limit=100\")",
+      "Bash(curl -s -H 'Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a' \"https://app.asana.com/api/1.0/workspaces/1200562986979232/projects?opt_fields=name,gid&limit=100&offset=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJib3JkZXJfcmFuayI6IlswLDEyMDY0MTg0NjcxMzU0NTZdIiwiaWF0IjoxNzc0NDM4MDcwLCJleHAiOjE3NzQ0Mzg5NzB9.IPCBljS-ua_T84RKQZgLRFmVz66w0n2uHO_hsTNKeN4\")",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456?opt_fields=name,notes,created_at,modified_at,current_status,members.name,members.email\")",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456/sections?opt_fields=name\")",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/tasks?project=1206418467135456&opt_fields=name,completed,due_on,assignee.name,notes,created_at,modified_at,memberships.section.name,custom_fields&limit=100\")",
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456/custom_field_settings?opt_fields=custom_field.name,custom_field.type,custom_field.enum_options.name,custom_field.enum_options.enabled,custom_field.enum_options.color\")"
     ]
   }
 }

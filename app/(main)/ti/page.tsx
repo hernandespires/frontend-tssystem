@@ -201,7 +201,7 @@ const Ti = () => {
 							variant="outline"
 							size="sm"
 							className="px-5 py-2.5 cursor-pointer text-sm gap-2 rounded-md"
-							onClick={() => router.push("/ti/usuarios")}
+							onClick={() => router.push("/lista-colaboradores?from=ti")}
 						>
 							<RiGitRepositoryCommitsFill size={16} />
 							Ver todos colaboradores
@@ -248,14 +248,14 @@ const Ti = () => {
 					</ActionButton>
 					<ActionButton
 						flexible
-						onClick={() => router.push("/ti/cadastro-usuarios")}
+						onClick={() => router.push("/ti/cadastro_usuario")}
 						icon={<HardDriveDownload size={38} color="white" strokeWidth={2} />}
 					>
 						{"Cadastro de\nUsuários"}
 					</ActionButton>
 					<ActionButton
 						flexible
-						onClick={() => router.push("/ti/cadastro_patrimonio")}
+						onClick={() => router.push("/ti/cadastro-patrimonio")}
 						icon={<Package size={38} color="white" strokeWidth={2} />}
 					>
 						{"Cadastro de\nPatrimônios"}
