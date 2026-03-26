@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
 	ArrowLeft,
 	ArrowRightFromLine,
@@ -11,7 +11,8 @@ import {
 	Rocket,
 	Calendar as CalendarIcon,
 } from "lucide-react"
-import { format } from "date-fns"
+import { format, parse } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 import {
 	Breadcrumb,
@@ -34,53 +35,44 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select"
-import { findCustomFieldEnumOptions, findSuppliersByCategories } from "@/services/asana/project"
+import { findCustomFieldEnumOptions, findSuppliersByCategories, findProjectTasks } from "@/services/asana/project"
 import { AsanaEnumOption } from "@/types/services/asana/project"
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { Employee } from "@/types/services/humanResources/employee"
 import { toast } from "sonner"
-import { createAsset } from "@/services/ti/asset"
-import { formatterCurrencyBRL } from "@/utils/formatters"
+import { createAsset, findAssetById, updateAsset } from "@/services/ti/asset"
+import { formatterCurrencyBRL, formatterSerialNumber } from "@/utils/formatters"
+
+import {
+	ASSET_BRANDS,
+	ASSET_MODELS, 
+	ASSET_STATUSES, 
+	ASSET_SIZES, 
+	ASSET_SUPPLIERS 
+} from "@/utils/constants/ti-assets"
 
 const CURRENT_STEP_COUNT = 2
-const ALLOWED_CATEGORIES = [
-	"NOTEBOOKS",
-	"COMPUTADORES",
-	"TELAS",
-	"ACESSÓRIOS DE INFORMÁTICA",
-	"CELULARES",
-	"CÂMERAS TS CAST",
-	"TS CAST ",
-	"CARREGADOR NOTEBOOK",
-	"ESTABILIZADOR DE CELULAR",
-	"CARREGADOR DE CELULAR",
-	"CAMERA",
-]
 
 const DEPARTMENT_MAPPING: Record<string, string[]> = {
-	NOTEBOOKS: [], // All
-	COMPUTADORES: [], // All
-	TELAS: [], // All
-	CAMERA: ["AUDIOVISUAL", "MARKETING"],
+	NOTEBOOKS: [],
+	COMPUTADORES: [],
+	TELAS: [],
 	"CAMERAS TS CAST": ["AUDIOVISUAL", "MARKETING"],
 	CELULARES: ["AUDIOVISUAL", "SOCIAL MEDIA", "MARKETING"],
-	"CARREGADOR NOTEBOOK": [], // All
-	"ESTABILIZADOR DE CELULAR": ["AUDIOVISUAL", "SOCIAL MEDIA", "MARKETING"],
-	"CARREGADOR DE CELULAR": ["AUDIOVISUAL", "SOCIAL MEDIA", "MARKETING"],
 }
 
 const BRAND_MAPPING: Record<string, string[]> = {
-	NOTEBOOKS: ["DELL", "APPLE", "LENOVO", "ACER", "HP", "SAMSUNG", "VAIO", "POSITIVO", "ASUS"],
-	COMPUTADORES: ["DELL", "LENOVO", "APPLE", "HP", "SAMSUNG", "ASUS", "GAMER", "TGT", "LOGITECH"],
-	TELAS: ["LG", "SAMSUNG", "DELL", "AOC", "PHILIPS", "BENQ", "PHILCO"],
-	CELULARES: ["APPLE", "SAMSUNG", "LG", "ASUS"],
+	NOTEBOOK: ["DELL", "APPLE", "LENOVO", "ACER", "HP", "SAMSUNG", "VAIO", "POSITIVO", "ASUS"],
+	COMPUTADOR: ["DELL", "LENOVO", "APPLE", "HP", "SAMSUNG", "ASUS", "GAMER", "TGT", "LOGITECH"],
+	TELA: ["LG", "SAMSUNG", "DELL", "AOC", "PHILIPS", "BENQ", "PHILCO"],
+	CELULAR: ["APPLE", "SAMSUNG", "LG", "ASUS"],
 	"ACESSÓRIOS DE INFORMÁTICA": ["LOGITECH", "MULTILASER", "SEAGATE", "JBL", "SADES", "INTELBRAS"],
 	"TS CAST ": ["CANON", "SONY", "PANASONIC", "FUJITSU", "NOVADIGITAL", "ULANZI", "BOYA", "ZHIYUN", "YONGNUO DIGITAL", "BATMAX"],
 	"CÂMERAS TS CAST": ["CANON", "SONY", "PANASONIC"],
 }
 
 const MODEL_MAPPING: Record<string, string[]> = {
-	NOTEBOOKS: [
+	NOTEBOOK: [
 		"ASPIRE",
 		"MACBOOK",
 		"LATITUDE",
@@ -99,20 +91,32 @@ const MODEL_MAPPING: Record<string, string[]> = {
 		"VOSTRO",
 		"IDEAPAD",
 	],
-	CELULARES: ["IPHONE", "SAMSUNG A06", "IPHONE 15 PRO"],
+	CELULAR: ["IPHONE", "SAMSUNG A06", "IPHONE 15 PRO"],
 	"ACESSÓRIOS DE INFORMÁTICA": ["ZIGBEE 3.0", "NVIDIA GEFORCE", "H390"],
 }
 
-const MOCK_SUPPLIERS = [
-	"DELL",
-	"APPLE",
-	"AMAZON",
-	"KABUM",
-	"MERCADO LIVRE",
-	"ALIVE",
-	"MAGALU",
-	"AMERICANAS",
-	"TS CAST",
+const ASSET_TYPE_OPTIONS = [
+	"ACESSÓRIOS DE DECORAÇÃO",
+	"ACESSÓRIOS DE INFORMÁTICA",
+	"ACESSÓRIOS TS CAST",
+	"ARMÁRIOS",
+	"AUTOMAÇÃO",
+	"BIBLIOTECA TS",
+	"CADEIRAS",
+	"CAIXA DE FERRAMENTA",
+	"CÂMERAS TS CAST",
+	"CELULARES",
+	"COMPUTADORES",
+	"CONTROLES",
+	"DESCOMPRESSÃO",
+	"ELETRODOMÉSTICO",
+	"MESAS",
+	"MÓVEIS PLANEJADOS",
+	"NOTEBOOKS",
+	"PATRIMÔNIO DESCARTADO",
+	"SOFÁ",
+	"TELAS",
+	"TELEVISÃO",
 ]
 
 const normalize = (str: string) =>
@@ -121,57 +125,62 @@ const normalize = (str: string) =>
 		.replace(/[\u0300-\u036f]/g, "")
 		.toUpperCase()
 
-const normalizedAllowed = ALLOWED_CATEGORIES.map(normalize)
+const DEPARTMENT_NAME_MAPPING: Record<string, string> = {
+	"Research and Development": "Pesquisa & Desenvolvimento",
+	"Strategic Manager": "Gestão Estratégica",
+	"Humam Resources": "Recursos Humanos",
+	"Project Manager": "Gestão de Projetos",
+}
+
+const formatDepartmentLabel = (dept: string): string =>
+	DEPARTMENT_NAME_MAPPING[dept] ||
+	dept
+		.replace(/_/g, " ")
+		.toLowerCase()
+		.replace(/\b\w/g, (char) => char.toUpperCase())
+
 
 export default function AssetRegistrationPage() {
 	const router = useRouter()
+	const searchParams = useSearchParams()
+	const editId = searchParams.get("id")
+	const isEditMode = !!editId
+
 	const [currentStep, setCurrentStep] = useState(1)
 	const [purchaseDate, setPurchaseDate] = useState<Date | undefined>(undefined)
 	const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 	const [assetType, setAssetType] = useState("")
 	const [department, setDepartment] = useState("")
 	const [size, setSize] = useState("")
-	const [categories, setCategories] = useState<AsanaEnumOption[]>([])
 	const [departments, setDepartments] = useState<string[]>([])
-	const [sizes, setSizes] = useState<AsanaEnumOption[]>([])
-	const [suppliers, setSuppliers] = useState<string[]>([])
+	const [asanaDepartmentsBySection, setAsanaDepartmentsBySection] = useState<Record<string, string[]>>({})
+	const [sizes, setSizes] = useState<AsanaEnumOption[]>(ASSET_SIZES)
+	const [suppliers, setSuppliers] = useState<string[]>(ASSET_SUPPLIERS.sort())
 	const [selectedSupplier, setSelectedSupplier] = useState("")
-	const [statuses, setStatuses] = useState<AsanaEnumOption[]>([])
+	const [statuses, setStatuses] = useState<AsanaEnumOption[]>(ASSET_STATUSES)
 	const [selectedStatus, setSelectedStatus] = useState("")
-	const [brands, setBrands] = useState<AsanaEnumOption[]>([])
+	const [brands, setBrands] = useState<AsanaEnumOption[]>(ASSET_BRANDS)
 	const [selectedBrand, setSelectedBrand] = useState("")
-	const [loadingCategories, setLoadingCategories] = useState(true)
 	const [loadingDepartments, setLoadingDepartments] = useState(true)
-	const [loadingSizes, setLoadingSizes] = useState(true)
-	const [loadingSuppliers, setLoadingSuppliers] = useState(true)
-	const [loadingStatuses, setLoadingStatuses] = useState(true)
-	const [loadingBrands, setLoadingBrands] = useState(true)
-	const [models, setModels] = useState<AsanaEnumOption[]>([])
+	const [loadingSizes, setLoadingSizes] = useState(false)
+	const [loadingSuppliers, setLoadingSuppliers] = useState(false)
+	const [loadingStatuses, setLoadingStatuses] = useState(false)
+	const [loadingBrands, setLoadingBrands] = useState(false)
+	const [models, setModels] = useState<AsanaEnumOption[]>(ASSET_MODELS)
 	const [selectedModel, setSelectedModel] = useState("")
-	const [loadingModels, setLoadingModels] = useState(true)
+	const [loadingModels, setLoadingModels] = useState(false)
 	const [allEmployees, setAllEmployees] = useState<Employee[]>([])
 	const [employeeSearch, setEmployeeSearch] = useState("")
 	const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
 	const [isEmployeeDropdownOpen, setIsEmployeeDropdownOpen] = useState(false)
 	const employeeDropdownRef = useRef<HTMLDivElement>(null)
 
-	const [serialNumber, setSerialNumber] = useState("")
+	const [serialNumber, setSerialNumber] = useState("0000")
 	const [value, setValue] = useState("")
 	const [additionalInfo, setAdditionalInfo] = useState("")
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
 	useEffect(() => {
-		const loadCategories = async () => {
-			try {
-				const options = await findCustomFieldEnumOptions("CATEGORIA")
-				setCategories(options)
-			} catch {
-				setCategories([])
-			} finally {
-				setLoadingCategories(false)
-			}
-		}
-
 		const loadDepartments = async () => {
 			try {
 				const employees = await findAllEmployees()
@@ -191,85 +200,7 @@ export default function AssetRegistrationPage() {
 			}
 		}
 
-		const loadSizes = async () => {
-			try {
-				const [hdOptions, ssdOptions] = await Promise.all([
-					findCustomFieldEnumOptions("HD"),
-					findCustomFieldEnumOptions("SSD"),
-				])
-				const combined = [...hdOptions, ...ssdOptions]
-				const uniqueSizes = combined.filter(
-					(option, index, self) =>
-						self.findIndex((o) => o.name === option.name) === index
-				)
-				setSizes(uniqueSizes)
-			} catch {
-				setSizes([])
-			} finally {
-				setLoadingSizes(false)
-			}
-		}
-
-		const loadSuppliers = async () => {
-			try {
-				const SUPPLIER_CATEGORIES = [
-					"NOTEBOOKS",
-					"COMPUTADORES",
-					"TELAS",
-					"ACESSÓRIOS DE INFORMÁTICA",
-					"CELULARES",
-					"CÂMERAS TS CAST",
-				]
-				const filteredSuppliers = await findSuppliersByCategories(SUPPLIER_CATEGORIES)
-				const combined = [...new Set([...filteredSuppliers, ...MOCK_SUPPLIERS])]
-				setSuppliers(combined.sort())
-			} catch {
-				setSuppliers([])
-			} finally {
-				setLoadingSuppliers(false)
-			}
-		}
-
-		const loadStatuses = async () => {
-			try {
-				const options = await findCustomFieldEnumOptions("STATUS")
-				setStatuses(options)
-			} catch {
-				setStatuses([])
-			} finally {
-				setLoadingStatuses(false)
-			}
-		}
-
-		const loadBrands = async () => {
-			try {
-				const options = await findCustomFieldEnumOptions("MARCA")
-				setBrands(options)
-			} catch {
-				setBrands([])
-			} finally {
-				setLoadingBrands(false)
-			}
-		}
-
-		const loadModels = async () => {
-			try {
-				const options = await findCustomFieldEnumOptions("MODELO")
-				setModels(options)
-			} catch {
-				setModels([])
-			} finally {
-				setLoadingModels(false)
-			}
-		}
-
-		loadCategories()
 		loadDepartments()
-		loadSizes()
-		loadSuppliers()
-		loadStatuses()
-		loadBrands()
-		loadModels()
 
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
@@ -285,6 +216,85 @@ export default function AssetRegistrationPage() {
 			document.removeEventListener("mousedown", handleClickOutside)
 		}
 	}, [])
+
+	useEffect(() => {
+		const loadAsanaDepartments = async () => {
+			try {
+				const tasks = await findProjectTasks()
+				const sectionDepts: Record<string, Set<string>> = {}
+
+				for (const task of tasks) {
+					const sectionName = task.memberships?.[0]?.section?.name
+					if (!sectionName) continue
+
+					const deptField = task.custom_fields?.find(
+						(cf) => cf.name.toUpperCase() === "DEPARTAMENTO"
+					)
+					if (!deptField?.display_value) continue
+
+					const normalizedSection = normalize(sectionName)
+					if (!sectionDepts[normalizedSection]) sectionDepts[normalizedSection] = new Set()
+					sectionDepts[normalizedSection].add(deptField.display_value)
+				}
+
+				const result: Record<string, string[]> = {}
+				for (const [key, set] of Object.entries(sectionDepts)) {
+					result[key] = Array.from(set).sort()
+				}
+				setAsanaDepartmentsBySection(result)
+			} catch {
+				// Fallback: empty map, will show all departments
+			}
+		}
+
+		loadAsanaDepartments()
+	}, [])
+
+	useEffect(() => {
+		if (!editId) return
+
+		const loadAssetForEdit = async () => {
+			try {
+				const asset = await findAssetById(editId)
+
+				setAssetType(asset.tipo_patrimonio || "")
+				setDepartment(asset.departamento || "")
+				setSelectedBrand(asset.marca || "")
+				setSelectedModel(asset.modelo_completo || "")
+				setSerialNumber(formatterSerialNumber(asset.numero_serie || ""))
+				setSize(asset.tamanho || "")
+				setSelectedStatus(asset.status || "")
+				setSelectedSupplier(asset.fornecedor || "")
+				setAdditionalInfo(asset.informacoes_adicionais || "")
+
+				if (asset.valor != null) {
+					setValue(formatterCurrencyBRL(String(asset.valor)))
+				}
+
+				if (asset.data_compra) {
+					try {
+						const parsed = parse(asset.data_compra, "dd/MM/yyyy", new Date())
+						if (!isNaN(parsed.getTime())) {
+							setPurchaseDate(parsed)
+						}
+					} catch {
+						// Date parsing failed, leave empty
+					}
+				}
+
+				if (asset.id_colaborador && typeof asset.id_colaborador !== "string") {
+					const employee = asset.id_colaborador as Employee
+					setSelectedEmployee(employee)
+					setEmployeeSearch(employee.name || "")
+				}
+			} catch {
+				toast.error("Erro ao carregar dados do patrimônio.")
+				router.push("/ti/controle-patrimonios")
+			}
+		}
+
+		loadAssetForEdit()
+	}, [editId, router])
 
 	const validateStep1 = () => {
 		if (!assetType) {
@@ -366,7 +376,7 @@ export default function AssetRegistrationPage() {
 					.trim()
 			)
 
-			await createAsset({
+			const payload = {
 				tipo_patrimonio: assetType,
 				categoria: assetType,
 				departamento: department,
@@ -376,17 +386,23 @@ export default function AssetRegistrationPage() {
 				tamanho: size,
 				status: selectedStatus,
 				valor: isNaN(numericValue) ? 0 : numericValue,
-				data_compra: purchaseDate ? purchaseDate.toISOString() : undefined,
+				data_compra: purchaseDate ? format(purchaseDate, "dd/MM/yyyy") : undefined,
 				fornecedor: selectedSupplier,
 				informacoes_adicionais: additionalInfo,
 				id_colaborador: selectedEmployee ? { id: selectedEmployee.id } : undefined,
-			})
+			}
 
-			toast.success("Patrimônio cadastrado com sucesso!")
-			router.push("/ti")
-		} catch (error) {
-			console.error("Error saving asset:", error)
-			toast.error("Erro ao cadastrar patrimônio. Tente novamente.")
+			if (isEditMode && editId) {
+				await updateAsset(editId, payload)
+				toast.success("Patrimônio atualizado com sucesso!")
+			} else {
+				await createAsset(payload)
+				toast.success("Patrimônio cadastrado com sucesso!")
+			}
+
+			router.push("/ti/controle-patrimonios")
+		} catch {
+			toast.error(isEditMode ? "Erro ao atualizar patrimônio. Tente novamente." : "Erro ao cadastrar patrimônio. Tente novamente.")
 		} finally {
 			setIsSubmitting(false)
 		}
@@ -405,8 +421,14 @@ export default function AssetRegistrationPage() {
 						</BreadcrumbItem>
 						<BreadcrumbSeparator className="text-[#A09E9C] mx-2" />
 						<BreadcrumbItem>
+							<BreadcrumbLink href="/ti/controle-patrimonios" className="text-sm text-[#A09E9C] hover:text-white">
+								Controle de Patrimônios
+							</BreadcrumbLink>
+						</BreadcrumbItem>
+						<BreadcrumbSeparator className="text-[#A09E9C] mx-2" />
+						<BreadcrumbItem>
 							<BreadcrumbPage className="text-sm text-default-orange">
-								Cadastro de Patrimônios
+								{isEditMode ? "Editar Patrimônio" : "Cadastro de Patrimônios"}
 							</BreadcrumbPage>
 						</BreadcrumbItem>
 					</BreadcrumbList>
@@ -426,13 +448,13 @@ export default function AssetRegistrationPage() {
 						Voltar
 					</Button>
 					<h2 className="text-default-orange text-base font-bold">
-						Cadastro de Patrimônios
+						{isEditMode ? "Editar Patrimônio" : "Cadastro de Patrimônios"}
 					</h2>
 				</div>
 
 				{/* Header */}
 				<h1 className="text-default-orange text-[22px] font-bold text-center mb-12">
-					Cadastro de Patrimônios
+					{isEditMode ? "Editar Patrimônio" : "Cadastro de Patrimônios"}
 				</h1>
 
 				{/* Step 1 */}
@@ -446,29 +468,16 @@ export default function AssetRegistrationPage() {
 								</span>
 								<Select value={assetType} onValueChange={setAssetType}>
 									<SelectTrigger className="bg-[#0C0907] border-[#332C24] text-[#A09E9C] p-3 rounded h-auto w-full [&>svg]:text-[#A09E9C]">
-										<SelectValue placeholder={loadingCategories ? "Carregando..." : "Selecione o tipo"} />
+										<SelectValue placeholder="Selecione o tipo" />
 									</SelectTrigger>
 									<SelectContent className="bg-[#1A1510] border-[#332C24] max-h-[300px]">
-										{(categories.filter((cat) => {
-											const name = normalize(cat.name || "")
-											return normalizedAllowed.some((allowed) =>
-												name.includes(allowed) || allowed.includes(name)
-											)
-										}).length > 0
-											? categories.filter((cat) => {
-													const name = normalize(cat.name || "")
-													return normalizedAllowed.some((allowed) =>
-														name.includes(allowed) || allowed.includes(name)
-													)
-											  })
-											: categories
-										).map((category) => (
+										{ASSET_TYPE_OPTIONS.map((type) => (
 											<SelectItem
-												key={category.gid}
-												value={category.name}
+												key={type}
+												value={type}
 												className="text-[#A09E9C] focus:bg-[#332C24] focus:text-white"
 											>
-												{category.name}
+												{type}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -492,10 +501,23 @@ export default function AssetRegistrationPage() {
 											.filter((dept) => {
 												if (!assetType) return false
 												const normalizedAsset = normalize(assetType)
-												const allowedDepts = DEPARTMENT_MAPPING[normalizedAsset] || []
-												if (allowedDepts.length === 0) return true // All departments allowed
-												return allowedDepts.some(
-													(allowed) => normalize(dept).includes(normalize(allowed))
+
+												// Hardcoded mapping for types that already have filters
+												const hardcodedDepts = DEPARTMENT_MAPPING[normalizedAsset]
+												if (hardcodedDepts !== undefined) {
+													if (hardcodedDepts.length === 0) return true
+													return hardcodedDepts.some(
+														(allowed) => normalize(dept).includes(normalize(allowed))
+													)
+												}
+
+												// Asana-derived departments for remaining types
+												const asanaDepts = asanaDepartmentsBySection[normalizedAsset]
+												if (!asanaDepts || asanaDepts.length === 0) return true
+												return asanaDepts.some(
+													(asanaDept) =>
+														normalize(dept).includes(normalize(asanaDept)) ||
+														normalize(asanaDept).includes(normalize(dept))
 												)
 											})
 											.map((dept) => (
@@ -504,7 +526,7 @@ export default function AssetRegistrationPage() {
 													value={dept}
 													className="text-[#A09E9C] focus:bg-[#332C24] focus:text-white"
 												>
-													{dept}
+													{formatDepartmentLabel(dept)}
 												</SelectItem>
 											))}
 									</SelectContent>
@@ -607,9 +629,9 @@ export default function AssetRegistrationPage() {
 								</span>
 								<Input
 									type="text"
-									placeholder="000120202020"
+									placeholder="0000"
 									value={serialNumber}
-									onChange={(e) => setSerialNumber(e.target.value)}
+									onChange={(e) => setSerialNumber(formatterSerialNumber(e.target.value))}
 									className="bg-[#0C0907] border-[#332C24] text-[#A09E9C] p-3 rounded h-auto w-full placeholder:text-[#A09E9C]"
 								/>
 							</div>
@@ -706,7 +728,7 @@ export default function AssetRegistrationPage() {
 											>
 												<span className="flex-1 text-sm">
 													{purchaseDate
-														? format(purchaseDate, "MMMM dd, yyyy")
+														? format(purchaseDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
 														: "Selecione a data"}
 												</span>
 												<CalendarIcon size={18} className="text-[#A09E9C]" />
@@ -723,6 +745,7 @@ export default function AssetRegistrationPage() {
 													setPurchaseDate(date)
 													setIsCalendarOpen(false)
 												}}
+												locale={ptBR}
 												className="rounded-md"
 											/>
 										</PopoverContent>
@@ -852,7 +875,7 @@ export default function AssetRegistrationPage() {
 								) : (
 									<>
 										<Rocket size={18} />
-										Finalizar Cadastro
+										{isEditMode ? "Salvar Alterações" : "Finalizar Cadastro"}
 									</>
 								)}
 							</Button>

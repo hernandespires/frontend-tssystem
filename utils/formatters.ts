@@ -127,3 +127,13 @@ export const formatterITIN = (value: string): string => {
         .replace(/^(\d{3})-(\d{2})(\d)/, '$1-$2-$3')
         .slice(0, 11)
 }
+
+export const formatterSerialNumber = (value: string): string => {
+    const digits = value.replace(/\D/g, "")
+    // Remove leading zeros to get the actual "typed" value
+    const cleanDigits = digits.replace(/^0+/, "")
+    // Limit to 4 digits max
+    const limited = cleanDigits.slice(0, 4)
+    // Pad back to 4 digits
+    return limited.padStart(4, "0")
+}
