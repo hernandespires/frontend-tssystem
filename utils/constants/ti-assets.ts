@@ -1,5 +1,57 @@
 import { AsanaEnumOption } from "@/types/services/asana/project"
 
+export const ASSET_TYPE_OPTIONS = [
+  "ACESSÓRIOS DE DECORAÇÃO",
+  "ACESSÓRIOS DE INFORMÁTICA",
+  "ACESSÓRIOS TS CAST",
+  "ARMÁRIOS",
+  "AUTOMAÇÃO",
+  "BIBLIOTECA TS",
+  "CADEIRAS",
+  "CAIXA DE FERRAMENTA",
+  "CÂMERAS TS CAST",
+  "CELULARES",
+  "COMPUTADORES",
+  "CONTROLES",
+  "DESCOMPRESSÃO",
+  "ELETRODOMÉSTICO",
+  "MESAS",
+  "MÓVEIS PLANEJADOS",
+  "NOTEBOOKS",
+  "PATRIMÔNIO DESCARTADO",
+  "SOFÁ",
+  "TELAS",
+  "TELEVISÃO",
+] as const
+
+export const DEPARTMENT_FILTER_BY_ASSET_TYPE: Record<string, string[]> = {
+  NOTEBOOKS: [],
+  COMPUTADORES: [],
+  TELAS: [],
+  "CAMERAS TS CAST": ["AUDIOVISUAL", "MARKETING"],
+  CELULARES: ["AUDIOVISUAL", "SOCIAL MEDIA", "MARKETING"],
+}
+
+export const BRAND_FILTER_BY_ASSET_TYPE: Record<string, string[]> = {
+  NOTEBOOK: ["DELL", "APPLE", "LENOVO", "ACER", "HP", "SAMSUNG", "VAIO", "POSITIVO", "ASUS"],
+  COMPUTADOR: ["DELL", "LENOVO", "APPLE", "HP", "SAMSUNG", "ASUS", "GAMER", "TGT", "LOGITECH"],
+  TELA: ["LG", "SAMSUNG", "DELL", "AOC", "PHILIPS", "BENQ", "PHILCO"],
+  CELULAR: ["APPLE", "SAMSUNG", "LG", "ASUS"],
+  "ACESSÓRIOS DE INFORMÁTICA": ["LOGITECH", "MULTILASER", "SEAGATE", "JBL", "SADES", "INTELBRAS"],
+  "TS CAST ": ["CANON", "SONY", "PANASONIC", "FUJITSU", "NOVADIGITAL", "ULANZI", "BOYA", "ZHIYUN", "YONGNUO DIGITAL", "BATMAX"],
+  "CÂMERAS TS CAST": ["CANON", "SONY", "PANASONIC"],
+}
+
+export const MODEL_FILTER_BY_ASSET_TYPE: Record<string, string[]> = {
+  NOTEBOOK: [
+    "ASPIRE", "MACBOOK", "LATITUDE", "THINKPAD", "AIR5", "VJP155F11X",
+    "PCG", "B330", "INSPIRON", "G3", "350X", "ODYSSEY", "BOOK E30",
+    "GALAXY BOOK2", "VIVOBOOK", "VOSTRO", "IDEAPAD",
+  ],
+  CELULAR: ["IPHONE", "SAMSUNG A06", "IPHONE 15 PRO"],
+  "ACESSÓRIOS DE INFORMÁTICA": ["ZIGBEE 3.0", "NVIDIA GEFORCE", "H390"],
+}
+
 export const ASSET_CATEGORIES: AsanaEnumOption[] = [
   { "name": "NOTEBOOK", "gid": "1206418469717171", "color": "", "enabled": true },
   { "name": "COMPUTADOR", "gid": "1206418469717172", "color": "", "enabled": true },

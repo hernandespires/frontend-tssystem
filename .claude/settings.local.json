@@ -50,7 +50,13 @@
       "Bash(find c:/Users/Luiz/Desktop/frontend-tssystem/contexts -type f -name *.tsx -o -type f -name *.ts)",
       "Bash(npx shadcn@latest add alert-dialog -y)",
       "Bash(npx shadcn@latest add alert-dialog --overwrite)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type f \\\\\\(-name *asset*.tsx -o -name *asset*.ts \\\\\\) -print)",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type d -name ti -print)",
+      "Bash(find \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem/app/\\(main\\)/ti\" -type f -name \"*.tsx\" -o -name \"*.ts\")",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type f \\\\\\(-path */store/* -o -path */contexts/* \\\\\\) -name *ti* -print)",
+      "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type f \\\\\\(-path */store/* -o -path */contexts/* \\\\\\) -name *asset* -print)",
+      "Bash(find \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem/app/\\(main\\)/ti\" -type d)"
     ]
   }
 }
