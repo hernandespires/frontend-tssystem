@@ -51,7 +51,7 @@ const Rh = () => {
 					<Button isFulled onClick={() => router.push("/")} icon={<BsClipboardData size={36} color="black" />}>
 						Relatório Mensal
 					</Button>
-					<Button isFulled onClick={() => router.push("/")} icon={<LuScanFace size={36} color="black" />}>
+					<Button isFulled onClick={() => router.push("/rh/ponto-facial")} icon={<LuScanFace size={36} color="black" />}>
 						Pontos
 					</Button>
 					<Button isFulled onClick={() => router.push("/")} icon={<MdOutlinePersonSearch size={36} color="black" />}>

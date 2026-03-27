@@ -15,7 +15,7 @@ import { useZodForm } from "@/hooks/useZodForm"
 import { Employee, SendEmployee } from "@/types/services/humanResources/employee"
 import { useGetFirstErrorKey } from "@/hooks/useGetFirstErrorKey"
 import { useIsValidFormField } from "@/hooks/useIsValidFormField"
-import { formSchema } from "./formSchema"
+import { formSchema, baseFormSchema } from "./formSchema"
 import { Controller, FieldValues } from "react-hook-form"
 import { formatterCPF, formatterCurrencyBRL, formatterPisPasep, formatterBigDecimal } from "@/utils/formatters"
 import ActualDocument from "../components/ActualDocument"
@@ -33,7 +33,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 	const form = useZodForm(formSchema, "rh")
 
 	const errors = form.formState.errors
-	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(formSchema.shape))
+	const firstErrorKey = useGetFirstErrorKey(errors, Object.keys(baseFormSchema.shape))
 
 	const DatePicker = dynamic(() => import("../../../../../../../components/Form/DatePicker"), { ssr: false })
 	const DropdownMenu = dynamic(() => import("../../../../../../../components/Form/DropdownMenu"), { ssr: false })
@@ -154,7 +154,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 						form={form}
 						name="typeEmployment"
 						label="Tipo de Vínculo"
-						schemaKeys={Object.keys(formSchema.shape)}
+						schemaKeys={Object.keys(baseFormSchema.shape)}
 						options={[
 							{ label: "CLT", value: "CLT" },
 							{ label: "CNPJ", value: "CNPJ" },
@@ -166,7 +166,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 						form={form}
 						name="laborModality"
 						label="Modalidade"
-						schemaKeys={Object.keys(formSchema.shape)}
+						schemaKeys={Object.keys(baseFormSchema.shape)}
 						options={[
 							{ label: "Presencial", value: "IN_PERSON" },
 							{ label: "Semi-presencial", value: "HYBRID" },
@@ -177,7 +177,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 						form={form}
 						name="laborScale"
 						label="Escala"
-						schemaKeys={Object.keys(formSchema.shape)}
+						schemaKeys={Object.keys(baseFormSchema.shape)}
 						options={[
 							{ label: "5x2", value: "_5X2" },
 							{ label: "4x3", value: "_4X3" },
@@ -190,7 +190,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 				</div>
 				<div className="flex flex-wrap flex-1 gap-x-6 gap-y-4.5 h-fit">
 					<div className="w-full">
-						<DatePicker form={form} formSchema={formSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
+						<DatePicker form={form} formSchema={baseFormSchema} fieldName="admissionDate" label="Data de admisão" className="max-w-1/2" />
 					</div>
 					<Field>
 						<FieldLabel>Salário</FieldLabel>
@@ -233,6 +233,7 @@ const LaborDocuments = ({ urlPath, prevStep, actualStep, percentageProgress, nex
 						<FieldLabel>Documentação</FieldLabel>
 						<ActualDocument>{getDocumentName(watchedDocumentation) ?? employeeFound?.documentation ?? employeeData?.documentation ?? ""}</ActualDocument>
 						<Input type="file" accept=".pdf,.png,.docx,.jpg" {...form.register("documentation")} />
+						<FieldError>{firstErrorKey === "documentation" && String(form.formState.errors.documentation?.message)}</FieldError>
 					</Field>
 				</div>
 			</div>

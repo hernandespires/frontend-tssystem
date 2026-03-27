@@ -44,7 +44,13 @@
       "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456?opt_fields=name,notes,created_at,modified_at,current_status,members.name,members.email\")",
       "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456/sections?opt_fields=name\")",
       "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/tasks?project=1206418467135456&opt_fields=name,completed,due_on,assignee.name,notes,created_at,modified_at,memberships.section.name,custom_fields&limit=100\")",
-      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456/custom_field_settings?opt_fields=custom_field.name,custom_field.type,custom_field.enum_options.name,custom_field.enum_options.enabled,custom_field.enum_options.color\")"
+      "Bash(curl -s -H \"Authorization: Bearer 2/1213230135608775/1213807263652028:fe420ddf840fac4c7cb0c1d98bf0611a\" \"https://app.asana.com/api/1.0/projects/1206418467135456/custom_field_settings?opt_fields=custom_field.name,custom_field.type,custom_field.enum_options.name,custom_field.enum_options.enabled,custom_field.enum_options.color\")",
+      "Bash(ls -la \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)/ti/\")",
+      "Bash(ls -laR \"c:/Users/Luiz/Desktop/frontend-tssystem/app/\\(main\\)/ti/cadastro-patrimonio\")",
+      "Bash(find c:/Users/Luiz/Desktop/frontend-tssystem/contexts -type f -name *.tsx -o -type f -name *.ts)",
+      "Bash(npx shadcn@latest add alert-dialog -y)",
+      "Bash(npx shadcn@latest add alert-dialog --overwrite)",
+      "Bash(git status:*)"
     ]
   }
 }

@@ -1,0 +1,626 @@
+{
+  "CATEGORIA": [
+    {
+      "name": "NOTEBOOK",
+      "gid": "1206418469717171"
+    },
+    {
+      "name": "COMPUTADOR",
+      "gid": "1206418469717172"
+    },
+    {
+      "name": "TELA",
+      "gid": "1206418469717219"
+    },
+    {
+      "name": "HD EXTERNO",
+      "gid": "1206418469717220"
+    },
+    {
+      "name": "IPAD",
+      "gid": "1206419996672204"
+    },
+    {
+      "name": "CADEIRA DIRETOR",
+      "gid": "1206835963429056"
+    },
+    {
+      "name": "CADEIRA LARANJA",
+      "gid": "1206835963429057"
+    },
+    {
+      "name": "SOFÁ",
+      "gid": "1206835963429058"
+    },
+    {
+      "name": "POLTRONA",
+      "gid": "1206835963429059"
+    },
+    {
+      "name": "MESA CENTRO",
+      "gid": "1206835963429060"
+    },
+    {
+      "name": "PUFF",
+      "gid": "1206835963429061"
+    },
+    {
+      "name": "CADEIRA RECEPÇÃO",
+      "gid": "1206835963429062"
+    },
+    {
+      "name": "MESA METAL PRETA",
+      "gid": "1206835963429063"
+    },
+    {
+      "name": "CESTO DE LIXO",
+      "gid": "1206835963429101"
+    },
+    {
+      "name": "MESA BISTRÔ",
+      "gid": "1206841351603850"
+    },
+    {
+      "name": "BANCO",
+      "gid": "1206841353282553"
+    },
+    {
+      "name": "BALCÃO",
+      "gid": "1206841353282581"
+    },
+    {
+      "name": "TELEVISÃO",
+      "gid": "1206845027250877"
+    },
+    {
+      "name": "GELADEIRA",
+      "gid": "1206846571151058"
+    },
+    {
+      "name": "MICRO-ONDAS ",
+      "gid": "1206846571151059"
+    },
+    {
+      "name": "MESA",
+      "gid": "1206846571151081"
+    },
+    {
+      "name": "CADEIRA",
+      "gid": "1206846571151105"
+    },
+    {
+      "name": "BANQUINHO BISTRÔ",
+      "gid": "1206850999887821"
+    },
+    {
+      "name": "BANQUINHO",
+      "gid": "1206850999887822"
+    },
+    {
+      "name": "TAPETE",
+      "gid": "1206853852247332"
+    },
+    {
+      "name": "LUMINÁRIA",
+      "gid": "1206864413564966"
+    },
+    {
+      "name": "VÍDEO GAME X BOX",
+      "gid": "1206864413565069"
+    },
+    {
+      "name": "CONTROLES",
+      "gid": "1206864413565088"
+    },
+    {
+      "name": "ARMÁRIO",
+      "gid": "1206864413565165"
+    },
+    {
+      "name": "DECORAÇÃO",
+      "gid": "1206864413565193"
+    },
+    {
+      "name": "ROTEADOR",
+      "gid": "1206877806962113"
+    },
+    {
+      "name": "LIVRO",
+      "gid": "1206902447917547"
+    },
+    {
+      "name": "MICROFONE",
+      "gid": "1206902881321765"
+    },
+    {
+      "name": "CÂMERA",
+      "gid": "1206902881321766"
+    },
+    {
+      "name": "TRIPÉ",
+      "gid": "1206907027029378"
+    },
+    {
+      "name": "MESA DE SOM PODCAST",
+      "gid": "1206907027029445"
+    },
+    {
+      "name": "QUADRO",
+      "gid": "1206907027029633"
+    },
+    {
+      "name": "BEBEDOURO",
+      "gid": "1206907027029660"
+    },
+    {
+      "name": "PROJETOR",
+      "gid": "1206922423901167"
+    },
+    {
+      "name": "LONA PROJETOR",
+      "gid": "1206922423901168"
+    },
+    {
+      "name": "CORTINA ROLO",
+      "gid": "1206922423901382"
+    },
+    {
+      "name": "MACBOOK",
+      "gid": "1206931010068183"
+    },
+    {
+      "name": "FRIGOBAR",
+      "gid": "1206931015446489"
+    },
+    {
+      "name": "POLTRONA MASSAGEM",
+      "gid": "1206931015446529"
+    },
+    {
+      "name": "MÓVEL PLANEJADO",
+      "gid": "1206931015446537"
+    },
+    {
+      "name": "INFRAVERMELHO",
+      "gid": "1206931015446590"
+    },
+    {
+      "name": "ALEXA",
+      "gid": "1206931015446597"
+    },
+    {
+      "name": "CELULAR",
+      "gid": "1206934422541460"
+    },
+    {
+      "name": "IMPRESSORA",
+      "gid": "1206934422541573"
+    },
+    {
+      "name": "QUADRO BRANCO",
+      "gid": "1206934422541659"
+    },
+    {
+      "name": "CABINE",
+      "gid": "1206940814822716"
+    },
+    {
+      "name": "MESINHA",
+      "gid": "1206950128271648"
+    },
+    {
+      "name": "VIOLÃO",
+      "gid": "1206950128271766"
+    },
+    {
+      "name": "FLIPERAMA",
+      "gid": "1206950128271767"
+    },
+    {
+      "name": "OMBRELONE",
+      "gid": "1206950128272018"
+    },
+    {
+      "name": "CHALEIRA ELÉTRICA E SUPORTE",
+      "gid": "1206950128272081"
+    },
+    {
+      "name": "FONE",
+      "gid": "1206970101766909"
+    },
+    {
+      "name": "CARREGADOR NOTEBOOK",
+      "gid": "1206983348287314"
+    },
+    {
+      "name": "BILHAR",
+      "gid": "1206999877039646"
+    },
+    {
+      "name": "GRAVADOR DE VOZ",
+      "gid": "1207029134399304"
+    },
+    {
+      "name": "MICROFONE LAPELA",
+      "gid": "1207029134399305"
+    },
+    {
+      "name": "CAFETEIRA",
+      "gid": "1207030355360072"
+    },
+    {
+      "name": "ESTABILIZADOR DE CELULAR",
+      "gid": "1207046008898046"
+    },
+    {
+      "name": "LENTE CÂMERA",
+      "gid": "1207058424179325"
+    },
+    {
+      "name": "CARREGADOR DE BATERIA",
+      "gid": "1207058424179413"
+    },
+    {
+      "name": "BATERIA CÂMERA",
+      "gid": "1207058424179414"
+    },
+    {
+      "name": "TECLADO",
+      "gid": "1207433061599521"
+    },
+    {
+      "name": "GUIMBAL",
+      "gid": "1207897178879537"
+    },
+    {
+      "name": "CARREGADOR CELULAR",
+      "gid": "1209228295215321"
+    }
+  ],
+  "HD": [
+    {
+      "name": "500 GB",
+      "gid": "1206418469717199"
+    },
+    {
+      "name": "1 TB",
+      "gid": "1206418469717200"
+    },
+    {
+      "name": "2 TB",
+      "gid": "1206418469717201"
+    },
+    {
+      "name": "4 TB",
+      "gid": "1206418469717202"
+    },
+    {
+      "name": "ANALISAR",
+      "gid": "1206419256209836"
+    },
+    {
+      "name": "240 GB",
+      "gid": "1206832931880612"
+    },
+    {
+      "name": "237 GB",
+      "gid": "1206841353282659"
+    }
+  ],
+  "SSD": [
+    {
+      "name": "128 GB",
+      "gid": "1206418469717205"
+    },
+    {
+      "name": "256 GB",
+      "gid": "1206418469717206"
+    },
+    {
+      "name": "512 GB",
+      "gid": "1206419256209834"
+    },
+    {
+      "name": "ANALISAR",
+      "gid": "1206419256209835"
+    }
+  ],
+  "STATUS": [
+    {
+      "name": "OK",
+      "gid": "1206418469717175"
+    },
+    {
+      "name": "COM DEFEITO MAS OPERANTE",
+      "gid": "1206418469717176"
+    },
+    {
+      "name": "TROCAR",
+      "gid": "1206418469717177"
+    },
+    {
+      "name": "NECESSITA DE UPGRADE",
+      "gid": "1206419257607908"
+    },
+    {
+      "name": "DESCARTADO",
+      "gid": "1208020861345266"
+    }
+  ],
+  "MARCA": [
+    {
+      "name": "ACER",
+      "gid": "1206418467135477"
+    },
+    {
+      "name": "LENOVO",
+      "gid": "1206418467135478"
+    },
+    {
+      "name": "DELL",
+      "gid": "1206418467135479"
+    },
+    {
+      "name": "APPLE",
+      "gid": "1206418467135480"
+    },
+    {
+      "name": "AOC",
+      "gid": "1206419257607810"
+    },
+    {
+      "name": "SAMSUNG",
+      "gid": "1206418467135481"
+    },
+    {
+      "name": "SONY",
+      "gid": "1206418467135482"
+    },
+    {
+      "name": "LG",
+      "gid": "1206418469717158"
+    },
+    {
+      "name": "HP",
+      "gid": "1206419257607789"
+    },
+    {
+      "name": "GAMER",
+      "gid": "1206419257607745"
+    },
+    {
+      "name": "SEAGATE ",
+      "gid": "1206419257607776"
+    },
+    {
+      "name": "BENQ",
+      "gid": "1206419996671992"
+    },
+    {
+      "name": "PHILCO",
+      "gid": "1206419996672061"
+    },
+    {
+      "name": "VAIO",
+      "gid": "1206442718908441"
+    },
+    {
+      "name": "POSITIVO",
+      "gid": "1206442720713023"
+    },
+    {
+      "name": "SEMP TOSHIBA",
+      "gid": "1206442720713123"
+    },
+    {
+      "name": "PHILIPS",
+      "gid": "1206846571151005"
+    },
+    {
+      "name": "PANASONIC",
+      "gid": "1206846571151056"
+    },
+    {
+      "name": "FUJITSU",
+      "gid": "1206877806962046"
+    },
+    {
+      "name": "MULTILASER",
+      "gid": "1206877806962073"
+    },
+    {
+      "name": "NOVADIGITAL",
+      "gid": "1206877806962105"
+    },
+    {
+      "name": "CANON",
+      "gid": "1206902881321764"
+    },
+    {
+      "name": "FACITEC",
+      "gid": "1206922423901346"
+    },
+    {
+      "name": "INTELBRAS",
+      "gid": "1206922423901423"
+    },
+    {
+      "name": "BRASTEMP",
+      "gid": "1206931015446487"
+    },
+    {
+      "name": "CONSUL",
+      "gid": "1206940814822798"
+    },
+    {
+      "name": "JBL",
+      "gid": "1206970101766907"
+    },
+    {
+      "name": "SADES",
+      "gid": "1206970101767964"
+    },
+    {
+      "name": "AMDATA BRASIL",
+      "gid": "1206980073968791"
+    },
+    {
+      "name": "TGT",
+      "gid": "1206983348287269"
+    },
+    {
+      "name": "ULANZI",
+      "gid": "1207046008897976"
+    },
+    {
+      "name": "BOYA",
+      "gid": "1207046008898024"
+    },
+    {
+      "name": "ZHIYUN",
+      "gid": "1207046008898044"
+    },
+    {
+      "name": "YONGNUO DIGITAL",
+      "gid": "1207058424179410"
+    },
+    {
+      "name": "BATMAX",
+      "gid": "1207058424179436"
+    },
+    {
+      "name": "LOGITECH",
+      "gid": "1210846158888208"
+    },
+    {
+      "name": "ASUS",
+      "gid": "1212980697013668"
+    }
+  ],
+  "MODELO": [
+    {
+      "name": "ASPIRE",
+      "gid": "1206419257607822"
+    },
+    {
+      "name": "ASPIRE 3",
+      "gid": "1206418469717164"
+    },
+    {
+      "name": "ASPIRE 5",
+      "gid": "1206418469717163"
+    },
+    {
+      "name": "NITRO 5",
+      "gid": "1206418469717165"
+    },
+    {
+      "name": "MACBOOK PRO M1",
+      "gid": "1206418469717166"
+    },
+    {
+      "name": "LATITUDE",
+      "gid": "1206419256209822"
+    },
+    {
+      "name": "IDEAPAD3I",
+      "gid": "1206419996035488"
+    },
+    {
+      "name": "ELITEBOOK",
+      "gid": "1206419257607791"
+    },
+    {
+      "name": "THINKPAD",
+      "gid": "1206419996671751"
+    },
+    {
+      "name": "AIR5",
+      "gid": "1206419996672202"
+    },
+    {
+      "name": "VJP155F11X",
+      "gid": "1206442718908443"
+    },
+    {
+      "name": "PCG",
+      "gid": "1206442720712747"
+    },
+    {
+      "name": "B330",
+      "gid": "1206442720712778"
+    },
+    {
+      "name": "INSPIRON",
+      "gid": "1206442720712849"
+    },
+    {
+      "name": "G3",
+      "gid": "1206442720712905"
+    },
+    {
+      "name": "350X",
+      "gid": "1206442720712952"
+    },
+    {
+      "name": "MACBOOK PRO",
+      "gid": "1206832943750354"
+    },
+    {
+      "name": "ODYSSEY",
+      "gid": "1206845557332495"
+    },
+    {
+      "name": "BOOK E30",
+      "gid": "1206846813149951"
+    },
+    {
+      "name": "ZIGBEE 3.0",
+      "gid": "1206881647728112"
+    },
+    {
+      "name": "MACBOOK AIR",
+      "gid": "1206931896256196"
+    },
+    {
+      "name": "MACBOOK AR ANTIGO",
+      "gid": "1206932000668432"
+    },
+    {
+      "name": "IPHONE 7",
+      "gid": "1206935040587010"
+    },
+    {
+      "name": "IPHONE 11",
+      "gid": "1206935040587011"
+    },
+    {
+      "name": "GALAXY BOOK2",
+      "gid": "1206980917019324"
+    },
+    {
+      "name": "NVIDIA GEFORCE",
+      "gid": "1207437298985577"
+    },
+    {
+      "name": "SAMSUNG A06",
+      "gid": "1208989318717119"
+    },
+    {
+      "name": "VOSTRO ",
+      "gid": "1209310804158933"
+    },
+    {
+      "name": "H390",
+      "gid": "1210846383637853"
+    },
+    {
+      "name": "IPHONE 15 PRO",
+      "gid": "1212814293724405"
+    },
+    {
+      "name": "VIVOBOOK GO 15",
+      "gid": "1212980697013670"
+    }
+  ]
+}

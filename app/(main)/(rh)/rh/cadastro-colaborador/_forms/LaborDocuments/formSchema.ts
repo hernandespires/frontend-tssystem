@@ -1,7 +1,7 @@
 import z from "zod"
 import { defaultEmptyError, defaultError } from "@/components/Form/defaultFormFieldErrors"
 
-export const formSchema = z.object({
+export const baseFormSchema = z.object({
 	workCard: z
 		.string({ error: defaultError("Carteira de trabalho") })
 		.nonempty(defaultEmptyError("Carteira de trabalho"))
@@ -50,4 +50,22 @@ export const formSchema = z.object({
 			if (files.length === 0) return true
 			return files[0] instanceof File
 		}, defaultError("Documentação"))
+})
+
+export const formSchema = baseFormSchema.superRefine((data, ctx) => {
+	if (data.reservist) {
+		const doc = data.documentation
+		const isDocEmpty = !doc || 
+			(typeof doc === "string" && doc === "") || 
+			(doc instanceof FileList && doc.length === 0) || 
+			(Array.isArray(doc) && doc.length === 0)
+
+		if (isDocEmpty) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: defaultEmptyError("Documentação"),
+				path: ["documentation"]
+			})
+		}
+	}
 })
