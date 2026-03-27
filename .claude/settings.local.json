@@ -56,7 +56,9 @@
       "Bash(find \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem/app/\\(main\\)/ti\" -type f -name \"*.tsx\" -o -name \"*.ts\")",
       "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type f \\\\\\(-path */store/* -o -path */contexts/* \\\\\\) -name *ti* -print)",
       "Bash(find c:UsersLuizDesktopfrontend-tssystem -path */node_modules -prune -o -type f \\\\\\(-path */store/* -o -path */contexts/* \\\\\\) -name *asset* -print)",
-      "Bash(find \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem/app/\\(main\\)/ti\" -type d)"
+      "Bash(find \"c:\\\\Users\\\\Luiz\\\\Desktop\\\\frontend-tssystem/app/\\(main\\)/ti\" -type d)",
+      "Bash(npm install:*)",
+      "Bash(npx vitest:*)"
     ]
   }
 }

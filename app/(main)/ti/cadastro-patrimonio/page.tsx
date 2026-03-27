@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import EmployeeSearchDropdown from "@/components/EmployeeSearchDropdown"
+import SearchableDropdown from "@/components/SearchableDropdown"
 import { useAssetRegistration } from "@/hooks/useAssetRegistration"
 import { formatDepartmentLabel } from "@/utils/department"
 import { ASSET_TYPE_OPTIONS } from "@/utils/constants/ti-assets"
@@ -82,33 +83,24 @@ export default function AssetRegistrationPage() {
 						{/* Left Column */}
 						<div className="flex flex-col gap-8">
 							<FormField label="Tipo de patrimônio">
-								<Select value={state.assetType} onValueChange={setAssetType}>
-									<SelectTrigger className="bg-[#0C0907] border-[#332C24] text-[#A09E9C] p-3 rounded h-auto w-full [&>svg]:text-[#A09E9C]">
-										<SelectValue placeholder="Selecione o tipo" />
-									</SelectTrigger>
-									<SelectContent className="bg-[#1A1510] border-[#332C24] max-h-[300px]">
-										{ASSET_TYPE_OPTIONS.map((type) => (
-											<SelectItem key={type} value={type} className="text-[#A09E9C] focus:bg-[#332C24] focus:text-white">
-												{type}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+								<SearchableDropdown
+									options={[...ASSET_TYPE_OPTIONS]}
+									value={state.assetType}
+									onChange={setAssetType}
+									placeholder="Selecione ou busque o tipo"
+								/>
 							</FormField>
 
 							<FormField label="Departamento">
-								<Select disabled={!state.assetType} value={state.department} onValueChange={setDepartment}>
-									<SelectTrigger className={`bg-[#0C0907] border-[#332C24] text-[#A09E9C] p-3 rounded h-auto w-full [&>svg]:text-[#A09E9C] ${!state.assetType ? "opacity-50 cursor-not-allowed" : ""}`}>
-										<SelectValue placeholder={!state.assetType ? "Selecione o tipo primeiro" : state.loadingDepartments ? "Carregando..." : "Selecione o departamento"} />
-									</SelectTrigger>
-									<SelectContent className="bg-[#1A1510] border-[#332C24] max-h-[300px]">
-										{filterDepartments().map((dept) => (
-											<SelectItem key={dept} value={dept} className="text-[#A09E9C] focus:bg-[#332C24] focus:text-white">
-												{formatDepartmentLabel(dept)}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+								<SearchableDropdown
+									disabled={!state.assetType}
+									loading={state.loadingDepartments}
+									options={filterDepartments()}
+									value={state.department}
+									onChange={setDepartment}
+									placeholder={!state.assetType ? "Selecione o tipo primeiro" : "Selecione ou busque o departamento"}
+									formatLabel={formatDepartmentLabel}
+								/>
 							</FormField>
 						</div>
 

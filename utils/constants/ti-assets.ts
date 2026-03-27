@@ -2,27 +2,37 @@ import { AsanaEnumOption } from "@/types/services/asana/project"
 
 export const ASSET_TYPE_OPTIONS = [
   "ACESSÓRIOS DE DECORAÇÃO",
-  "ACESSÓRIOS DE INFORMÁTICA",
+  "Acessórios de informática",
   "ACESSÓRIOS TS CAST",
   "ARMÁRIOS",
   "AUTOMAÇÃO",
   "BIBLIOTECA TS",
-  "CADEIRAS",
+  "Cadeiras",
   "CAIXA DE FERRAMENTA",
   "CÂMERAS TS CAST",
   "CELULARES",
-  "COMPUTADORES",
+  "Computadores",
   "CONTROLES",
   "DESCOMPRESSÃO",
   "ELETRODOMÉSTICO",
   "MESAS",
   "MÓVEIS PLANEJADOS",
-  "NOTEBOOKS",
+  "Notebooks",
   "PATRIMÔNIO DESCARTADO",
   "SOFÁ",
-  "TELAS",
+  "Telas",
   "TELEVISÃO",
 ] as const
+
+export const ADDITIONAL_DEPARTMENTS = [
+  "AUDIOVISUAL",
+  "DESIGN",
+  "SOCIAL MEDIA",
+  "TRADUÇÃO",
+  "WEB-DESIGN",
+  "TRÁFEGO",
+  "GESTÃO",
+]
 
 export const DEPARTMENT_FILTER_BY_ASSET_TYPE: Record<string, string[]> = {
   NOTEBOOKS: [],

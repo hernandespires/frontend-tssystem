@@ -18,6 +18,7 @@ import {
 	ASSET_SUPPLIERS,
 	BRAND_FILTER_BY_ASSET_TYPE,
 	MODEL_FILTER_BY_ASSET_TYPE,
+	ADDITIONAL_DEPARTMENTS,
 } from "@/utils/constants/ti-assets"
 
 interface AssetRegistrationState {
@@ -316,20 +317,24 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 			if (!assetType) return []
 			const normalizedAsset = normalizeText(assetType)
 
-			// Exact match first
-			if (asanaDepartmentsBySection[normalizedAsset]) {
-				return asanaDepartmentsBySection[normalizedAsset]
-			}
+			let baseDepartments: string[] = []
 
-			// Flexible match: asset type "NOTEBOOKS" should match section "NOTEBOOK"
-			// Tries both directions: section contains asset type, or asset type contains section
-			for (const [sectionKey, departments] of Object.entries(asanaDepartmentsBySection)) {
-				if (normalizedAsset.includes(sectionKey) || sectionKey.includes(normalizedAsset)) {
-					return departments
+			// Try to find matching departments from Asana sections
+			if (asanaDepartmentsBySection[normalizedAsset]) {
+				baseDepartments = asanaDepartmentsBySection[normalizedAsset]
+			} else {
+				// Flexible match: asset type "NOTEBOOKS" should match section "NOTEBOOK"
+				for (const [sectionKey, departments] of Object.entries(asanaDepartmentsBySection)) {
+					if (normalizedAsset.includes(sectionKey) || sectionKey.includes(normalizedAsset)) {
+						baseDepartments = departments
+						break
+					}
 				}
 			}
 
-			return []
+			// Combine base departments with mandatory additional departments, ensuring no duplicates
+			const uniqueDepartments = new Set([...baseDepartments, ...ADDITIONAL_DEPARTMENTS])
+			return Array.from(uniqueDepartments).sort()
 		},
 		[assetType, asanaDepartmentsBySection]
 	)
