@@ -102,7 +102,7 @@ export default function AssetRegistrationPage() {
 										<SelectValue placeholder={!state.assetType ? "Selecione o tipo primeiro" : state.loadingDepartments ? "Carregando..." : "Selecione o departamento"} />
 									</SelectTrigger>
 									<SelectContent className="bg-[#1A1510] border-[#332C24] max-h-[300px]">
-										{filterDepartments(data.departments).map((dept) => (
+										{filterDepartments().map((dept) => (
 											<SelectItem key={dept} value={dept} className="text-[#A09E9C] focus:bg-[#332C24] focus:text-white">
 												{formatDepartmentLabel(dept)}
 											</SelectItem>

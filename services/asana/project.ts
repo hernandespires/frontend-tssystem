@@ -29,15 +29,26 @@ export const findProjectSections = async (): Promise<AsanaSection[]> => {
 }
 
 export const findProjectTasks = async (): Promise<AsanaTask[]> => {
-	const response = await asanaApi.get(`/tasks`, {
-		params: {
-			project: PROJECT_GID,
-			limit: 100,
-			opt_fields:
-				"name,completed,due_on,assignee.name,notes,created_at,modified_at,memberships.section.name,custom_fields",
-		},
-	})
-	return response.data.data
+	const allTasks: AsanaTask[] = []
+	let offset: string | null = null
+
+	do {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const response: { data: { data: AsanaTask[]; next_page?: { offset: string } } } = await asanaApi.get(`/tasks`, {
+			params: {
+				project: PROJECT_GID,
+				limit: 100,
+				offset,
+				opt_fields:
+					"name,completed,due_on,assignee.name,notes,created_at,modified_at,memberships.section.name,custom_fields",
+			},
+		})
+
+		allTasks.push(...response.data.data)
+		offset = response.data.next_page?.offset ?? null
+	} while (offset)
+
+	return allTasks
 }
 
 export const findTasksBySection = async (

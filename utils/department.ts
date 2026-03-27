@@ -18,8 +18,7 @@ export const formatDepartmentLabel = (department: string): string => {
 		.join(" ")
 }
 
-export const isDepartmentMapped = (department: string): boolean =>
-	!!DEPARTMENT_LABEL_MAP[department]
+export const isDepartmentMapped = (department: string): boolean => !!DEPARTMENT_LABEL_MAP[department]
 
 export const normalizeText = (text: string): string =>
 	text

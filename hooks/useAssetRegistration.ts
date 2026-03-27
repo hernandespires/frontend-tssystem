@@ -3,11 +3,11 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { format, parse } from "date-fns"
 import { toast } from "sonner"
 
-import { findCustomFieldEnumOptions, findProjectTasks } from "@/services/asana/project"
+import { findProjectTasks } from "@/services/asana/project"
 import { findAllEmployees } from "@/services/humanResources/employee"
 import { createAsset, findAssetById, updateAsset } from "@/services/ti/asset"
 import { formatterCurrencyBRL, formatterSerialNumber } from "@/utils/formatters"
-import { formatDepartmentLabel, isDepartmentMapped, normalizeText } from "@/utils/department"
+import { normalizeText } from "@/utils/department"
 import { AsanaEnumOption } from "@/types/services/asana/project"
 import { Employee } from "@/types/services/humanResources/employee"
 import {
@@ -16,7 +16,6 @@ import {
 	ASSET_STATUSES,
 	ASSET_SIZES,
 	ASSET_SUPPLIERS,
-	DEPARTMENT_FILTER_BY_ASSET_TYPE,
 	BRAND_FILTER_BY_ASSET_TYPE,
 	MODEL_FILTER_BY_ASSET_TYPE,
 } from "@/utils/constants/ti-assets"
@@ -43,14 +42,12 @@ interface AssetRegistrationState {
 }
 
 interface AssetRegistrationData {
-	departments: string[]
 	allEmployees: Employee[]
 	sizes: AsanaEnumOption[]
 	statuses: AsanaEnumOption[]
 	brands: AsanaEnumOption[]
 	models: AsanaEnumOption[]
 	suppliers: string[]
-	asanaDepartmentsBySection: Record<string, string[]>
 }
 
 export interface UseAssetRegistrationReturn {
@@ -78,7 +75,7 @@ export interface UseAssetRegistrationReturn {
 	handleAdvance: () => void
 	handleBack: () => void
 	handleSubmit: () => Promise<void>
-	filterDepartments: (departments: string[]) => string[]
+	filterDepartments: () => string[]
 	filterBrands: (brands: AsanaEnumOption[]) => AsanaEnumOption[]
 	filterModels: (models: AsanaEnumOption[]) => AsanaEnumOption[]
 }
@@ -90,24 +87,6 @@ function parseCurrencyToNumber(currencyString: string): number {
 	return isNaN(numericValue) ? 0 : numericValue
 }
 
-function deduplicateDepartments(rawDepartments: string[]): string[] {
-	const uniqueByLabel = new Map<string, string>()
-
-	rawDepartments.forEach((dept) => {
-		const label = formatDepartmentLabel(dept)
-		const existing = uniqueByLabel.get(label)
-		const isMapped = isDepartmentMapped(dept)
-		const existingIsMapped = existing ? isDepartmentMapped(existing) : false
-
-		if (!existing || (isMapped && !existingIsMapped)) {
-			uniqueByLabel.set(label, dept)
-		}
-	})
-
-	return Array.from(uniqueByLabel.values()).sort((a, b) =>
-		formatDepartmentLabel(a).localeCompare(formatDepartmentLabel(b))
-	)
-}
 
 export function useAssetRegistration(): UseAssetRegistrationReturn {
 	const router = useRouter()
@@ -134,7 +113,6 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 	const [isSubmitting, setIsSubmitting] = useState(false)
 	const [loadingDepartments, setLoadingDepartments] = useState(true)
 
-	const [departments, setDepartments] = useState<string[]>([])
 	const [allEmployees, setAllEmployees] = useState<Employee[]>([])
 	const [asanaDepartmentsBySection, setAsanaDepartmentsBySection] = useState<Record<string, string[]>>({})
 
@@ -146,34 +124,21 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 		setValue(formatterCurrencyBRL(rawValue))
 	}, [])
 
-	// Load departments (employees + Asana enum)
+	// Load employees list
 	useEffect(() => {
-		const loadDepartments = async () => {
+		const loadEmployees = async () => {
 			try {
-				const [employees, asanaDepartmentOptions] = await Promise.all([
-					findAllEmployees(),
-					findCustomFieldEnumOptions("DEPARTAMENTO").catch(() => []),
-				])
-
+				const employees = await findAllEmployees()
 				setAllEmployees(employees)
-
-				const employeeDepartments = employees
-					.map((emp) => emp.department)
-					.filter((dept) => dept !== "")
-				const asanaDepartmentNames = asanaDepartmentOptions.map((opt) => opt.name)
-
-				setDepartments(deduplicateDepartments([...employeeDepartments, ...asanaDepartmentNames]))
 			} catch {
-				setDepartments([])
-			} finally {
-				setLoadingDepartments(false)
+				// Employees are only needed for the link step, not critical
 			}
 		}
 
-		loadDepartments()
+		loadEmployees()
 	}, [])
 
-	// Load Asana departments by section (for filtering by asset type)
+	// Load departments by section from Asana tasks (grouped by section name)
 	useEffect(() => {
 		const loadAsanaDepartmentsBySection = async () => {
 			try {
@@ -200,7 +165,9 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 				}
 				setAsanaDepartmentsBySection(result)
 			} catch {
-				// Fallback: empty map, will show all departments
+				// Fallback: empty map
+			} finally {
+				setLoadingDepartments(false)
 			}
 		}
 
@@ -345,27 +312,24 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 	])
 
 	const filterDepartments = useCallback(
-		(depts: string[]): string[] => {
+		(): string[] => {
 			if (!assetType) return []
 			const normalizedAsset = normalizeText(assetType)
 
-			return depts.filter((dept) => {
-				const hardcodedDepts = DEPARTMENT_FILTER_BY_ASSET_TYPE[normalizedAsset]
-				if (hardcodedDepts !== undefined) {
-					if (hardcodedDepts.length === 0) return true
-					return hardcodedDepts.some((allowed) =>
-						normalizeText(dept).includes(normalizeText(allowed))
-					)
-				}
+			// Exact match first
+			if (asanaDepartmentsBySection[normalizedAsset]) {
+				return asanaDepartmentsBySection[normalizedAsset]
+			}
 
-				const asanaDepts = asanaDepartmentsBySection[normalizedAsset]
-				if (!asanaDepts || asanaDepts.length === 0) return true
-				return asanaDepts.some(
-					(asanaDept) =>
-						normalizeText(dept).includes(normalizeText(asanaDept)) ||
-						normalizeText(asanaDept).includes(normalizeText(dept))
-				)
-			})
+			// Flexible match: asset type "NOTEBOOKS" should match section "NOTEBOOK"
+			// Tries both directions: section contains asset type, or asset type contains section
+			for (const [sectionKey, departments] of Object.entries(asanaDepartmentsBySection)) {
+				if (normalizedAsset.includes(sectionKey) || sectionKey.includes(normalizedAsset)) {
+					return departments
+				}
+			}
+
+			return []
 		},
 		[assetType, asanaDepartmentsBySection]
 	)
@@ -404,9 +368,9 @@ export function useAssetRegistration(): UseAssetRegistrationReturn {
 			isEmployeeDropdownOpen, isCalendarOpen, isSubmitting, loadingDepartments,
 		},
 		data: {
-			departments, allEmployees, sizes: ASSET_SIZES, statuses: ASSET_STATUSES,
+			allEmployees, sizes: ASSET_SIZES, statuses: ASSET_STATUSES,
 			brands: ASSET_BRANDS, models: ASSET_MODELS,
-			suppliers: ASSET_SUPPLIERS.slice().sort(), asanaDepartmentsBySection,
+			suppliers: ASSET_SUPPLIERS.slice().sort(),
 		},
 		isEditMode,
 		setCurrentStep, setAssetType, setDepartment, setSelectedBrand,
